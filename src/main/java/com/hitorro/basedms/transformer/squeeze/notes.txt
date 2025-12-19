@@ -1,0 +1,21 @@
+Sorrenson Squeeze after being installed goes in:
+
+/Application/<sqztemp>/Squeeze
+
+Its config file is found:
+
+
+
+Watch directories are of the structure:
+
+<dir_watch>/                  -in
+<dir_watch>/CompletedSource   -done
+<dir_watch>/CompressedOutput  -out
+
+One places in the in directory, once completed, it vanishes from the in and appears in the done and the output file is
+found in out (note that the output file will appear in out before it is infact completed), I assume we should watch the completedsource
+directory to know what is done.
+
+You can setup multiple convertions to happen from the watch in to the out (dont think we should do this as it will not know clearly what
+convertion settings we used.
+

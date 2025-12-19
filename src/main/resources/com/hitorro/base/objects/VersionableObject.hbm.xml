@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.VersionableObject" table="versionable_object" polymorphism="implicit">
+
+        <meta attribute="class-description">
+            System object that has security and version control
+        </meta>
+        <id name="id" type="long" column="system_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+
+
+        <version column="versionStamp" name="versionStamp"
+                 type="integer"
+                 unsaved-value="null"
+                 access="property"/>
+        <property name="guid" type="string" not-null="true" index="guid_idx"/>
+        <property name="versionLabel" type="string" not-null="true"/>
+        <property name="canonicalGuid" type="string" not-null="true" index="canonguid_idx"/>
+
+        <property name="state" type="int"/>
+
+        <many-to-one name="canonical" class="com.hitorro.base.objects.VersionableObject" column="canonical" lazy="false" fetch="select"/>
+        <many-to-one name="nextVersion" class="com.hitorro.base.objects.VersionableObject" column="nextVersion" lazy="false" fetch="select"/>
+        <many-to-one name="branchVersion" class="com.hitorro.base.objects.VersionableObject" column="branchVersion" lazy="false" fetch="select"/>
+        <many-to-one name="parentVersion" class="com.hitorro.base.objects.VersionableObject" column="parentVersion" lazy="false" fetch="select"/>
+
+        <!--<many-to-one name="person" class="Person" column="PERSON_ID" unique="true"/>-->
+        <property name="creationDate" type="timestamp" not-null="true"/>
+        <property name="modifiedDate" type="timestamp" not-null="true"/>
+        <property name="authoredDate" type="timestamp" not-null="true"/>
+
+
+        <property name="note" type="string" not-null="false"/>
+
+        <property name="shouldIndex" type="boolean" not-null="false"/>
+        <property name="isIndexed" type="boolean" not-null="false"/>
+        <property name="indexName" type="string" not-null="false"/>
+
+        <property name="identityHash" type="long" index="identityHash_idx"/>
+
+
+        <!--categories-->
+        <!--<set name="categories" table="sysobject_categories" cascade="all" lazy="true">
+                        <key column="system_id"/>
+                        <many-to-many column="domainvalue_id" class="DomainValue"/>
+            </set> -->
+        <!-- contents -->
+        <set name="contents" table="versionableobject_contents" cascade="persist,save-update" lazy="true">
+            <key column="system_id"/>
+            <many-to-many column="content_id" class="com.hitorro.base.objects.Content"/>
+        </set>
+
+        <set name="categories" table="versionableobject_category" cascade="persist,save-update" lazy="true">
+            <key column="system_id"/>
+            <composite-element class="com.hitorro.util.objects.DomainValue"> <!-- class attribute required -->
+                <property name="domain"/>
+                <property name="value"/>
+            </composite-element>
+        </set>
+
+        <set name="containers" table="versionableobject_container" cascade="persist,save-update" lazy="true">
+            <key column="system_id"/>
+            <many-to-many column="container_id" class="com.hitorro.base.objects.Container"/>
+        </set>
+
+        <many-to-one name="owningContainer" class="com.hitorro.base.objects.Container" column="owningContainer" lazy="false" fetch="select"/>
+
+        <property name="creator" type="string" length="80" not-null="false"/>
+        <property name="effectiveUser" type="string" length="80" not-null="false"/>
+        <property name="adapterSource" type="string" not-null="false"/>
+
+        <property name="realm" type="string" length="80" not-null="false" column="realm"/>
+        <filter name="statusFilter" condition=":statusParam=realm"/>
+    </class>
+    <filter-def name="statusFilter">
+        <filter-param name="statusParam" type="string"/>
+    </filter-def>
+</hibernate-mapping>

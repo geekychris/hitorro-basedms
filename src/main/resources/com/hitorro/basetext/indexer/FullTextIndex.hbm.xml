@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.basetext.indexer">
+
+    <class name="ht.basetext.indexer.FullTextIndex" table="FullTextIndex">
+        <meta attribute="class-description">
+            Index representation
+        </meta>
+        <id name="id" type="long" column="indexer_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <property name="guid" type="string" not-null="true"/>
+        <property name="name" type="string" not-null="true"/>
+        <property name="store" type="string" not-null="true"/>
+        <property name="rootPath" type="string" not-null="true"/>
+    </class>
+</hibernate-mapping>

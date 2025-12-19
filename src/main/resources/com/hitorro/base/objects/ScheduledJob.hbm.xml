@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.ScheduledJob" table="ScheduledJob" extends="com.hitorro.base.objects.VersionableObject">
+        <meta attribute="class-description">
+            Persisted version of a scheduledS job
+        </meta>
+        <key column="system_id"/>
+        <property name="name" type="string" length="80" not-null="true"/>
+        <property name="jobName" type="string" length="80" not-null="true"/>
+        <property name="chronSchedule" type="string" length="40"/>
+        <property name="secondsSchedule" type="int"/>
+        <property name="parametersGuid" type="string" length="20"/>
+
+    </joined-subclass>
+</hibernate-mapping>

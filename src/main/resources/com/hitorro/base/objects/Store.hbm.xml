@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+        package="ht.base.objects">
+    <class name="com.hitorro.base.objects.Store" table="Store">
+        <meta attribute="class-description">
+            Store represents the storage strategy of a content object. Currently there are
+            the following types:
+
+            filestore: content is stored on disk relative to a root path provided in the
+            blob: content is stored in the
+        </meta>
+        <id name="id" type="long" column="store_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <property name="defaultStore" type="boolean"/>
+
+        <property name="name" type="string"/>
+        <property name="storeType" type="string"/>
+        <property name="rootPath" type="string"/>
+        <property name="docRoot" type="string"/>
+        <property name="isPubliclyVisible" type="boolean"/>
+        <property name="offline" type="boolean"/>
+    </class>
+</hibernate-mapping>

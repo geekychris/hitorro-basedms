@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.Content" table="Content">
+        <meta attribute="class-description">
+            Trivial Content test schema
+        </meta>
+        <id name="id" type="long" column="content_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <property name="guid" type="string" not-null="true" index="guid_idx"/>
+        <property name="originalFileName" type="string" length="1024" not-null="true"/>
+        <property name="fileName" type="string" not-null="false"/>
+        <!-- quality properties -->
+        <property name="resolutionAux" type="string" not-null="false"/>
+        <property name="width" type="int" not-null="false"/>
+        <property name="height" type="int" not-null="false"/>
+        <property name="bitRate" type="int" not-null="false"/>
+        <property name="durationSeconds" type="int" not-null="false"/>
+        <property name="codec" type="string" not-null="false"/>
+        <property name="contentSize" type="long" not-null="false"/>
+
+        <property name="blobContent" type="blob" length="1000000"/>
+        <property name="creationDate" type="date" not-null="true"/>
+        <property name="contentTypeLiteral" type="string" not-null="false"/>
+        <property name="StoreName" type="string" not-null="true"/>
+        <property name="referenceCount" type="int"/>
+        <set name="renditions" table="content_renditions" cascade="all" lazy="true">
+            <key column="contentrendition_id"/>
+            <one-to-many class="com.hitorro.base.objects.Content"/>
+        </set>
+        <many-to-one name="parentRendition" class="com.hitorro.base.objects.Content" column="contentrendition_id" lazy="false" fetch="select"/>
+
+        <set name="categories" table="content_category" lazy="true">
+            <key column="system_id"/>
+            <composite-element class="com.hitorro.util.objects.DomainValue"> <!-- class attribute required -->
+                <property name="domain"/>
+                <property name="value"/>
+            </composite-element>
+        </set>
+
+
+        <set name="versionableObjects" table="versionableobject_contents" inverse="true" cascade="persist,save-update"
+             lazy="true">
+            <key column="content_id"/>
+            <many-to-many column="system_id" class="com.hitorro.base.objects.VersionableObject"/>
+        </set>
+    </class>
+
+</hibernate-mapping>

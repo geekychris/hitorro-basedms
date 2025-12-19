@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.basedms.workflow">
+    <joined-subclass name="com.hitorro.basedms.workflow.WorkFlowItem" table="WorkFlowItem" extends="com.hitorro.base.objects.VersionableObject">
+        <meta attribute="class-description">
+            Workflow Object
+        </meta>
+        <key column="system_id"/>
+        <property name="finished" type="boolean" not-null="false"/>
+
+        <property name="stateMachine" type="string" not-null="true"/>
+        <property name="currentState" type="string" not-null="false"/>
+        <set name="workflowItemEntries" table="workflowitem_workflowitementry" inverse="true" cascade="all"
+             lazy="false">
+            <key column="system_id"/>
+            <one-to-many class="com.hitorro.basedms.workflow.WorkFlowItemEntry"/>
+        </set>
+
+        <set name="outstandingWorkflowItems" table="workflowitem_outstandingworkflowItems" inverse="true" cascade="all"
+             lazy="false">
+            <key column="system_id"/>
+            <one-to-many class="com.hitorro.basedms.workflow.OutstandingWorkflowItem"/>
+        </set>
+
+    </joined-subclass>
+</hibernate-mapping>

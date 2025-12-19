@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.util.objects">
+
+    <class name="com.hitorro.util.objects.ObjectVersions" table="ObjectVersions">
+        <meta attribute="class-description">
+            List of managed objects in the system and their schema version
+        </meta>
+        <id name="id" type="long" column="objectversions_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <version name="version" column="version"/>
+        <property name="name" type="string" not-null="true"/>
+        <property name="objectVersion" type="long" not-null="true"/>
+        <property name="lastModified" type="date" not-null="true"/>
+    </class>
+</hibernate-mapping>

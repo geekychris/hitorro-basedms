@@ -1,0 +1,35 @@
+
+TEST  PRODUCER  SAMPLEAPP ....
+
+UI
+
+APPFRAMEWORK
+
+BASE
+
+NETWORK
+
+UTIL
+
+
+
+TODO
+
+distributed query response aggregation
+display, index, feature build automation
+core scoring with meta data
+sentiment analysis
+geo location tagging
+sentiment el cheapo
+noun extraction
+editorial mechanism
+Distributed job manager
+
+
+
+
+
+
+notes to maven build
+
+http://lucene.472066.n3.nabble.com/jira-Commented-NUTCH-825-Publish-nutch-artifacts-to-central-maven-repository-td2017303.html

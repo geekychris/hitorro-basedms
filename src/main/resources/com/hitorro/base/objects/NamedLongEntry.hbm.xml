@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.NamedLongEntry" table="NamedLongEntry">
+        <meta attribute="class-description">
+            Named Longs keep track of
+        </meta>
+        <id name="id" type="long" column="namedlongentry_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <version name="versionStamp" column="versionStamp" unsaved-value="null"/>
+        <property name="name" type="string" not-null="true"/>
+        <property name="description" type="string" not-null="true"/>
+        <property name="value" type="long" not-null="true"/>
+        <property name="incrementor" type="long" not-null="true"/>
+    </class>
+</hibernate-mapping>

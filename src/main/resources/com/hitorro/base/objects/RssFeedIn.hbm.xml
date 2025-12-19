@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.RssFeedIn" table="RssFeedIn" extends="com.hitorro.base.objects.VersionableObject">
+        <meta attribute="class-description">
+            Persisted version of an rss input feed
+        </meta>
+        <key column="system_id"/>
+        <property name="name" type="string" length="80" not-null="true" index="name_idx"/>
+        <property name="description" type="string" length="255"/>
+        <property name="uri" type="string" length="255" not-null="true"/>
+        <property name="siteUrl" type="string" length="255"/>
+        <property name="nextRead" type="timestamp"/>
+        <property name="readInMinutes" type="int"/>
+        <property name="contactName" type="string" length="40"/>
+        <property name="contactEmail" type="string" length="80"/>
+        <property name="lastModified" type="string" length="80"/>
+
+        <property name="forumType" type="int"/>
+        <property name="priority" type="int"/>
+        <many-to-one name="forum" class="com.hitorro.base.objects.Forum" column="forum_id" fetch="select"/>
+        <many-to-one name="sharedForum" class="com.hitorro.base.objects.Forum" column="sharedforum_id"
+                     fetch="select"/>
+    </joined-subclass>
+</hibernate-mapping>

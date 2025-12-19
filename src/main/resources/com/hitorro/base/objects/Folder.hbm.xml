@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.Folder" table="Folder" extends="com.hitorro.base.objects.Container">
+        <meta attribute="class-description">
+            Folder, for workflow, containing arbitrary VersionableObjects
+        </meta>
+        <key column="system_id"/>
+        <property name="name" type="string" length="20" not-null="true"/>
+        <property name="isRootLevel" type="boolean"/>
+    </joined-subclass>
+</hibernate-mapping>

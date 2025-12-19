@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.Category" table="Category">
+        <meta attribute="class-description">
+            Category element in a category set scoped by domain
+        </meta>
+        <id name="id" type="long" column="category_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <property name="domain" type="string" not-null="true"/>
+        <property name="value" type="string" not-null="true"/>
+        <property name="displayName" type="string" not-null="true"/>
+        <property name="description" type="string" length="1024" not-null="false"/>
+        <property name="externalId" type="string" not-null="false"/>
+        <many-to-one name="parent" column="categoryParent_id" class="com.hitorro.base.objects.Category"/>
+
+        <set name="children" table="category_category" cascade="all" lazy="true">
+            <key column="categorycategory_id"/>
+            <one-to-many class="com.hitorro.base.objects.Category"/>
+        </set>
+        <property name="adapterSource" type="string" not-null="false"/>
+
+    </class>
+</hibernate-mapping>

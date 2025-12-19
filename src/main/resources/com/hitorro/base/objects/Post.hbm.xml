@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+    <joined-subclass
+            name="com.hitorro.base.objects.Post"
+            table="Post"
+            extends="com.hitorro.base.objects.Document">
+        <key column="system_id"/>
+        <property name="entryOrdinal" type="int" not-null="true"/>
+        <property name="moreLink" type="string" length="1024"/>
+        <property name="siteLink" type="string" length="1024"/>
+        <property name="degree" type="int"/>
+        <property name="type" type="int"/>
+        <property name="originalAuthor" type="string"/>
+        <property name="feedContact" type="string"/>
+        <property name="destinationUrl" type="string" length="1024"/>
+        <many-to-one name="parent" class="com.hitorro.base.objects.Post" column="parent_id" fetch="select"/>
+        <property name="refCount" type="int"/>
+    </joined-subclass>
+</hibernate-mapping>

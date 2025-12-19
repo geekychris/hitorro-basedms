@@ -1,0 +1,7 @@
+<ploppy>
+   <steps>
+       <test root="foo">
+       </test>
+
+   </steps>
+</ploppy>

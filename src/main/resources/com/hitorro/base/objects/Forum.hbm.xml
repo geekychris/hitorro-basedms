@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.Forum" table="Forum" extends="com.hitorro.base.objects.Container">
+        <meta attribute="class-description">
+            Persisted version of a forum, which is an object that contains Posts
+        </meta>
+        <key column="system_id"/>
+        <property name="name" type="string" length="80" not-null="true" index="name_idx"/>
+        <many-to-one name="area" class="com.hitorro.base.objects.SubjectArea" column="area_id" fetch="select"/>
+    </joined-subclass>
+</hibernate-mapping>

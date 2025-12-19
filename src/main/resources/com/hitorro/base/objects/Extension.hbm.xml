@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.Extension" table="Extensions">
+        <id name="id" type="long" column="extension_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <many-to-one name="contentType" column="contenttype_id" class="com.hitorro.base.objects.ContentType"/>
+        <property name="fileExtension" type="string" not-null="true"/>
+        <property name="isPrefered" type="boolean" not-null="false"/>
+
+    </class>
+
+</hibernate-mapping>

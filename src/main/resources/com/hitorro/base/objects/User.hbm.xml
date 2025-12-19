@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.User" table="user_t" extends="com.hitorro.base.objects.VersionableObject">
+        <meta attribute="class-description">
+            User object
+        </meta>
+        <key column="system_id"/>
+        <property name="name" type="string" length="80" not-null="true" index="name_idx"/>
+        <property name="displayName" type="string" length="80"/>
+        <property name="password" type="string" length="40"/>
+        <property name="emailAddress" type="string" length="80"/>
+        <property name="passwordHash" type="string" length="80"/>
+        <property name="activationToken" type="string" length="80"/>
+        <set name="roles" table="user_role" lazy="true">
+            <key column="user_id"/>
+            <many-to-many column="role_id" class="com.hitorro.base.objects.Role"/>
+        </set>
+    </joined-subclass>
+</hibernate-mapping>

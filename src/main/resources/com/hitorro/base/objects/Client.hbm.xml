@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+    <joined-subclass
+            name="com.hitorro.base.objects.Client"
+            table="Client"
+            extends="com.hitorro.base.objects.VersionableObject">
+        <key column="system_id"/>
+        <property name="uniqueName" type="string" not-null="true" index="uniquename_idx"/>
+        <property name="name" type="string" length="80" not-null="true"/>
+        <property name="isActive" type="boolean"/>
+    </joined-subclass>
+</hibernate-mapping>

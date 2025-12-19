@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <joined-subclass name="com.hitorro.base.objects.Container" table="container_t" extends="com.hitorro.base.objects.VersionableObject">
+        <meta attribute="class-description">
+            Container of objects. This is a query driven container, by default
+            it will give you a lists of objects that have versionableobject.container[] value set to
+            this container. One can change the query to have an alternative containement strategy.
+        </meta>
+        <key column="system_id"/>
+        <property name="description" type="string" not-null="false"/>
+        <property name="queryString" type="string" not-null="true"/>
+        <set name="contained" table="sysobject_container" inverse="true" cascade="persist,save-update" lazy="true">
+            <key column="container_id"/>
+            <many-to-many column="system_id" class="com.hitorro.base.objects.VersionableObject"/>
+        </set>
+    </joined-subclass>
+</hibernate-mapping>

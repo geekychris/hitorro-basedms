@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2006-2025 Chris Collins
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package com.hitorro.base.typesystem.commands;
+
+import com.hitorro.jsontypesystem.JVS;
+import com.hitorro.util.commandandcontrol.Command;
+import com.hitorro.util.commandandcontrol.CommandSession;
+import com.hitorro.util.commandandcontrol.Response;
+import com.hitorro.util.commandandcontrol.RestOperations;
+import com.hitorro.util.commandandcontrol.ano.CommandArgument;
+import com.hitorro.util.commandandcontrol.ano.CommandDef;
+import com.hitorro.util.json.keys.StringProperty;
+
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 4:39:11 PM
+ */
+@CommandDef(command = "dms.dumpforupgrade", description = "Dump a series of objects to an output stream")
+public class DumpForUpgrade extends Command {
+    @CommandArgument(required = true)
+    private StringProperty FileName = new StringProperty("file", "file to write out the serialized content as", "");
+
+    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+        DumpContext dc = DumpContext.getDumpContextForUpgrade(new File(FileName.apply(args)));
+
+        int counter = 0;
+        try {
+            counter = dc.dump();
+            this.writeSuccess(response, "wrote %s root level objects", Integer.toString(counter));
+        } catch (IOException e) {
+            this.writeSimpleError(response, "Unable to create dump file% %s %e", e, e);
+            return false;
+        }
+        return true;
+    }
+}

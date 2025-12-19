@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "htbin://data//dtds//hibernate-mapping-3.0.dtd">
+<hibernate-mapping
+        package="ht.base.objects">
+
+    <class name="com.hitorro.base.objects.PersistedSerializedObject" table="PersistedSerializedObject">
+        <meta attribute="class-description">
+            Trivial Content test schema
+        </meta>
+        <id name="id" type="long" column="content_id">
+            <meta attribute="scope-set">protected</meta>
+            <generator class="native"/>
+        </id>
+        <property name="guid" type="string" not-null="true" index="guid_idx"/>
+        <property name="executor" type="string"/>
+        <property name="blobContent" type="blob" length="1000000"/>
+        <property name="collectionId" type="int" not-null="true"/>
+        <property name="name" type="string" not-null="true"/>
+        <property name="effectiveFrom" type="timestamp"/>
+        <property name="priority" type="int"/>
+    </class>
+
+</hibernate-mapping>
