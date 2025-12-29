@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
 <hibernate-mapping
-        package="ht.util.objects">
+        package="com.hitorro.util.objects">
 
     <class name="com.hitorro.util.objects.ObjectVersions" table="ObjectVersions">
         <meta attribute="class-description">

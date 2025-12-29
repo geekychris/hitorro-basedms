@@ -934,7 +934,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             Type t = TypeManager.getTypeManager().getTypeByShortName(shortName[0]);
             if (t == null)
             {
-                ht.util.typesystem.Log.typemanager.warn("No Type defined for %s", pts.getClassification().getCanonicalName());
+                com.hitorro.util.typesystem.Log.typemanager.warn("No Type defined for %s", pts.getClassification().getCanonicalName());
                 return pts;
             }
             if (t.isInstanceOf(pts))
