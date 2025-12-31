@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
 <hibernate-mapping
-        package="ht.basedms.workflow">
+        package="com.hitorro.basedms.workflow">
     <joined-subclass name="com.hitorro.basedms.workflow.WorkFlowItem" table="WorkFlowItem" extends="com.hitorro.base.objects.VersionableObject">
         <meta attribute="class-description">
             Workflow Object

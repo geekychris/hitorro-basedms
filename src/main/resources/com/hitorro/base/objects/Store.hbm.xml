@@ -4,7 +4,7 @@
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping
-        package="ht.base.objects">
+        package="com.hitorro.base.objects">
     <class name="com.hitorro.base.objects.Store" table="Store">
         <meta attribute="class-description">
             Store represents the storage strategy of a content object. Currently there are

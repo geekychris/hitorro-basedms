@@ -3,9 +3,9 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
 <hibernate-mapping
-        package="ht.basetext.indexer">
+        package="com.hitorro.basetext.indexer">
 
-    <class name="ht.basetext.indexer.FullTextIndex" table="FullTextIndex">
+    <class name="com.hitorro.basetext.indexer.FullTextIndex" table="FullTextIndex">
         <meta attribute="class-description">
             Index representation
         </meta>

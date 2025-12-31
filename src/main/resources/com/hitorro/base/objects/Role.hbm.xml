@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
 <hibernate-mapping
-        package="ht.base.objects">
+        package="com.hitorro.base.objects">
 
     <joined-subclass name="com.hitorro.base.objects.Role" table="Role" extends="com.hitorro.base.objects.VersionableObject">
         <meta attribute="class-description">

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "htbin://data//dtds//hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="ht.base.objects">
+<hibernate-mapping package="com.hitorro.base.objects">
     <joined-subclass name="com.hitorro.base.objects.SubjectArea" table="SubjectArea" extends="com.hitorro.base.objects.VersionableObject">
         <key column="system_id"/>
         <property name="name" type="string" length="20" not-null="true" index="name_idx"/>
@@ -14,7 +14,7 @@
         <!--
         <set name="forums" table="subjectarea_forum" lazy="true">
             <key column="subjectarea_id"/>
-            <one-to-many class="ht.base.objects.Forum"/>
+            <one-to-many class="com.hitorro.base.objects.Forum"/>
         </set>
         -->
     </joined-subclass>
