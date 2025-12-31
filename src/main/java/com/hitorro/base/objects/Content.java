@@ -162,7 +162,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setCodec(String codec) {
-        codec = codec;
+        this.codec = codec;
     }
 
     public long getContentSize() {
@@ -170,7 +170,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setContentSize(long contentSize) {
-        contentSize = contentSize;
+        this.contentSize = contentSize;
     }
 
     public int getBitRate() {
@@ -178,7 +178,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setBitRate(int bitRate) {
-        bitRate = bitRate;
+        this.bitRate = bitRate;
     }
 
     public int getDurationSeconds() {
@@ -199,7 +199,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setWidth(int width) {
-        width = width;
+        this.width = width;
     }
 
     public int getHeight() {
@@ -207,7 +207,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setHeight(int height) {
-        height = height;
+        this.height = height;
     }
 
     /**
@@ -333,7 +333,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     public void setRenditions(Set<Content> renditions) {
-        renditions = renditions;
+        this.renditions = renditions;
     }
 
 

@@ -108,7 +108,7 @@ public class Category extends BaseType {
     }
 
     public void setDomain(String domain) {
-        domain = StringUtil.lowerCaseIfNotNull(domain);
+        this.domain = StringUtil.lowerCaseIfNotNull(domain);
     }
 
     @UiProperties(displayName = "Value", displayType = UiProperties.TextFieldDisplay, order = 30)
@@ -117,7 +117,7 @@ public class Category extends BaseType {
     }
 
     public void setValue(String value) {
-        value = StringUtil.lowerCaseIfNotNull(value);
+        this.value = StringUtil.lowerCaseIfNotNull(value);
     }
 
     public Set<Category> getChildren() {
@@ -125,7 +125,7 @@ public class Category extends BaseType {
     }
 
     public void setChildren(Set<Category> children) {
-        children = children;
+        this.children = children;
     }
 
 
@@ -136,7 +136,7 @@ public class Category extends BaseType {
 
 
     public void setDescription(String description) {
-        description = description;
+        this.description = description;
     }
 
 
@@ -146,7 +146,7 @@ public class Category extends BaseType {
 
 
     public void setExternalId(String externalId) {
-        externalId = externalId;
+        this.externalId = externalId;
     }
 
 

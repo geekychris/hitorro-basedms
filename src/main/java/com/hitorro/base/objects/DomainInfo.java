@@ -103,7 +103,7 @@ public class DomainInfo extends BaseType {
     }
 
     public void setDomain(String domain) {
-        domain = StringUtil.lowerCaseIfNotNull(domain);
+        this.domain = StringUtil.lowerCaseIfNotNull(domain);
     }
 
     public void serialize(HTObjectOutputStream os)
