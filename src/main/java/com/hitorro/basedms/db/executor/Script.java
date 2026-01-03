@@ -57,24 +57,22 @@ public class Script {
     public static final String MYSQL_ALL_DB_OBJECTS = "*.*";                //  The Database Objects to which these Privileges apply
 
     //  Fundamental Database Scripts   
-    public static final String SCRIPT_CREATE_DATABASE = "user/scripts/db/create_database.sql";
-    public static final String SCRIPT_CREATE_USER = "user/scripts/db/create_user.sql";
-    public static final String SCRIPT_DROP_DATABASE = "user/scripts/db/drop_database.sql";
-    public static final String SCRIPT_DROP_TABLE = "user/scripts/db/drop_table.sql";
-    public static final String SCRIPT_ENABLE_FOREIGN_KEY_CHECK = "user/scripts/db/enable_foreign_key_check.sql";
-    public static final String SCRIPT_GRANT_PRIVILEGES = "user/scripts/db/grant_privileges.sql";
-    public static final String SCRIPT_CREATE_USER_GRANT_PRIVS = "user/scripts/db/create_and_grant.sql";
+    public static final String SCRIPT_CREATE_DATABASE = "config/dbscripts/create_database.sql";
+    public static final String SCRIPT_CREATE_USER = "config/dbscripts/create_user.sql";
+    public static final String SCRIPT_DROP_DATABASE = "config/dbscripts/drop_database.sql";
+    public static final String SCRIPT_DROP_TABLE = "config/dbscripts/drop_table.sql";
+    public static final String SCRIPT_ENABLE_FOREIGN_KEY_CHECK = "config/dbscripts/enable_foreign_key_check.sql";
+    public static final String SCRIPT_GRANT_PRIVILEGES = "config/dbscripts/grant_privileges.sql";
+    public static final String SCRIPT_CREATE_USER_GRANT_PRIVS = "config/dbscripts/create_and_grant.sql";
 
     private List<String> _statements = new ArrayList<String>();
-
     public Script() {
     }
 
-    public Script(String fileName) throws IOException {
-        File file = new File(Env.getBin(), fileName);
-        loadScripts(file);
-    }
-
+	public Script(String fileName) throws IOException {
+		File file = new File(Env.getBin(), fileName);
+		loadScripts(file);
+	}
     public Script(File file) throws IOException {
         loadScripts(file);
     }

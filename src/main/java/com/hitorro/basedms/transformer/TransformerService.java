@@ -38,11 +38,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
 @ServiceDefinition(dependentService = {JobService.class},
         shortName = "transformer",
         description = "Transformer service",
@@ -55,17 +50,12 @@ public class TransformerService {
             "General transcoding config",
             "${HT_BIN}/data/transcoder/edges.csv");
     public static final IntegerProperty JobThreads = new IntegerProperty("transcoder.threads", "Number of threads", 2);
-    public static final BooleanProperty DisableJobService = new BooleanProperty("transcoder.disablequeue", "", false);
     public static final String PSO_JOB_NAME = "jobs";
     private static TransformerService s_service;
     private ConvertionContext m_convertionContext = new ConvertionContext();
     private Map<String, TransformMethod> m_methods = new HashMap<String, TransformMethod>();
-    private boolean _initialized = false;
-    private boolean _started = false;
 
-    private boolean m_startJobQueue = true;
-    private int m_queueLength = 40;
-    //private int m_threads = 4;
+	private boolean m_startJobQueue = true;
     private int m_threads = JobThreads.apply();
 
     public static TransformerService getService() {

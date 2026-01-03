@@ -587,7 +587,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     }
 
     public void setRealm(String realm) {
-        realm = realm;
+        this.realm = realm;
     }
 
     public String getCreator() {
@@ -595,7 +595,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     }
 
     public void setCreator(String creator) {
-        creator = creator;
+        this.creator = creator;
     }
 
     public String getEffectiveUser() {
@@ -603,7 +603,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     }
 
     public void setEffectiveUser(String effectiveUser) {
-        effectiveUser = effectiveUser;
+        this.effectiveUser = effectiveUser;
     }
 
     public boolean visitVersionTree(com.hitorro.basedms.VersionableObjectVisitor visitor) {
@@ -647,7 +647,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     //************** CONTENT STUFF ******************************
 
     public void setContainers(Set<Container> containers) {
-        containers = containers;
+        this.containers = containers;
     }
 
     // ----------------- ListValueSource
