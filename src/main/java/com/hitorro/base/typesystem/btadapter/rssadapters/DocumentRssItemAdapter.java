@@ -25,7 +25,6 @@ import com.hitorro.base.objects.Document;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 6, 2005 Time: 6:39:22 PM
  */
 public class DocumentRssItemAdapter<E extends Document> extends VersionableObjectRssItem<E> {
     public Class getHonoringClass() {

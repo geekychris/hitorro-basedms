@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 24, 2006 Time: 10:52:29 PM
  */
 @CommandDef(command = "dms.loadserialization", description = "Load objects into the system from a serialized file.")
 public class Load extends com.hitorro.util.commandandcontrol.Command {

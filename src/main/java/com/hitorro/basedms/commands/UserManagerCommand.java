@@ -46,9 +46,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 8, 2005 Time: 4:05:50 PM
- * <p/>
  * Create Activate validate delete getAllDetails setpassword
  * <p/>
  * Here are the following commands.  You can issue them from a telnet session or execute them from the REST interface:

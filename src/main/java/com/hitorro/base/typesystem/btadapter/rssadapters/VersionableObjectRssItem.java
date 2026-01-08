@@ -35,9 +35,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 6, 2005 Time: 4:06:37 PM
- * <p/>
  * Abstract item that will generate an RssItemInterface compatible accessor.  In this case
  */
 public class VersionableObjectRssItem<E extends com.hitorro.base.objects.VersionableObject> implements RssItemInterface,

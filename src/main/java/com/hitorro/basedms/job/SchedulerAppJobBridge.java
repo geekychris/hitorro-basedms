@@ -39,7 +39,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2007 Time: 12:23:06 PM
  * <p/>
  * Bridge between the scheduler and a j
  */

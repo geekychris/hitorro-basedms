@@ -22,7 +22,6 @@
 package com.hitorro.basedms;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 28, 2006 Time: 4:17:09 PM
  */
 public class SystemVersionException extends Exception {
     public SystemVersionException(String message) {

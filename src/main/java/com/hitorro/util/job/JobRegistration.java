@@ -23,9 +23,7 @@ package com.hitorro.util.job;
 
 import com.hitorro.util.core.classes.ClassUtil;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 1:17:26 PM
- */
+
 public class JobRegistration {
     public String _name;
     public String _displayName;

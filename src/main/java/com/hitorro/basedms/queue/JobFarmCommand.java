@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 28, 2005 Time: 7:30:09 PM
  */
 public class JobFarmCommand extends FarmCommand<JobQueueElement<PersistedSerializedObject>, JobQueueElement<PersistedSerializedObject>, Object> {
 

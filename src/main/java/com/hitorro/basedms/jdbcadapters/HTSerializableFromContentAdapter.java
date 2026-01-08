@@ -37,7 +37,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 22, 2005 Time: 6:54:55 PM
  * <p/>
  * Using a jdbc result, that has 1 column that is the guid of a content object that has HTSerialized object as its
  * content, deserialize the payload and return it.

@@ -35,7 +35,6 @@ import java.util.Iterator;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 6, 2005 Time: 7:33:59 PM
  */
 public class SORetrievalAdapter<E extends BaseType, OUT> implements HibernateQueryResultObjectAdapter {
     private BaseSession session;

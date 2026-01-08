@@ -34,7 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 9, 2005 Time: 4:40:58 PM
  * <p/>
  * Takes the PSOQueueProcessor one step further by not placing onto the input queue any element that has the same site
  * id as something that we recently put on the queue.

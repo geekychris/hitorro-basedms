@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 8:50:36 PM
  */
 public class ObjectVersionsCache {
     private Map<String, ObjectVersions> m_versions = new HashMap<String, ObjectVersions>();

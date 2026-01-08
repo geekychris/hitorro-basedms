@@ -42,7 +42,6 @@ import org.apache.log4j.Level;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 4:26:04 PM
  * <p/>
  * Job to fetch html content and put it as a piece of content to the
  */

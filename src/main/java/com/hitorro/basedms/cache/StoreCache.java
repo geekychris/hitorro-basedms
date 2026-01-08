@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 10:02:03 AM
  */
 public class StoreCache {
     private Store defaultStore = null;

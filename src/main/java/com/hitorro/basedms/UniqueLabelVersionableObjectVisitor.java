@@ -24,7 +24,6 @@ package com.hitorro.basedms;
 import com.hitorro.base.objects.VersionableObject;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 7:35:06 AM
  * <p/>
  * Visit a system object version tree and ensure that one and only one version can have a specific "domain","value"
  * pair.  This is used by domains that have a unique across versions flag set to true.

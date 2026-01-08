@@ -31,7 +31,6 @@ import org.hibernate.event.spi.PersistEventListener;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 7:17:36 AM
  */
 public class HTHibernatePersistListener implements PersistEventListener {
     public void onPersist(PersistEvent persistEvent) throws HibernateException {

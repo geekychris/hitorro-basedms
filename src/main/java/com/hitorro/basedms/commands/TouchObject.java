@@ -33,7 +33,6 @@ import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.StringProperty;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 10, 2005 Time: 9:42:33 AM
  */
 @CommandDef(command = "dms.touchobject", description = "touch modified time of a persisted object")
 public class TouchObject extends Command {

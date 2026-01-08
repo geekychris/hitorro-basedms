@@ -48,9 +48,6 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 24, 2005 Time: 6:40:15 AM
- * <p/>
  * Scan a file system, identify files that do not have a content object, optionally remove them or generate a script to
  * remove them
  */

@@ -29,9 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 7, 2005 Time: 9:29:25 AM
- * <p/>
  * Given a listFiles of DomainValue objects, index them as numerous string literals.  Any DV field we dont put in the main
  * content (we ignore the flag!)
  */

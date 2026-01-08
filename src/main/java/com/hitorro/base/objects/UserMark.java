@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 12, 2005 Time: 2:04:15 PM
  */
 
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.UserMark,

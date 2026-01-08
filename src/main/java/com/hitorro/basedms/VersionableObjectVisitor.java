@@ -24,7 +24,6 @@ package com.hitorro.basedms;
 import com.hitorro.base.objects.VersionableObject;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 4, 2006 Time: 9:29:26 PM
  * <p/>
  * WARNING:
  * <p/>

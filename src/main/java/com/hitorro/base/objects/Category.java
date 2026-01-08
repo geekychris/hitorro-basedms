@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 10:09:02 AM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Category,
         isView = false,

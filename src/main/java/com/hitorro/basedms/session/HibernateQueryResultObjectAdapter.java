@@ -26,7 +26,6 @@ import org.hibernate.type.Type;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 7, 2005 Time: 4:20:30 PM
  */
 public interface HibernateQueryResultObjectAdapter<E> {
     E map(Iterator iter, Type[] types, String[] aliases);

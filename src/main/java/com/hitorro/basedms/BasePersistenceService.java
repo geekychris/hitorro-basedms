@@ -57,7 +57,6 @@ import com.hitorro.util.typesystem.BaseType;
 import java.util.function.Predicate;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 1:48:00 PM
  */
 @ServiceDefinition(dependentService = {HibernateService.class, ServletService.class, OpersService.class},
         shortName = "basepersistence",

@@ -33,7 +33,6 @@ import com.hitorro.util.objects.DomainValue;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 6, 2006 Time: 9:17:13 PM
  */
 public abstract class CategoryBaseUtil {
     /**

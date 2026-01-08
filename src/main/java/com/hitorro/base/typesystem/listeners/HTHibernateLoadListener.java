@@ -27,7 +27,6 @@ import org.hibernate.event.spi.PostLoadEvent;
 import org.hibernate.event.spi.PostLoadEventListener;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 8:33:55 AM
  */
 public class HTHibernateLoadListener implements PostLoadEventListener {
     public void onPostLoad(PostLoadEvent postLoadEvent) {

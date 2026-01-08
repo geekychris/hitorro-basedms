@@ -28,7 +28,6 @@ import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.hibernate.event.spi.SaveOrUpdateEventListener;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 16, 2006 Time: 9:53:05 PM
  */
 public class HTHibernateOnSaveListener implements SaveOrUpdateEventListener {
     public void onSaveOrUpdate(SaveOrUpdateEvent saveOrUpdateEvent) throws HibernateException {

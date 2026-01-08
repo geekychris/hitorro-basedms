@@ -28,7 +28,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 10, 2007 Time: 10:35:17 AM
  */
 
 

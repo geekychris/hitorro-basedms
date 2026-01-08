@@ -27,7 +27,6 @@ import com.hitorro.util.typesystem.OnTrigger;
 import com.hitorro.util.typesystem.TypeIntf;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 1, 2006 Time: 10:20:52 PM
  */
 public class BaseTypeOnTriggerGeneric implements OnTrigger {
     public boolean execute(OnTrigger.TriggerType key, TypeIntf type, Object bt) {

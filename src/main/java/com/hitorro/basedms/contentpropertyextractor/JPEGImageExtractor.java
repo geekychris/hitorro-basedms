@@ -24,7 +24,6 @@ package com.hitorro.basedms.contentpropertyextractor;
 import com.hitorro.base.objects.ContentType;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 26, 2005 Time: 4:45:25 PM
  */
 public class JPEGImageExtractor extends ImageExtractor {
     public String getMimeType() {

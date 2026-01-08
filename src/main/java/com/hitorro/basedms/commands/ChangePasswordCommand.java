@@ -32,10 +32,7 @@ import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.json.keys.StringProperty;
 
-/**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 23, 2005 Time: 8:33:29 PM
- */
+
 @CommandDef(command = "user.changepassword", description = "Change a users password")
 public class ChangePasswordCommand extends Command {
     @CommandArgument(required = true)

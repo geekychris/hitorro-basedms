@@ -32,7 +32,6 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 26, 2006 Time: 11:45:35 AM
  * <p/>
  * Class to allow the retrieval of an object via guid and to generate a guid. The standard globally identifyable object
  * should use the standard:

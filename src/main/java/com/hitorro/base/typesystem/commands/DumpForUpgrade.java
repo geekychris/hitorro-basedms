@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 4:39:11 PM
  */
 @CommandDef(command = "dms.dumpforupgrade", description = "Dump a series of objects to an output stream")
 public class DumpForUpgrade extends Command {

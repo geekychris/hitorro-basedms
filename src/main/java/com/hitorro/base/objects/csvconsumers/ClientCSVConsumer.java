@@ -28,9 +28,7 @@ import com.hitorro.basedms.exceptions.CategoryException;
 import com.hitorro.util.core.map.MapUtil;
 import com.hitorro.util.core.string.StringUtil;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 3:24:38 PM
- */
+
 public class ClientCSVConsumer extends CSVHibernateLoaderConsumer<Client> {
     public static final String UniqueNameColumn = "uniquename";
     public static final String NameColumn = "name";

@@ -29,7 +29,6 @@ import com.hitorro.util.core.string.StringUtil;
 import java.util.HashMap;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 1:08:08 PM One should load
  * one domain at a time with this integrator ELSE you end up with false parent linkage.  This loader assumes parents are
  * part of the integration event.
  */

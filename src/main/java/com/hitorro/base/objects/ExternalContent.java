@@ -31,7 +31,6 @@ import java.io.IOException;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 7, 2005 Time: 7:44:47 AM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.ExternalContent,
         isView = false,

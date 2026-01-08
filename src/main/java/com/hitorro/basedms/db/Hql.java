@@ -34,7 +34,6 @@ import org.hibernate.query.Query;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 3:38:25 PM
  */
 @CommandDef(command = "dms.hql", description = "Execute a hql command.  Such as dms.hql select x from ht.base.objects.RssFeedIn")
 public class Hql extends com.hitorro.util.commandandcontrol.Command {

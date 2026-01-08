@@ -29,7 +29,6 @@ import org.hibernate.type.Type;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 7, 2005 Time: 4:20:44 PM
  */
 public class HibernateQueryIteratorMapper<E> extends AbstractIterator<E> {
     private HibernateQueryResultObjectAdapter<E> m_adapter;

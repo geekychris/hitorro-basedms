@@ -35,7 +35,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 1, 2008 Time: 3:53:53 PM
  */
 public class ActionUtil {
     /**

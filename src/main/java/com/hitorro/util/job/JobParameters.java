@@ -29,9 +29,7 @@ import com.hitorro.util.typesystem.HTSerializable;
 
 import java.io.IOException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 6:06:16 PM
- */
+
 public abstract class JobParameters implements HTSerializable {
     public static final int SerializationVersion = 1;
     // dms session used by object when editing

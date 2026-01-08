@@ -28,10 +28,7 @@ import com.hitorro.util.typesystem.BaseSessionFactory;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 8, 2005 Time: 9:33:01 AM
- */
+
 public class JDBCUtils {
     public static final int performSimpleJDBCUpdate(String sqlStatement) {
         BaseSession session = BaseSessionFactory.getFactory().getSession();

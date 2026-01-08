@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 26, 2006 Time: 6:10:05 PM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.ScheduledJob,
         isView = false,

@@ -26,7 +26,6 @@ import com.hitorro.util.log.Logger;
 import org.apache.log4j.Level;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 26, 2005 Time: 11:49:34 AM
  * <p/>
  * Created by a job if it has something to say.  Such as:
  * <p/>

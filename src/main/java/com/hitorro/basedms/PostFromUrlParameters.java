@@ -33,7 +33,6 @@ import com.hitorro.util.urlparser.URLUtil;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 28, 2005 Time: 11:44:40 AM
  */
 
 @TypeClassMetaInfo(shortTypeName = "PostFromUrlParameters",

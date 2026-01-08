@@ -30,7 +30,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 27, 2005 Time: 7:41:58 PM
  */
 @CommandDef(command = "job.dumpqueues", description = "Dump the persisted queues")
 public class DumpQueues extends com.hitorro.util.commandandcontrol.Command {

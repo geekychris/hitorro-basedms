@@ -35,7 +35,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 30, 2006 Time: 3:14:33 PM
  * <p/>
  * Look for a content that has a tag.  If Value is null then it looks for a domain only
  */

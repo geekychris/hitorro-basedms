@@ -39,7 +39,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 19, 2005 Time: 1:02:07 PM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Reference,
         isView = false,

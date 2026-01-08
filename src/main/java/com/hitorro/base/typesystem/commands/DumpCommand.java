@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 24, 2006 Time: 6:34:35 PM
  */
 @CommandDef(command = "dms.dumphql", description = "Dump a series of objects to an output stream")
 public class DumpCommand extends Command {

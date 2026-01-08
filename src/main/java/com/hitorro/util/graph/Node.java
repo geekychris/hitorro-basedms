@@ -22,7 +22,6 @@
 package com.hitorro.util.graph;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 10, 2007 Time: 10:35:40 AM
  */
 class Node {
     double x;

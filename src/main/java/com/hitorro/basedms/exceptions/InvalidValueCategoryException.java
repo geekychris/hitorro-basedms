@@ -24,7 +24,6 @@ package com.hitorro.basedms.exceptions;
 import com.hitorro.util.core.string.Fmt;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 4, 2006 Time: 6:45:24 PM
  */
 public class InvalidValueCategoryException extends CategoryException {
     public InvalidValueCategoryException(String domain, String value) {

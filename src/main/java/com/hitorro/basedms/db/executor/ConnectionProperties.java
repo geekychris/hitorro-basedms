@@ -22,7 +22,6 @@
 package com.hitorro.basedms.db.executor;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: Chris Date: Jan 11, 2005 Time: 4:17:08 PM
  * <p/>
  * Database Connection Properties
  */

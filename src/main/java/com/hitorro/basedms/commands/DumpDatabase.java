@@ -41,7 +41,6 @@ import java.util.Iterator;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 13, 2005 Time: 9:18:19 PM
  */
 @CommandDef(command = "db.dump", description = "Dump the database contents as a sql file")
 public class DumpDatabase extends Command {

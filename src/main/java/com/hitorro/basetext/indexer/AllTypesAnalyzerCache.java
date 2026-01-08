@@ -36,7 +36,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 13, 2006 Time: 8:15:58 PM
  */
 public class AllTypesAnalyzerCache extends BaseMapper<IsoLanguage, Analyzer> {
     public static final String EventName = "AllTypesAnalyzerCache";

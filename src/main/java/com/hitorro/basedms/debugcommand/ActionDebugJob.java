@@ -29,9 +29,7 @@ import com.hitorro.util.job.JobParameters;
 import org.apache.log4j.Level;
 import org.quartz.JobExecutionException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 25, 2005 Time: 1:19:27 PM
- */
+
 
 public class ActionDebugJob extends Job {
     public static final String JobName = "actiondebugjob";

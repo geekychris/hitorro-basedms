@@ -36,7 +36,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 27, 2006 Time: 10:00:53 AM
  */
 @TypeClassMetaInfo(shortTypeName = "MimeTypeContentConstraint",
         isView = false,

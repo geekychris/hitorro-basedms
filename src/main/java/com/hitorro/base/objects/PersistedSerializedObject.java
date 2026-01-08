@@ -43,7 +43,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 16, 2006 Time: 11:02:45 AM
  * <p/>
  * Persist a non persisted versioned object.  Can be used for such things as workflow, persisted queue, etc
  */

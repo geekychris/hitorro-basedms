@@ -28,7 +28,6 @@ import org.hibernate.query.Query;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 5, 2005 Time: 1:54:28 PM
  * <p/>
  * Assumes you are executing a query returning a GUID.  From that we will fetch the
  */

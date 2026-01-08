@@ -25,7 +25,6 @@ import java.util.Iterator;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 28, 2005 Time: 10:33:34 AM Assumes the
  * input iterator is an iterator of guids.
  */
 public class GuidListResultObjectAdapterDriver<E> implements Iterator<E> {

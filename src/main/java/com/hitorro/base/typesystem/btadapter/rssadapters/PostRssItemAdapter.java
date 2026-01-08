@@ -27,7 +27,6 @@ import com.hitorro.util.urlparser.URLUtil;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 6, 2005 Time: 5:07:14 PM
  */
 public class PostRssItemAdapter<E extends Post> extends DocumentRssItemAdapter<E> {
     public Class getHonoringClass() {

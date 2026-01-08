@@ -29,9 +29,7 @@ import com.hitorro.util.io.ImageManipulator;
 
 import java.io.IOException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 26, 2005 Time: 4:44:58 PM
- */
+
 public abstract class ImageExtractor implements ContentPropertiesExtractor {
     public boolean extract(ContentProperties props, BaseFile file) {
         ImageManipulator im = new ImageManipulator();

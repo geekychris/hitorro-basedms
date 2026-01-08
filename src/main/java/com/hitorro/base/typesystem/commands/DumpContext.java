@@ -38,7 +38,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 9:24:18 AM Context is
  * responsible for dumping a set of objects from a set of queries
  * <p/>
  * A dump file consists of numerous persisted object and a lead out record.

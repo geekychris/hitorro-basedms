@@ -31,7 +31,6 @@ import org.hibernate.event.spi.DeleteEventListener;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 8:10:14 AM
  */
 public class HTHibernateDeleteListener implements DeleteEventListener {
     public void onDelete(DeleteEvent deleteEvent) throws HibernateException {

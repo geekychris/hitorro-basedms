@@ -35,7 +35,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 30, 2006 Time: 4:31:37 PM
  */
 @TypeClassMetaInfo(shortTypeName = "ResolutionContentConstraint",
         isView = false,

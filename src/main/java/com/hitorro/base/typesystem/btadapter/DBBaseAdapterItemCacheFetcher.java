@@ -30,7 +30,6 @@ import com.hitorro.util.typesystem.btadapter.BaseTypeAdapter;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 24, 2005 Time: 4:43:34 PM
  */
 public class DBBaseAdapterItemCacheFetcher<T> extends BaseAdapterItemCacheFetcher<T> {
     /**

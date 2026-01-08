@@ -30,7 +30,6 @@ import com.hitorro.util.typesystem.TypeIntf;
 import java.util.Date;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 16, 2006 Time: 6:08:42 PM
  */
 public class VersionableObjectOnTriggerGeneric implements OnTrigger {
     public boolean execute(OnTrigger.TriggerType key, TypeIntf type, Object bt) {

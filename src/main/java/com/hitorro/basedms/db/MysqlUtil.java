@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Copyright (c) 2003-2008 HiTorro All rights reserved. User: chris Date: Oct 9, 2006 Time: 3:15:33 PM
  */
 public class MysqlUtil {
 

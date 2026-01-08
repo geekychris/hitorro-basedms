@@ -22,7 +22,6 @@
 package com.hitorro.basedms.exceptions;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 4, 2006 Time: 6:42:46 PM
  */
 public class CategoryException extends Exception {
     public CategoryException(String msg) {

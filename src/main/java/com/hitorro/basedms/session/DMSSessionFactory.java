@@ -33,7 +33,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 17, 2006 Time: 3:14:25 PM
  */
 public class DMSSessionFactory extends BaseSessionFactory<BaseSession> {
     private static ResponseShape header = initHeader();

@@ -27,7 +27,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 10, 2007 Time: 10:38:16 AM
  */
 public class GraphPanel extends Panel
         implements Runnable, MouseListener, MouseMotionListener {

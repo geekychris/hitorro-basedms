@@ -21,10 +21,7 @@
  */
 package com.hitorro.basedms;
 
-/**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 3, 2008 Time: 3:40:43 PM
- */
+
 public class Constants extends com.hitorro.util.core.Constants {
     // xml mime type
 

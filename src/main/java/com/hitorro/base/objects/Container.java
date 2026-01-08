@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 2:15:41 PM
  */
 
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Container,

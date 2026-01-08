@@ -26,7 +26,6 @@ import com.hitorro.basedms.db.CSVHibernateLoaderConsumer;
 import com.hitorro.util.core.map.MapUtil;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 12:41:54 PM
  */
 
 public class DomainInfoCSVConsumer extends CSVHibernateLoaderConsumer<DomainInfo> {

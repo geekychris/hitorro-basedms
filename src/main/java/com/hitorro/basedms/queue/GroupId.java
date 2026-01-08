@@ -22,7 +22,6 @@
 package com.hitorro.basedms.queue;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 9, 2005 Time: 2:26:16 PM
  */
 public interface GroupId {
     Object getGroupId();

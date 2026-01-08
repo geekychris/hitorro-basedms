@@ -50,8 +50,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 
-/**
- * <p/> This sample program is a minimal Java application showing JDBC access to a Derby database.</p> <p/> Instructions
+/** This sample program is a minimal Java application showing JDBC access to a Derby database.</p> <p/> Instructions
  * for how to run this program are given in <A HREF=example.html>example.html</A>, by default located in the same
  * directory as this source file ($DERBY_HOME/demo/programs/simple/).</p> <p/> Derby applications can run against Derby
  * running in an embedded or a client/server framework.</p> <p/> When Derby runs in an embedded framework, the JDBC

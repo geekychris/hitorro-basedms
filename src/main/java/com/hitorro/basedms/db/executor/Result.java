@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: Chris Date: Nov 16, 2006 Time: 12:43:20 PM
  * <p/>
  * Result of executing a SQL Statement
  * <p/>

@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 29, 2005 Time: 4:13:23 PM
  * <p/>
  * Set of utility methods
  */

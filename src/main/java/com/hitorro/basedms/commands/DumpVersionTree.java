@@ -35,7 +35,6 @@ import com.hitorro.util.typesystem.BaseSession;
 import com.hitorro.util.typesystem.HTSerializable;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 29, 2006 Time: 8:59:33 AM
  */
 @CommandDef(command = "dms.dumpversiontree", description = "Dump the version tree of a versioned object.")
 public class DumpVersionTree extends com.hitorro.util.commandandcontrol.Command {

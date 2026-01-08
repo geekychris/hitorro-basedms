@@ -35,7 +35,6 @@ import org.hibernate.query.Query;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 2:27:11 PM
  */
 public class DomainValueCache extends BaseMapper<String, ValueMap<Category>> {
 

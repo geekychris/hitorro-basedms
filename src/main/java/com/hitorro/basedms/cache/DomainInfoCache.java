@@ -28,7 +28,6 @@ import com.hitorro.util.core.iterator.mappers.BaseMapper;
 import com.hitorro.util.typesystem.BaseSession;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 2:29:37 PM
  */
 public class DomainInfoCache extends BaseMapper<String, DomainInfo> {
     public static final String EventName = "DomainInfo Cache";

@@ -30,7 +30,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 22, 2005 Time: 6:56:26 PM
  * <p/>
  * Given a jdbc result row with 1 column which is the guid of a content object, return the reconstituted content
  * object.

@@ -30,7 +30,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 1:55:54 PM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Client,
         isView = false,

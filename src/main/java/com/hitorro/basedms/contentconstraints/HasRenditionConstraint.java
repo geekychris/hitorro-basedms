@@ -36,7 +36,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 26, 2005 Time: 5:22:26 PM
  */
 
 @TypeClassMetaInfo(shortTypeName = "HasRenditionContentConstraint",

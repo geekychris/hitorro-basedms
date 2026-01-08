@@ -34,9 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 30, 2005 Time: 10:01:28 AM
- * <p/>
  * Serialized object that tracks user prefrences, such as bookmarks, playlists, subscriptions
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.UserPreferences,

@@ -31,7 +31,6 @@ import java.io.IOException;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 16, 2005 Time: 1:43:08 PM
  */
 public class HTSerializer {
     private static final long serialVersionUID = 4765780215928860139L;

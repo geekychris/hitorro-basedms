@@ -29,7 +29,6 @@ import com.hitorro.util.commandandcontrol.RestOperations;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 17, 2006 Time: 6:52:48 PM
  */
 @CommandDef(command = "dms.listsessions", description = "Dump DMSSession info")
 public class DumpSessionInfo extends Command {

@@ -44,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 28, 2005 Time: 11:49:03 AM
  */
 public class PostFromUrlFetcherAppJob extends Job {
 

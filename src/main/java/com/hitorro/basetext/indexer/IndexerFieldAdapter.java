@@ -32,7 +32,6 @@ import java.util.Map;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 7, 2005 Time: 9:28:50 AM
  */
 public class IndexerFieldAdapter {
     public static final String DEFAULT_SEARCH_FIELD = "content";

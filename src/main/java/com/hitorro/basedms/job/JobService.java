@@ -47,9 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 5:45:45 PM.
- */
+
 @ServiceDefinition(dependentService = {BaseDMSService.class},
         shortName = "job",
         description = "Job service",

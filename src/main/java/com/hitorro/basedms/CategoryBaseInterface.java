@@ -29,7 +29,6 @@ import com.hitorro.util.core.valuemap.ValueMap;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 7, 2006 Time: 7:44:30 AM
  * <p/>
  * Interface defining the base methods we need to access categories.
  */

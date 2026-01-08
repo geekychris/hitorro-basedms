@@ -22,7 +22,6 @@
 package com.hitorro.basedms.session;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 17, 2006 Time: 6:39:37 PM
  */
 public class DMSessionReusedException extends Exception {
     public DMSessionReusedException(String message) {

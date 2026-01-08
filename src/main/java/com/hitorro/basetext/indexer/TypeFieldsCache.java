@@ -32,7 +32,6 @@ import java.util.List;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 6:56:04 PM
  */
 public class TypeFieldsCache extends BaseMapper<TypeIntf, List<TypeFieldIntf>> {
     public static String EventName = "TypeFieldsCache";

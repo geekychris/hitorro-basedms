@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 22, 2006 Time: 11:39:02 AM
  */
 @CommandDef(command = "job.listscheduled", description = "Displays a listFiles of jobs currently scheduled for execution")
 public class DumpScheduledJobs extends com.hitorro.util.commandandcontrol.Command {

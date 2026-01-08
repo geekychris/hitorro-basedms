@@ -26,7 +26,6 @@ import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import org.hibernate.stat.Statistics;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 17, 2006 Time: 11:07:35 AM
  */
 @CommandDef(command = "dms.dumphibernatestats", description = "Dump the hibernate statistics")
 public class DumpHibernateStatistics extends com.hitorro.util.commandandcontrol.Command {

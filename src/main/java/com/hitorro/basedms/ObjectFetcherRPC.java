@@ -41,7 +41,6 @@ import java.util.Map;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 22, 2005 Time: 6:00:45 PM
  */
 public class ObjectFetcherRPC extends RPCHandler {
     public static final String ObjectFetchRPCKey = "objectfetchrpc";

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: rmonaghan Date: Nov 30, 2006 Time: 10:01:59 AM
  */
 public class ScpDirectory {
 

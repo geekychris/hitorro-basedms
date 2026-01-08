@@ -34,7 +34,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 2, 2006 Time: 11:17:39 AM
  */
 public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     public static NamedLong BaseTypeIdNamedLong = NamedLong.registerNamedLong("baseid", 1, 100, "unique id for base id and its subtypes");

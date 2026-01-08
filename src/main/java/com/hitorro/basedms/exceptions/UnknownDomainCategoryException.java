@@ -24,7 +24,6 @@ package com.hitorro.basedms.exceptions;
 import com.hitorro.util.core.string.Fmt;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 4, 2006 Time: 6:43:42 PM
  */
 public class UnknownDomainCategoryException extends CategoryException {
     public UnknownDomainCategoryException(String domain) {

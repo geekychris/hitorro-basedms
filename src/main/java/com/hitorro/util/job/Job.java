@@ -30,7 +30,6 @@ import org.quartz.JobExecutionException;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 6:02:21 PM
  */
 public abstract class Job {
     // our database session

@@ -31,7 +31,6 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 4:26:28 PM
  */
 @TypeClassMetaInfo(shortTypeName = "HTMLFetcherajParams",
         isView = false,

@@ -48,7 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 25, 2005 Time: 10:34:05 AM
  * <p/>
  * The PersistedSerializedObject can be used as a typed work queue.
  * <p/>

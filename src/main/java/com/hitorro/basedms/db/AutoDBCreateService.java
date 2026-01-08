@@ -41,7 +41,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 13, 2006 Time: 11:47:11 AM Service that
  * if enabled will detect if the user, password
  */
 @ServiceDefinition(dependentService = {},

@@ -31,9 +31,6 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 22, 2005 Time: 6:40:37 PM
- * <p/>
  * Request object for fetching objects by guid or other constraint and then potentially converting them through a base
  * adapter. (first user of this was an RSSItemInterface fetcher).
  */
