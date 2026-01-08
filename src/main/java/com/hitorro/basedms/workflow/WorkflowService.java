@@ -33,11 +33,7 @@ import com.hitorro.util.json.keys.IntegerProperty;
 import com.hitorro.util.startupframework.phases.ServiceDefinition;
 import com.hitorro.util.statemachine.StateMachineService;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @ServiceDefinition(dependentService = {StateMachineService.class},
         shortName = "workflow",
         description = "Simple workflow service",

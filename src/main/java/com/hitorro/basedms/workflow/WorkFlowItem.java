@@ -43,10 +43,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * represents an item
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.WorkFlowItem,

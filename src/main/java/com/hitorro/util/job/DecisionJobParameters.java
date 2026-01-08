@@ -38,10 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Allow one to make a choice from a listFiles of decision paths.
  */
 @TypeClassMetaInfo(shortTypeName = "DecisionJobParameters",

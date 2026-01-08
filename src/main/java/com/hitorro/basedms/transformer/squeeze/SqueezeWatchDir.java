@@ -38,9 +38,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
+
  * <p>
  * Though we are given a BaseFile, this implementation only works with a local file system
  */

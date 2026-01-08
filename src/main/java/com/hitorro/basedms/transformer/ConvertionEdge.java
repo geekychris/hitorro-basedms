@@ -22,10 +22,7 @@
 package com.hitorro.basedms.transformer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Defines end points of a transformation.
  */
 public class ConvertionEdge {

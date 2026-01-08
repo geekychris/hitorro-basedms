@@ -35,11 +35,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class TestJDBCConnection extends RunnableService {
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         return null;

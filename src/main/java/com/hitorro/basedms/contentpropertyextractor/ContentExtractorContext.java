@@ -28,11 +28,7 @@ import com.hitorro.util.core.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ContentExtractorContext {
     private static ContentExtractorContext s_context = new ContentExtractorContext();
 

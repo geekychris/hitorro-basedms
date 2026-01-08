@@ -26,10 +26,7 @@ import com.hitorro.util.basefile.fs.BaseFile;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Method to tranform content
  */
 public interface TransformMethod {

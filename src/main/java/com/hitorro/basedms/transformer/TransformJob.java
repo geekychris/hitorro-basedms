@@ -35,10 +35,7 @@ import org.apache.log4j.Level;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Defines all that is needed to attempt transforming content
  */
 public class TransformJob extends Job {

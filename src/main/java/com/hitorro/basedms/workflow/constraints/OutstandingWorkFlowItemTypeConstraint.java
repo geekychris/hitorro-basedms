@@ -26,11 +26,7 @@ import com.hitorro.basedms.workflow.OutstandingWorkflowItem;
 import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.opers.HTPredicate;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class OutstandingWorkFlowItemTypeConstraint implements HTPredicate<OutstandingWorkflowItem> {
     private boolean m_ignoreCase;
     private String m_term;

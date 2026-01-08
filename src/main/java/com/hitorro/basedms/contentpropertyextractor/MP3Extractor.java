@@ -36,11 +36,7 @@ import org.jaudiotagger.tag.TagException;
 
 import java.io.IOException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class MP3Extractor implements ContentPropertiesExtractor {
     public String getMimeType() {
         return ContentType.MimeTypeMP3;

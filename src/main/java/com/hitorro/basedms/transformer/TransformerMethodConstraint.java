@@ -25,11 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.json.keys.StringProperty;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class TransformerMethodConstraint implements HTPredicate<ConvertionEdge> {
     public static final StringProperty FieldKey = new StringProperty("field", "", null);
     private String m_field;

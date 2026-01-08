@@ -52,10 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Sorenson Squeeze service.   This service is only applicable for machines (macs) that have Sorenson 4.5 Squeeze
  * installed
  */

@@ -29,10 +29,7 @@ import com.hitorro.util.typesystem.BaseSession;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Looks for workflow items that havent moved in a while and looks to see if they can be moved on.
  * <p/>
  * This notifies any non modified wfi's to see if they have a validator that tickles them to the next state. For

@@ -29,11 +29,7 @@ import com.hitorro.util.integrationevents.RunIntegrationEvent;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import com.hitorro.util.startupframework.phases.ServiceDefinition;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @ServiceDefinition(dependentService = {BaseDMSService.class},
         shortName = "richdms",
         description = "rich document management service",

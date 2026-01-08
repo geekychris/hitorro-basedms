@@ -25,9 +25,7 @@ import com.hitorro.basedms.ContentProperties;
 import com.hitorro.util.basefile.fs.BaseFile;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris Interface for extracting properties from a content, fills them into the ContentProperties interface.
+ Interface for extracting properties from a content, fills them into the ContentProperties interface.
  */
 public interface ContentPropertiesExtractor {
     String getMimeType();

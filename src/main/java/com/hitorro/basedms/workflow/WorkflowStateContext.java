@@ -25,11 +25,7 @@ import com.hitorro.util.statemachine.State;
 import com.hitorro.util.typesystem.BaseSession;
 import com.hitorro.util.typesystem.HTSerializable;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class WorkflowStateContext {
     private WorkFlowItem workflowItem;
     private HTSerializable notificationItem;

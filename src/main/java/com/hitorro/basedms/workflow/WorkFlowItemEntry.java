@@ -29,11 +29,7 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
 import java.io.IOException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.WorkFlowItemEntry,
         isView = false,
         isPersisted = true,

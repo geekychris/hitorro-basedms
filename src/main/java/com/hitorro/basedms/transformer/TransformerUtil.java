@@ -34,11 +34,7 @@ import com.hitorro.util.core.string.StringUtil;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class TransformerUtil {
 
     public static final TransformJobParameters createJobParameters(String notificationGuid,

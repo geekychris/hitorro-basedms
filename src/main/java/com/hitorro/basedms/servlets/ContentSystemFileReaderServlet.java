@@ -34,10 +34,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Read the content of a content object....only works on conten
  */
 public class ContentSystemFileReaderServlet extends HttpServlet {

@@ -26,11 +26,7 @@ import com.hitorro.basedms.transformer.ConvertionEdge;
 import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.opers.HTPredicate;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ToConstraint implements HTPredicate<ConvertionEdge> {
     private String m_field;
 

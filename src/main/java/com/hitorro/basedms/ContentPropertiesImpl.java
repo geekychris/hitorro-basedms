@@ -21,11 +21,7 @@
  */
 package com.hitorro.basedms;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ContentPropertiesImpl {
     private int m_width = 0;
     private int m_height = 0;

@@ -30,11 +30,7 @@ import com.hitorro.util.json.keys.BooleanProperty;
 import com.hitorro.util.json.keys.StringProperty;
 import com.hitorro.util.typesystem.BaseSession;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class BaseUserAuthMethod implements AuthenticationMethod {
     /**
      * global password

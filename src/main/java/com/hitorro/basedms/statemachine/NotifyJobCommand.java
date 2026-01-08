@@ -30,11 +30,7 @@ import com.hitorro.util.job.JobExecutionResult;
 import com.hitorro.util.typesystem.BaseSession;
 import org.apache.log4j.Level;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class NotifyJobCommand extends FarmCommand<JobQueueElement<PersistedSerializedObject>,
         JobQueueElement<PersistedSerializedObject>, Object> {
 

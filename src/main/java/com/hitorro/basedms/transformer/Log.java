@@ -23,11 +23,7 @@ package com.hitorro.basedms.transformer;
 
 import com.hitorro.util.log.Logger;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class Log extends com.hitorro.util.core.Log {
     public static final Logger transformer = Logger.getLogger("ht.base.transformer");
 

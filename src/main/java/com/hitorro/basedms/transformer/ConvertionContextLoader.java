@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Load ConvertionContexts from a csv file.
  */
 public class ConvertionContextLoader {

@@ -33,11 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 
 @TypeClassMetaInfo(shortTypeName = "PersistableList",
         isView = false,

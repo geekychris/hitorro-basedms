@@ -47,11 +47,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class BaseUtil {
     public static final long TypeBits = 0xFFFL << 52;
     public static final long Instancebits = 0xFFFL << 40;

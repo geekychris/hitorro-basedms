@@ -36,10 +36,7 @@ import org.hibernate.Hibernate;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Method to set content on an object.  One can subclass this as long as you ensure you
  */
 @TypeClassMetaInfo(shortTypeName = "ContentSetter",
