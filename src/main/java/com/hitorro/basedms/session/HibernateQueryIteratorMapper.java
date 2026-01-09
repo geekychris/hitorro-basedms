@@ -33,7 +33,7 @@ import java.util.Iterator;
 public class HibernateQueryIteratorMapper<E> extends AbstractIterator<E> {
     private HibernateQueryResultObjectAdapter<E> m_adapter;
     private Type[] m_types;
-    private String[] m_returnAliases;
+    private String[] returnAliases;
     private Iterator m_iter;
 
     public HibernateQueryIteratorMapper(HibernateQueryResultObjectAdapter adapter, Query query) {
@@ -42,7 +42,7 @@ public class HibernateQueryIteratorMapper<E> extends AbstractIterator<E> {
         m_iter = query.stream().iterator();
         //XXX TODO BUSTED
         //   m_types = query.getReturnTypes();
-        //  m_returnAliases = query.getReturnAliases();
+        //  returnAliases = query.getReturnAliases();
     }
 
     public boolean hasNext() {
@@ -50,7 +50,7 @@ public class HibernateQueryIteratorMapper<E> extends AbstractIterator<E> {
     }
 
     public E next() {
-        return m_adapter.map(m_iter, m_types, m_returnAliases);
+        return m_adapter.map(m_iter, m_types, returnAliases);
     }
 
     public void remove() {

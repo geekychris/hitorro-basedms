@@ -89,15 +89,15 @@ public class SqueezeService implements TerminationKey {
     private File m_temp;
     private ExecContext m_ec = null;
     private boolean m_isRunning = false;
-    private boolean m_shouldKeepRunning = true;
+    private boolean shouldKeepRunning = true;
     private RotatingBufferedOutputStream m_out;
     private RotatingBufferedOutputStream m_err;
     private Map<String, File> m_watches = new HashMap<String, File>();
-    private String m_processingFile;
-    private String m_processingPercentComplete;
-    private long m_processingLastUpdate;
-    private SqueezeListener m_squeezeListener = new SqueezeListener(SorensonHost.apply(), SorensonPort.apply(), this);
-    private Thread m_squeezeListenerThread;
+    private String processingFile;
+    private String processingPercentComplete;
+    private long processingLastUpdate;
+    private SqueezeListener squeezeListener = new SqueezeListener(SorensonHost.apply(), SorensonPort.apply(), this);
+    private Thread squeezeListenerThread;
 
     public static SqueezeService getService() {
         return s_service;
@@ -154,7 +154,7 @@ public class SqueezeService implements TerminationKey {
     }
 
     public String deInit() {
-        m_shouldKeepRunning = false;
+        shouldKeepRunning = false;
         if (m_isRunning) {
             if (m_ec != null) {
                 m_ec.destroy();
@@ -168,7 +168,7 @@ public class SqueezeService implements TerminationKey {
         m_isRunning = false;
         m_exitCode = exitCode;
         m_isRunning = false;
-        if (m_shouldKeepRunning) {
+        if (shouldKeepRunning) {
             m_isRunning = start();
         }
     }
@@ -189,8 +189,8 @@ public class SqueezeService implements TerminationKey {
             m_ec.exec();
             m_isRunning = true;
             Log.util.info("Started %s", execString);
-            m_squeezeListenerThread = new Thread(m_squeezeListener);
-            m_squeezeListenerThread.start();
+            squeezeListenerThread = new Thread(squeezeListener);
+            squeezeListenerThread.start();
             return true;
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
@@ -213,8 +213,8 @@ public class SqueezeService implements TerminationKey {
         setProcessingFile(file);
         setProcessingPercentComplete(percent);
         setProcessingLastUpdate(System.currentTimeMillis());
-        Console.println("Sorenson Squeeze file %s; percentage %s; time %s", m_processingFile, m_processingPercentComplete, m_processingLastUpdate);
-        com.hitorro.util.statemachine.Log.workflow.info("Sorenson Squeeze file %s; percentage %s; time %s", m_processingFile, m_processingPercentComplete, m_processingLastUpdate);
+        Console.println("Sorenson Squeeze file %s; percentage %s; time %s", processingFile, processingPercentComplete, processingLastUpdate);
+        com.hitorro.util.statemachine.Log.workflow.info("Sorenson Squeeze file %s; percentage %s; time %s", processingFile, processingPercentComplete, processingLastUpdate);
     }
 
 
@@ -245,36 +245,36 @@ public class SqueezeService implements TerminationKey {
 
 
     public synchronized String getProcessingFile() {
-        return m_processingFile;
+        return processingFile;
     }
 
 
     private void setProcessingFile(String processingFile) {
-        m_processingFile = processingFile;
+        this.processingFile = processingFile;
     }
 
 
     public synchronized String getProcessingPercentComplete() {
-        return m_processingPercentComplete;
+        return processingPercentComplete;
     }
 
 
     private void setProcessingPercentComplete(String processingPercentComplete) {
-        m_processingPercentComplete = "-1";
+        this.processingPercentComplete = "-1";
 
         if (!StringUtil.nullOrEmptyOrBlankString(processingPercentComplete)) {
-            m_processingPercentComplete = processingPercentComplete.substring(0, processingPercentComplete.lastIndexOf("%"));
+            this.processingPercentComplete = processingPercentComplete.substring(0, processingPercentComplete.lastIndexOf("%"));
         }
     }
 
 
     public synchronized long getProcessingLastUpdate() {
-        return m_processingLastUpdate;
+        return processingLastUpdate;
     }
 
 
     private void setProcessingLastUpdate(long processingLastUpdate) {
-        m_processingLastUpdate = processingLastUpdate;
+        this.processingLastUpdate = processingLastUpdate;
     }
 
 
@@ -299,12 +299,12 @@ class WatchDirHandler extends DefaultHandler {
     private File m_targetConfig;
     private XMLWriter m_writer;
     private SqueezeService m_service;
-    private PrintWriter m_printWriter;
+    private PrintWriter printWriter;
 
-    private File m_currWatchDir = null;
+    private File currWatchDir = null;
 
-    private String m_oldPath;
-    private String m_newPath;
+    private String oldPath;
+    private String newPath;
 
 
     public WatchDirHandler(File targetConfig, File watchDir, SqueezeService service) {
@@ -315,14 +315,14 @@ class WatchDirHandler extends DefaultHandler {
         m_targetConfig.delete();
         FileUtil.ensureDirectoryExists(m_watchDir);
         m_writer = new XMLWriter();
-        m_printWriter = FileUtil.getBufferedPrintWriterFromFile(m_targetConfig);
-        m_writer.setOutput(m_printWriter);
+        printWriter = FileUtil.getBufferedPrintWriterFromFile(m_targetConfig);
+        m_writer.setOutput(printWriter);
     }
 
 
     public void close() throws IOException {
         m_writer.flush();
-        m_printWriter.close();
+        printWriter.close();
     }
 
 
@@ -356,25 +356,25 @@ class WatchDirHandler extends DefaultHandler {
                 String value = attributes.getValue(i);
                 if (qualifiedName.equals(Source) && name.equals(FileName)) {
                     Log.transformer.debug("SQZ file me source filename: %s, value: %s", name, value);
-                    this.m_oldPath = value;
+                    this.oldPath = value;
                     String fName = FileUtil.getFileName(value);
                     File newFName = new File(m_watchDir, fName);
                     value = newFName.getAbsolutePath();
 
-                    this.m_newPath = value;
-                    m_currWatchDir = newFName;
+                    this.newPath = value;
+                    currWatchDir = newFName;
                     m_service.addWatch(newFName);
                 } else if (qualifiedName.equals(FileName) && name.equals("Value")) {
 
-                    /*String right = value.substring(this.m_oldPath.length());
-                    File compressed = new File(this.m_newPath, right);
+                    /*String right = value.substring(this.oldPath.length());
+                    File compressed = new File(this.newPath, right);
                     FileUtil.ensureParentDirectories(compressed, true);
                     File source = new File(compressed.getParentFile().getParentFile(), "CompletedSource");
                     FileUtil.ensureDirectoryExists(source);
                     String ext = FileUtil.getFileExtension(compressed);
                     File compressed2 = new File(compressed.getParentFile(), StringUtil.strcat(".", ext));
                     value = compressed2.toString();     */
-                    File compDir = new File(m_currWatchDir, SqueezeWatchDir.CompressedOutput);
+                    File compDir = new File(currWatchDir, SqueezeWatchDir.CompressedOutput);
                     FileUtil.ensureDirectoryExists(compDir);
                     File file = new File(value);
                     String ext = FileUtil.getFileExtension(file);

@@ -65,7 +65,7 @@ public class AutoDBCreateService {
     private String m_host;
     private String m_databaseName;
     private Properties m_props;
-    private JVS m_HiTorroProps;
+    private JVS HiTorroProps;
 
     /**
      * If enables, we should check to see if we have:
@@ -101,7 +101,7 @@ public class AutoDBCreateService {
 
                     Log.hibernate.info("Dropping db");
                     initdbDone.delete();
-                    DatabaseUtil.dropDatabase(m_HiTorroProps);
+                    DatabaseUtil.dropDatabase(HiTorroProps);
 
                 }
                 if (!autoInitDir.exists()) {
@@ -127,10 +127,10 @@ public class AutoDBCreateService {
                 if (canConnectAsRoot) {
                     Log.hibernate.debug("AutoDBCreate can connect as root user");
 
-                    if (DatabaseUtil.createDatabase(m_HiTorroProps)) {
+                    if (DatabaseUtil.createDatabase(HiTorroProps)) {
                         Log.hibernate.info("AutoDBCreate created database %s", m_databaseName);
 
-                        if (DatabaseUtil.createUser(m_HiTorroProps)) {
+                        if (DatabaseUtil.createUser(HiTorroProps)) {
                             Log.hibernate.info("AutoDBCreate created user %s", m_username);
 
                             return initDb(initdbDone);
@@ -164,8 +164,8 @@ public class AutoDBCreateService {
         m_props = new JVS(JVSProperties.getProperties().get(databaseConfigKey)).getAsProperties();
 
         //   default database configuration properties: defaultdb 
-        m_HiTorroProps = DatabaseUtil.getDefaultDBContext();
-        JsonNode connectInfo = m_HiTorroProps.get(connectConfigKey);
+        HiTorroProps = DatabaseUtil.getDefaultDBContext();
+        JsonNode connectInfo = HiTorroProps.get(connectConfigKey);
 
         m_username = DatabaseUtil.UsernameKey.apply(connectInfo);
         m_password = DatabaseUtil.PasswordKey.apply(connectInfo);

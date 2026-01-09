@@ -76,7 +76,7 @@ public class JobService implements com.hitorro.util.job.JobServiceIntf {
     private int m_queueLength = 40;
     //private int m_threads = 4;
     private int m_threads = JobThreads.apply();
-    private int m_httpThreads = HTTPJobThreads.apply();
+    private int httpThreads = HTTPJobThreads.apply();
 
     public JobService() {
         _registeredJobsByDisplayName = new HashMap<String, JobRegistration>();
@@ -134,7 +134,7 @@ public class JobService implements com.hitorro.util.job.JobServiceIntf {
 
             // create a queue just for HTML
             GroupSpacedPSOQueueProcessor<PersistedSerializedObject> httpQp = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(HTMLFetcherKey, "PSO-JobService",
-                    m_httpThreads * 6, m_httpThreads, jfc,
+                    httpThreads * 6, httpThreads, jfc,
                     PersistedSerializedObject.CollectionID_HTMLQueue);
             httpQp.addNames(PSO_JOB_NAME);
             httpQp.setOrderByMod(1000);

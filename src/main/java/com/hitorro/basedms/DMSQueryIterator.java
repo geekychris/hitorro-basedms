@@ -36,12 +36,12 @@ public class DMSQueryIterator<T> implements Iterator<T> {
 
     private T m_curr;
     private DMSSession m_session;
-    private Iterator<String> m_guidIter;
+    private Iterator<String> guidIter;
 
     public DMSQueryIterator(Query q, DMSSession session) {
         m_query = q;
         m_session = session;
-        m_guidIter = m_query.stream().iterator();
+        guidIter = m_query.stream().iterator();
         m_curr = getAux();
     }
 
@@ -61,8 +61,8 @@ public class DMSQueryIterator<T> implements Iterator<T> {
     }
 
     private T getAux() {
-        if (m_guidIter.hasNext()) {
-            String guid = m_guidIter.next();
+        if (guidIter.hasNext()) {
+            String guid = guidIter.next();
             m_session.rollback();
             if (!StringUtil.nullOrEmptyString(guid)) {
                 return (T) m_session.getHTSerializableFromGUID(guid);

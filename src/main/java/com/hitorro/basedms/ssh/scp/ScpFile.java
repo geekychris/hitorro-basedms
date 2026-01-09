@@ -43,12 +43,12 @@ public class ScpFile implements HTSerializable {
     Direction m_direction = Direction.unknown;
     String m_host;
     int m_port = 22;
-    boolean m_trust = true;
+    boolean trust = true;
     String m_user;
     String m_password;
-    String m_sourceFilePathName;
-    String m_targetBaseFilePath;
-    String m_targetFilePathName;
+    String sourceFilePathName;
+    String targetBaseFilePath;
+    String targetFilePathName;
     public ScpFile() {
     }
 
@@ -57,12 +57,12 @@ public class ScpFile implements HTSerializable {
         m_direction = direction;
         m_host = host;
         m_port = port;
-        m_trust = trust;
+        this.trust = trust;
         m_user = user;
         m_password = password;
-        m_sourceFilePathName = sourceFilepathName;
-        m_targetBaseFilePath = targetFilepathName;
-        m_targetFilePathName = targetFilepathName;
+        sourceFilePathName = sourceFilepathName;
+        targetBaseFilePath = targetFilepathName;
+        targetFilePathName = targetFilepathName;
     }
 
 
@@ -70,12 +70,12 @@ public class ScpFile implements HTSerializable {
         m_direction = direction;
         m_host = HostsUtil.HostKey.apply(transferProperties);
         m_port = HostsUtil.PortKey.apply(transferProperties);
-        m_trust = HostsUtil.TrustKey.apply(transferProperties);
+        trust = HostsUtil.TrustKey.apply(transferProperties);
         m_user = HostsUtil.UserKey.apply(transferProperties);
         m_password = HostsUtil.PasswordKey.apply(transferProperties);
-        m_targetBaseFilePath = HostsUtil.TargetBasePathKey.apply(transferProperties);
-        m_targetFilePathName = targetFilePathName;
-        m_sourceFilePathName = sourceFilepathName;
+        targetBaseFilePath = HostsUtil.TargetBasePathKey.apply(transferProperties);
+        this.targetFilePathName = targetFilePathName;
+        sourceFilePathName = sourceFilepathName;
     }
 
     public void serialize(HTObjectOutputStream os) throws IOException, StoreException {
@@ -113,12 +113,12 @@ public class ScpFile implements HTSerializable {
 
         m_host = source.m_host;
         m_port = source.m_port;
-        m_trust = source.m_trust;
+        trust = source.trust;
         m_user = source.m_user;
         m_password = source.m_password;
-        m_sourceFilePathName = source.m_sourceFilePathName;
-        m_targetBaseFilePath = source.m_targetBaseFilePath;
-        m_targetFilePathName = source.m_targetFilePathName;
+        sourceFilePathName = source.sourceFilePathName;
+        targetBaseFilePath = source.targetBaseFilePath;
+        targetFilePathName = source.targetFilePathName;
     }
 
     public int getSerializationVersion() {
@@ -162,11 +162,11 @@ public class ScpFile implements HTSerializable {
     }
 
     public boolean getTrust() {
-        return m_trust;
+        return trust;
     }
 
     public void setTrust(boolean trust) {
-        m_trust = trust;
+        this.trust = trust;
     }
 
     public String getUser() {
@@ -186,27 +186,27 @@ public class ScpFile implements HTSerializable {
     }
 
     public String getSourceFilepathName() {
-        return m_sourceFilePathName;
+        return sourceFilePathName;
     }
 
     public void setSourceFilepathName(String sourceFilepathName) {
-        m_sourceFilePathName = sourceFilepathName;
+        sourceFilePathName = sourceFilepathName;
     }
 
     public String getTargetBaseFilePath() {
-        return m_targetBaseFilePath;
+        return targetBaseFilePath;
     }
 
     public void setTargetBaseFilePath(String targetBaseFilePath) {
-        m_targetBaseFilePath = targetBaseFilePath;
+        this.targetBaseFilePath = targetBaseFilePath;
     }
 
     public String getTargetFilepathName() {
-        return m_targetFilePathName;
+        return targetFilePathName;
     }
 
     public void setTargetFilePathName(String targetFilePathName) {
-        m_targetFilePathName = targetFilePathName;
+        this.targetFilePathName = targetFilePathName;
     }
 
 

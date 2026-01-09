@@ -62,7 +62,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     private static final String SOByIdentityHash = "select pst from VersionableObject as pst where identityHash= :a";
     private static final String SOByIdentityHashGuid = "select guid from VersionableObject as pst where identityHash= :a";
     private transient static long m_sessionId = 0;
-    private long m_currentSessionId = m_sessionId++;
+    private long currentSessionId = m_sessionId++;
     private Session m_session = null;
     private boolean m_closed = false;
     private Transaction m_transaction = null;
@@ -70,14 +70,14 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     private boolean m_enableCache = false;
     private HashMap<String, com.hitorro.util.typesystem.BaseType> m_attatchedCache = new HashMap<String, com.hitorro.util.typesystem.BaseType>();
     private HashMap<String, com.hitorro.util.typesystem.BaseType> m_unattatchedCache = new HashMap<String, com.hitorro.util.typesystem.BaseType>();
-    private List<String> m_objectsToDeleteFromAttatched = new ArrayList<String>();
+    private List<String> objectsToDeleteFromAttatched = new ArrayList<String>();
     // debug info
     private String m_threadName = null;
     private String m_groupName = null;
     private Throwable m_throwable = null;
-    private long m_createTime;
+    private long createTime;
     private String m_name = NotSet;
-    private String m_effectiveuserName = "system";
+    private String effectiveuserName = "system";
     private String userName = "system";
     private String realm = null;
     private DMSSecurityModel securityModel = DMSOpenSecurityModel.m;
@@ -185,7 +185,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     public String getEffectiveUser() {
-        return m_effectiveuserName;
+        return effectiveuserName;
     }
 
     /**
@@ -198,7 +198,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
      */
     public void setUser(String name, String effectiveName, String realm, DMSSecurityModel secModel) {
         userName = name;
-        this.m_effectiveuserName = effectiveName;
+        this.effectiveuserName = effectiveName;
         this.realm = realm;
         if (StringUtil.nullOrEmptyString(realm)) {
             this.realm = null;
@@ -263,7 +263,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
         Thread t = Thread.currentThread();
         m_threadName = t.getName();
         ThreadGroup tg = t.getThreadGroup();
-        m_createTime = System.currentTimeMillis();
+        createTime = System.currentTimeMillis();
         m_groupName = tg.getName();
         if (recordStack) {
             m_throwable = new Throwable();
@@ -296,7 +296,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     public void persist(Object o) {
-        Log.dmssession.debug("Persisting (session: %s) )%s", m_currentSessionId, o);
+        Log.dmssession.debug("Persisting (session: %s) )%s", currentSessionId, o);
         ensureSession();
         if (o instanceof com.hitorro.util.typesystem.BaseType) {
             com.hitorro.util.typesystem.BaseType bt = (com.hitorro.util.typesystem.BaseType) o;
@@ -318,7 +318,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     public void update(Object o) {
-        Log.dmssession.debug("Updating (session: %s) %s", m_currentSessionId, o);
+        Log.dmssession.debug("Updating (session: %s) %s", currentSessionId, o);
         ensureSession();
         m_session.update(o);
     }
@@ -330,7 +330,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     public void saveOrUpdate(Object o) {
-        Log.dmssession.debug("Save Or Update (session: %s) %s", m_currentSessionId, o);
+        Log.dmssession.debug("Save Or Update (session: %s) %s", currentSessionId, o);
         addToCache(o);
         saveOrUpdateAux(o);
     }
@@ -554,7 +554,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             pts = m_unattatchedCache.get(guid);
             if (pts != null) {
                 // re-attach
-                Log.dmssession.debug("getting object guid (session: %s) %s and adding to cache %s", m_currentSessionId, guid, pts);
+                Log.dmssession.debug("getting object guid (session: %s) %s and adding to cache %s", currentSessionId, guid, pts);
 
                 saveOrUpdateAux(pts);
                 m_attatchedCache.put(guid, (com.hitorro.util.typesystem.BaseType) pts);
@@ -821,18 +821,18 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             if (o instanceof com.hitorro.util.typesystem.BaseType) {
 
                 String guid = ((com.hitorro.util.typesystem.BaseType) o).getGuid();
-                m_objectsToDeleteFromAttatched.add(guid);
+                objectsToDeleteFromAttatched.add(guid);
             }
         }
     }
 
     protected void applyRemoveListPostCommit() {
-        if (m_objectsToDeleteFromAttatched.size() > 0) {
-            for (String guid : m_objectsToDeleteFromAttatched) {
+        if (objectsToDeleteFromAttatched.size() > 0) {
+            for (String guid : objectsToDeleteFromAttatched) {
                 this.m_attatchedCache.remove(guid);
             }
         }
-        m_objectsToDeleteFromAttatched.clear();
+        objectsToDeleteFromAttatched.clear();
     }
 
 
@@ -880,7 +880,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     protected void saveOrUpdateAux(Object o) {
-        Log.dmssession.debug("Save Or Update (AUX) (Session: %s) %s", m_currentSessionId, o);
+        Log.dmssession.debug("Save Or Update (AUX) (Session: %s) %s", currentSessionId, o);
         ensureSession();
         //TypeManager.executeTrigger(OnTrigger.TriggerType.BeforeSave, o, true);
         /*(BaseType bt = (BaseType)o;
@@ -951,15 +951,15 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
 
 
     public long getCreateTime() {
-        return m_createTime;
+        return createTime;
     }
 
     public Date getCreateDate() {
-        return new Date(m_createTime);
+        return new Date(createTime);
     }
 
     public String getReadableCreateTime() {
-        return Fmt.formatDateTime(m_createTime);
+        return Fmt.formatDateTime(createTime);
     }
 
     public String getThreadName() {

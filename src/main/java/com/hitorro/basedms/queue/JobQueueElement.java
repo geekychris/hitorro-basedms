@@ -36,7 +36,7 @@ public class JobQueueElement<T> {
     private String m_guid;
     private T m_payload;
     private JobExecutionResult m_result;
-    private Object m_groupId = 0;
+    private Object groupId = 0;
 
     private long m_notBeforeTime = 0;
 
@@ -47,7 +47,7 @@ public class JobQueueElement<T> {
             try {
                 HTSerializable param = ((PersistedSerializedObject) pso).getObject();
                 if (param instanceof GroupId) {
-                    m_groupId = ((GroupId) param).getGroupId();
+                    groupId = ((GroupId) param).getGroupId();
                 }
             } catch (SQLException e) {
 
@@ -67,7 +67,7 @@ public class JobQueueElement<T> {
     }
 
     public Object getGroupId() {
-        return m_groupId;
+        return groupId;
     }
 
     public T getPayload() {
@@ -87,6 +87,6 @@ public class JobQueueElement<T> {
     }
 
     public Object getGroup() {
-        return m_groupId;
+        return groupId;
     }
 }

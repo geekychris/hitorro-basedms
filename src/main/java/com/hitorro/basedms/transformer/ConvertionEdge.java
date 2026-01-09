@@ -26,43 +26,43 @@ package com.hitorro.basedms.transformer;
  * Defines end points of a transformation.
  */
 public class ConvertionEdge {
-    private String m_sourceMimeType;
-    private String m_targetMimeType;
+    private String sourceMimeType;
+    private String targetMimeType;
 
-    private String m_transformerName;
-    private String m_tranformerMethod;
+    private String transformerName;
+    private String tranformerMethod;
     private String m_methodArgs;
 
     public String getSourceMimeType() {
-        return m_sourceMimeType;
+        return sourceMimeType;
     }
 
     public void setSourceMimeType(String mimeType) {
-        m_sourceMimeType = mimeType;
+        sourceMimeType = mimeType;
     }
 
     public String getTargetMimeType() {
-        return m_targetMimeType;
+        return targetMimeType;
     }
 
     public void setTargetMimeType(String mimeType) {
-        m_targetMimeType = mimeType;
+        targetMimeType = mimeType;
     }
 
     public String getTransformerName() {
-        return m_transformerName;
+        return transformerName;
     }
 
     public void setTransformerName(String transformer) {
-        m_transformerName = transformer;
+        transformerName = transformer;
     }
 
     public String getTransformerMethod() {
-        return m_tranformerMethod;
+        return tranformerMethod;
     }
 
     public void setTransformerMethod(String method) {
-        m_tranformerMethod = method;
+        tranformerMethod = method;
     }
 
     public String getMethodArgs() {

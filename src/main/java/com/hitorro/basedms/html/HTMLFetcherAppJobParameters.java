@@ -41,7 +41,7 @@ public class HTMLFetcherAppJobParameters extends JobParameters {
     public static final int SerializationVersion = 1;
     private String m_readUrl;
     private int m_retries;
-    private String m_targetGuid;
+    private String targetGuid;
     private String m_label;
 
     public HTMLFetcherAppJobParameters() {
@@ -74,11 +74,11 @@ public class HTMLFetcherAppJobParameters extends JobParameters {
     }
 
     public String getTargetGuid() {
-        return m_targetGuid;
+        return targetGuid;
     }
 
     public void setTargetGuid(String guid) {
-        m_targetGuid = guid;
+        targetGuid = guid;
     }
 
     // ----------------- HTSerializable
@@ -89,7 +89,7 @@ public class HTMLFetcherAppJobParameters extends JobParameters {
         os.writeString(m_readUrl);
         os.writeInt(m_retries);
         os.writeString(m_label);
-        os.writeString(m_targetGuid);
+        os.writeString(targetGuid);
     }
 
     public void deserialize(HTObjectInputStream os) throws IOException, ClassNotFoundException, StoreException {
@@ -100,7 +100,7 @@ public class HTMLFetcherAppJobParameters extends JobParameters {
                 m_readUrl = os.readString();
                 m_retries = os.readInt();
                 m_label = os.readString();
-                m_targetGuid = os.readString();
+                targetGuid = os.readString();
         }
     }
 

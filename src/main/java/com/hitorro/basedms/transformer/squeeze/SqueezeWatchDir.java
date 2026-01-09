@@ -54,7 +54,7 @@ public class SqueezeWatchDir implements TransformMethod {
     private File m_root;
     private File m_temp;
     private File m_completed;
-    private File m_completedSource;
+    private File completedSource;
 
     private String m_method;
 
@@ -64,7 +64,7 @@ public class SqueezeWatchDir implements TransformMethod {
         m_temp = temp;
         m_method = root.getName();
         m_completed = new File(m_root, CompressedOutput);
-        m_completedSource = new File(m_root, CompletedSource);
+        completedSource = new File(m_root, CompletedSource);
     }
 
 
@@ -182,7 +182,7 @@ public class SqueezeWatchDir implements TransformMethod {
      */
     public File getCompletedById(String id) {
         FileStartsEndsWith filter = new FileStartsEndsWith(id, true, false);
-        File files[] = this.m_completedSource.listFiles(filter);
+        File files[] = this.completedSource.listFiles(filter);
         if (com.hitorro.util.core.ArrayUtil.nullOrEmpty(files)) {
             return null;
         }

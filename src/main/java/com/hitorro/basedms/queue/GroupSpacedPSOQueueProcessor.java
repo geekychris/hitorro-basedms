@@ -41,14 +41,14 @@ import java.util.List;
 public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> extends PSOQueueProcessor<P> {
     public static final int QueueSize = 1024 * 5;
     private LRUHashMap<Object, InOutTime> m_sites = new LRUHashMap<Object, InOutTime>(QueueSize);
-    private List<JobQueueElement<P>> m_holdBack = new LinkedList<JobQueueElement<P>>();
+    private List<JobQueueElement<P>> holdBack = new LinkedList<JobQueueElement<P>>();
 
     // hold back 5 secs.
-    private long m_holdBackTime = Constants.MillisInSecond / 4;
+    private long holdBackTime = Constants.MillisInSecond / 4;
 
     // how many things to hold in back before we choke the real queue.
-    private long m_maxHoldbackSize = 8000;
-    private double m_refillThreshold = 0.5;
+    private long maxHoldbackSize = 8000;
+    private double refillThreshold = 0.5;
 
     public GroupSpacedPSOQueueProcessor(String name, String groupName, int workQueueLength, int workerThreadCount, FarmCommand<JobQueueElement<P>, JobQueueElement<P>, Object> farmCommand) {
         super(name, groupName, workQueueLength, workerThreadCount, farmCommand);
@@ -59,7 +59,7 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
     }
 
     public int getDeferredQueueCount() {
-        return m_holdBack.size();
+        return holdBack.size();
     }
 
     public void disable() {
@@ -67,8 +67,8 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
         if (m_sites != null) {
             m_sites.clear();
         }
-        if (m_holdBack != null) {
-            m_holdBack.clear();
+        if (holdBack != null) {
+            holdBack.clear();
         }
     }
 
@@ -76,20 +76,20 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
         if (m_inQueue.isFull()) {
             return false;
         }
-        double min = m_maxHoldbackSize * m_refillThreshold;
-        return m_holdBack.size() <= min;
+        double min = maxHoldbackSize * refillThreshold;
+        return holdBack.size() <= min;
     }
 
     protected boolean hasMaxCapacity() {
         if (m_inQueue.isFull()) {
             return false;
         }
-        return m_holdBack.size() <= m_maxHoldbackSize;
+        return holdBack.size() <= maxHoldbackSize;
     }
 
     public int getQueueSize() {
-        if (m_holdBack.size() > m_maxHoldbackSize) {
-            return super.getQueueSize() + m_holdBack.size();
+        if (holdBack.size() > maxHoldbackSize) {
+            return super.getQueueSize() + holdBack.size();
         }
         return super.getQueueSize();
     }
@@ -100,7 +100,7 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
      */
     protected int flush(long time) throws ThreadedQueueTimeoutException, ThreadedQueueCanceledException {
         int count = 0;
-        Iterator<JobQueueElement<P>> iter = m_holdBack.iterator();
+        Iterator<JobQueueElement<P>> iter = holdBack.iterator();
         int c = 0;
         while (iter.hasNext() && super.hasCapacity()) {
             c++;
@@ -119,7 +119,7 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
                 addToRealInQueueAndUpdateIOT(iot, time, item, iter, group, true);
                 count++;
 
-            } else if (iot.m_in == false && iot.m_time + m_holdBackTime < time) {
+            } else if (iot.m_in == false && iot.m_time + holdBackTime < time) {
                 // held back long enoughy
                 addToRealInQueueAndUpdateIOT(iot, time, item, iter, group, false);
                 count++;
@@ -136,9 +136,9 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
     private void addToRealInQueueAndUpdateIOT(InOutTime iot, long time, JobQueueElement<P> item, Iterator<JobQueueElement<P>> iter, Object group, boolean add) throws ThreadedQueueCanceledException, ThreadedQueueTimeoutException {
         if (add) {
             m_sites.put(group, iot);
-            Log.util.debug("Site (%s) not in listFiles adding...(%s) this queue %s", group, this.m_inQueue.size(), m_holdBack.size());
+            Log.util.debug("Site (%s) not in listFiles adding...(%s) this queue %s", group, this.m_inQueue.size(), holdBack.size());
         } else {
-            Log.util.debug("Site (%s)was in listFiles but out of date, refreshing.... (%s) ", group, this.m_inQueue.size(), m_holdBack.size());
+            Log.util.debug("Site (%s)was in listFiles but out of date, refreshing.... (%s) ", group, this.m_inQueue.size(), holdBack.size());
         }
         iot.m_in = true;
         iot.m_time = time;
@@ -166,11 +166,11 @@ public class GroupSpacedPSOQueueProcessor<P extends PersistedSerializedObject> e
             iot = new InOutTime(time);
             addToRealInQueueAndUpdateIOT(iot, time, jqe, null, group, true);
 
-        } else if (iot.m_in == false && iot.m_time + m_holdBackTime < time) {
+        } else if (iot.m_in == false && iot.m_time + holdBackTime < time) {
             addToRealInQueueAndUpdateIOT(iot, time, jqe, null, group, false);
         } else {
             // hold back for a later time
-            m_holdBack.add(jqe);
+            holdBack.add(jqe);
         }
     }
 

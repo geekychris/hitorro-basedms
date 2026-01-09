@@ -70,7 +70,7 @@ public class HibernateService {
     BootstrapServiceRegistry bootstrapRegistry;
     StandardServiceRegistry standardRegistry;
     private Statistics m_statistics;
-    private ObjectVersionsCache m_objectVersionCache = new ObjectVersionsCache();
+    private ObjectVersionsCache objectVersionCache = new ObjectVersionsCache();
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         com.hitorro.util.typesystem.BaseSessionFactory.setFactory(new DMSSessionFactory());
@@ -209,7 +209,7 @@ public class HibernateService {
      */
     private String validateTypes() {
         List<ObjectVersions> commitList = new ArrayList<ObjectVersions>();
-        m_objectVersionCache.load();
+        objectVersionCache.load();
         boolean allowUpgrade = AllowUpgrade.apply();
         for (com.hitorro.util.typesystem.Type t : com.hitorro.util.typesystem.TypeManager.getTypeManager().getTypes()) {
             String response = validateType(t, commitList, allowUpgrade);
@@ -243,7 +243,7 @@ public class HibernateService {
                 return s;
             }
 
-            ObjectVersions version = m_objectVersionCache.get(shortName);
+            ObjectVersions version = objectVersionCache.get(shortName);
             if (version == null) {
                 // version doesnt exist, its new
                 com.hitorro.util.typesystem.Log.typemanager.info("Type %s (%s) is new to the schema, creating version object", shortName, t.getShortClassName());

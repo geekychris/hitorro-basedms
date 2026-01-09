@@ -52,7 +52,7 @@ public class TransformerService {
     public static final IntegerProperty JobThreads = new IntegerProperty("transcoder.threads", "Number of threads", 2);
     public static final String PSO_JOB_NAME = "jobs";
     private static TransformerService s_service;
-    private ConvertionContext m_convertionContext = new ConvertionContext();
+    private ConvertionContext convertionContext = new ConvertionContext();
     private Map<String, TransformMethod> m_methods = new HashMap<String, TransformMethod>();
 
 	private boolean m_startJobQueue = true;
@@ -84,12 +84,12 @@ public class TransformerService {
     }
 
     public ConvertionContext getConvertionContext() {
-        return m_convertionContext;
+        return convertionContext;
     }
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         try {
-            m_convertionContext.loadContext(TransformerConfig.apply());
+            convertionContext.loadContext(TransformerConfig.apply());
             JobService.getService().registerAppJob(TransformJob.class, "Transformation Job", TransformJobParameters.class);
             s_service = this;
             ClusterService.getThisInstanceDefinition().addInstanceCapability(TransformationKey, "", "", "", true);
