@@ -32,6 +32,8 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import com.hitorro.util.typesystem.annotation.UiProperties;
 import org.hibernate.query.Query;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +42,9 @@ import java.util.Set;
 /**
  */
 
+@Entity
+@Table(name = "container_t")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Container,
         isView = false,
         isPersisted = true,
@@ -47,11 +52,18 @@ import java.util.Set;
 public class Container extends VersionableObject {
     public static final int SerializationVersion = 1;
 
+    @Column(name = "queryString", nullable = false)
     private String queryString;
+    
+    @Column(name = "description")
     private String description;
+    
     // no member for contained - get that data from the contained object side
     // we use the contained field only for hql queries.  Note that since we have containers that hold hundreds of
     // thousands of items (potentially) accessing the contained field from the container end would be bad
+    
+    @ManyToMany(mappedBy = "containers", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<VersionableObject> contained;
 
     public Container() {
         // needed for serialization and hybernate

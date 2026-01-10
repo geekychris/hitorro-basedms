@@ -32,12 +32,17 @@ import com.hitorro.util.typesystem.VersionBaseType;
 import com.hitorro.util.typesystem.annotation.FullTextAttributeMetaInfo;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
+
 
 /**
  */
+@MappedSuperclass
 public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     public static NamedLong BaseTypeIdNamedLong = NamedLong.registerNamedLong("baseid", 1, 100, "unique id for base id and its subtypes");
 
+    @Column(name = "guid", nullable = false)
+    @org.hibernate.annotations.Index(name = "guid_idx")
     protected String guid = null;
 
     public static String computeGuid(TypeIntf type) {

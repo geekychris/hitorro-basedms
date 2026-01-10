@@ -31,6 +31,8 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,6 +41,9 @@ import java.util.List;
 /**
  * Represent a forum topic.
  */
+@Entity
+@Table(name = "Forum")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Forum,
         isView = false,
         isPersisted = true,
@@ -53,7 +58,13 @@ public class Forum extends Container {
     private static final String UserQuery = "select usr " +
             "from RssFeedIn as feed, User as usr " +
             "where usr.rssFeedIn = feed and feed.forum.id= :a";
+    
+    @Column(name = "name", length = 80, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "area_id")
     private SubjectArea subjectArea;
 
     public Forum() {

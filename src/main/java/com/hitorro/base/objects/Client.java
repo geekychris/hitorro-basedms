@@ -27,10 +27,15 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 
 /**
  */
+@Entity
+@Table(name = "Client")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Client,
         isView = false,
         isPersisted = true,
@@ -39,8 +44,14 @@ import java.io.IOException;
 public class Client extends VersionableObject implements Cloneable {
     public static final int SerializationVersion = 3;
 
+    @Column(name = "uniqueName", nullable = false)
+    @org.hibernate.annotations.Index(name = "uniquename_idx")
     private String uniqueName;
+    
+    @Column(name = "name", length = 80, nullable = false)
     private String name;
+    
+    @Column(name = "isActive")
     private boolean isActive;
 
 

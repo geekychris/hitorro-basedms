@@ -33,12 +33,17 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Object representing a subject area (tech, poetry, golf, cooking).
  */
+@Entity
+@Table(name = "SubjectArea")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.SubjectArea,
         isView = false,
         isPersisted = true,
@@ -52,13 +57,26 @@ public class SubjectArea extends VersionableObject {
     public static final int SerializationVersion = 1;
     // the name where we put forums by default
     public static final String DefaultArea = "Other";
+    
     // name is the unique key
+    @Column(name = "name", length = 20, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String _name;
+    
     // displayname is the user friendly displayable name.  May not be unique!
+    @Column(name = "displayName", length = 100, nullable = false)
     private String _displayName;
+    
     // feeds associated with this area
     //private Set<Forum> _forums;
+    
     // personalities associated with this area
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "subjectarea_user",
+        joinColumns = @JoinColumn(name = "subjectarea_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> _personalities;
 
 

@@ -43,6 +43,8 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.OnTrigger;
 
+import jakarta.persistence.*;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +59,8 @@ import java.util.Set;
  *
  * @author chris
  */
+@Entity
+@Table(name = "Content")
 @com.hitorro.util.typesystem.annotation.TypeClassMetaInfo(shortTypeName = com.hitorro.util.typesystem.annotation.TypeClassMetaInfo.Content,
         onTriggers = {@com.hitorro.util.typesystem.annotation.ImplClassMeta(className = com.hitorro.basedms.BaseTypeOnTriggerGeneric.class, trigger = OnTrigger.TriggerType.OnNew),
                 @com.hitorro.util.typesystem.annotation.ImplClassMeta(className = com.hitorro.basedms.BaseTypeOnTriggerGeneric.class, trigger = OnTrigger.TriggerType.BeforeSave),
@@ -73,28 +77,75 @@ import java.util.Set;
 public class Content extends GuidBaseType implements com.hitorro.basedms.CategoryBaseInterface, com.hitorro.basedms.ContentProperties {
     public static final int SerializationVersion = 1;
     private static com.hitorro.basedms.NamedLong ContentIdNamedLong = com.hitorro.basedms.NamedLong.registerNamedLong("fscontentid", 1, 100, "unique content file name ids");
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "content_category", joinColumns = @JoinColumn(name = "system_id"))
+    @AttributeOverrides({
+        @AttributeOverride(name = "domain", column = @Column(name = "domain")),
+        @AttributeOverride(name = "value", column = @Column(name = "value"))
+    })
     protected Set<DomainValueIntf> categories = new HashSet<DomainValueIntf>();
+    
+    @Column(name = "referenceCount")
     protected int referenceCount = 0;
+    
     // transients.
+    @Transient
     private transient BaseFile internalFile = null;
+    
+    @Transient
     private transient File linkFile = null;
+    
+    @Lob
+    @Column(name = "blobContent", length = 1000000)
     private Blob blob;
+    
+    @Column(name = "StoreName", nullable = false)
     private String storeName;
+    
+    @Column(name = "originalFileName", length = 1024, nullable = false)
     private String originalFileName;
+    
     // filename where it currently resides
+    @Column(name = "fileName")
     private String fileName;
+    
+    @Column(name = "creationDate", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date createDate = new Date();
+    
+    @Column(name = "contentTypeLiteral")
     private String contentTypeLiteral;
+    
+    @OneToMany(mappedBy = "parentRendition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Content> renditions = new HashSet<Content>();
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contentrendition_id")
     private Content parentRendition;
+    
+    @Column(name = "resolutionAux")
     private String resolutionAux = new String();
+    
+    @Column(name = "width")
     private int width = 0;
+    
+    @Column(name = "height")
     private int height = 0;
+    
+    @Column(name = "bitRate")
     private int bitRate = 0;
+    
+    @Column(name = "durationSeconds")
     private int durationSeconds = 0;
+    
+    @Column(name = "codec")
     private String codec;
+    
+    @Column(name = "contentSize")
     private long contentSize = 0;
 
+    @ManyToMany(mappedBy = "contents", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<VersionableObject> versionableObjects = new HashSet<VersionableObject>();
 
     public Content() {

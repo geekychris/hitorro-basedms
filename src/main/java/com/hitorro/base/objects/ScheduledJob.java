@@ -43,6 +43,8 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,6 +52,9 @@ import java.util.List;
 
 /**
  */
+@Entity
+@Table(name = "ScheduledJob")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.ScheduledJob,
         isView = false,
         isPersisted = true,
@@ -62,10 +67,20 @@ public class ScheduledJob extends VersionableObject {
     public static final String ParametersGuidKey = "parametersguid";
     private static ListValue[] _classChoices;
     private static String ActiveJobsQuery = " where state = " + Constants.ActiveState;
+    
+    @Column(name = "name", length = 80, nullable = false)
     private String _name;
+    
+    @Column(name = "jobName", length = 80, nullable = false)
     private String _jobName;
+    
+    @Column(name = "chronSchedule", length = 40)
     private String _chronSchedule;
+    
+    @Column(name = "secondsSchedule")
     private int _secondsSchedule;
+    
+    @Column(name = "parametersGuid", length = 20)
     private String _parametersGuid;
 
     public ScheduledJob() {

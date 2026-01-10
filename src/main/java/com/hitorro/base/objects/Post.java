@@ -43,12 +43,17 @@ import com.hitorro.util.typesystem.HTSerializable;
 import com.hitorro.util.urlparser.URLUtil;
 import org.hibernate.query.Query;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Represents the data resulting from a single Rss feed item.
  */
+@Entity
+@Table(name = "Post")
+@PrimaryKeyJoinColumn(name = "system_id")
 @com.hitorro.util.typesystem.annotation.TypeClassMetaInfo(shortTypeName = com.hitorro.util.typesystem.annotation.TypeClassMetaInfo.Post,
         adapters = {@com.hitorro.util.typesystem.annotation.AdapterClassMeta(className = PostRssItemAdapter.class, adapterGroup = VersionableObjectRssItem.AdapterGroup)},
         isView = false,
@@ -100,20 +105,46 @@ public class Post extends Document {
     private static final String PostByIdentityHashForum = "select bentry from " + Post.class.getName() + " as bentry " +
             "where bentry.identityHash = :hash and containers.id = :forumid ";
     private static final String PostByIdentityHash = "select pst from Post as pst where identityHash = :a";
+    
+    @Transient
     private long titleHash;
+    
+    @Column(name = "entryOrdinal", nullable = false)
     private int entryOrdinal;
+    
+    @Column(name = "moreLink", length = 1024)
     private String moreLink;
+    
+    @Transient
     private int state;
+    
+    @Column(name = "degree")
     private int degree = 0;
+    
+    @Column(name = "type")
     private int type = PostType.RSSFeedType.getOrdinal();
+    
+    @Column(name = "siteLink", length = 1024)
     private String siteLink;
+    
     // the parent Post of this post (non-null for comments.  In this case _entryOrdinal gives ordering of listChildren.)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id")
     private Post parent;
+    
     // which feeds that showed this post (if it came from a feed)
     //private Set<RssFeedIn> _rssFeedIns;
+    
+    @Column(name = "originalAuthor")
     private String originalAuthor;
+    
+    @Column(name = "refCount")
     private int refCount;
+    
+    @Column(name = "feedContact")
     private String feedContact;
+    
+    @Column(name = "destinationUrl", length = 1024)
     private String destinationUrl;
 
     public Post() {

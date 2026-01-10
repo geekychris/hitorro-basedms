@@ -38,12 +38,17 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Basic user in the system
  */
+@Entity
+@Table(name = "user_t")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.User,
         isView = false,
         isPersisted = true,
@@ -62,14 +67,33 @@ public class User extends VersionableObject {
             "where feed.forum = forum and usr.rssFeedIn = feed " +
             "and usr.id = :a";
     // username is the unique key, and used for login
+    @Column(name = "name", length = 80, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String _name;
+    
     // displayname is the user friendly displayable name.  May not be unique!
+    @Column(name = "displayName", length = 80)
     private String _displayName;
+    
     // password will eventually be an encrypted password.  Right now, if non-null the user can log in
+    @Column(name = "password", length = 40)
     private String _password;
+    
+    @Column(name = "emailAddress", length = 80)
     private String _emailAddress;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> _roles;
+    
+    @Column(name = "passwordHash", length = 80)
     private String passwordHash;
+    
+    @Column(name = "activationToken", length = 80)
     private String activationToken;
 
     public User() {

@@ -32,11 +32,16 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 
 /**
  * User permission. A permission is a representation of the ability to do a specific bit of functionality.
  */
+@Entity
+@Table(name = "Permission")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Permission,
         isView = false,
         isPersisted = true,
@@ -52,7 +57,12 @@ public class Permission extends VersionableObject implements PermissionInterface
     // todo chris - should use a more formal cache
     // our globally cached admin permission
     private static Permission s_AdminPermission;
+    
+    @Column(name = "name", length = 20, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
+    
+    @Column(name = "description", length = 255)
     private String description;
 
     public Permission() {

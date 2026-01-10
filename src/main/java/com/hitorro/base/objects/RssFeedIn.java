@@ -33,12 +33,17 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Represent an incoming rss feed.
  */
+@Entity
+@Table(name = "RssFeedIn")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.RssFeedIn,
         isView = false,
         isPersisted = true,
@@ -55,18 +60,45 @@ public class RssFeedIn extends VersionableObject {
 
     public static final int SerializationVersion = 2;
 
+    @Column(name = "name", length = 80, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String _name;
+    
+    @Column(name = "description", length = 255)
     private String _description;
+    
+    @Column(name = "uri", length = 255, nullable = false)
     private String _uri;
+    
+    @Column(name = "nextRead")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date _nextRead;
+    
+    @Column(name = "readInMinutes")
     private int _readInMinutes;
+    
+    @Column(name = "contactEmail", length = 80)
     private String _contactEmail;
+    
+    @Column(name = "contactName", length = 40)
     private String _contactName;
+    
+    @Column(name = "lastModified", length = 80)
     private String _lastModified;
+    
+    @Column(name = "siteUrl", length = 255)
     private String _siteUrl;
+    
+    @Transient
     private Forum _forum;
+    
+    @Transient
     private Forum sharedForum;
+    
+    @Transient
     private int _forumType = NormalForum;
+    
+    @Transient
     private int _priority = 0;
 
     public RssFeedIn() {

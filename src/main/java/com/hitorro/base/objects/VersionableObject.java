@@ -44,12 +44,22 @@ import com.hitorro.util.core.valuemap.ValueMap;
 import com.hitorro.util.io.StoreException;
 import com.hitorro.util.versioning.VersioningUtil;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+@Entity
+@Table(name = "versionable_object")
+@Inheritance(strategy = InheritanceType.JOINED)
+@FilterDef(name = "statusFilter", parameters = @ParamDef(name = "statusParam", type = String.class))
+@Filter(name = "statusFilter", condition = ":statusParam=realm")
 @com.hitorro.util.typesystem.annotation.TypeClassMetaInfo(shortTypeName = com.hitorro.util.typesystem.annotation.TypeClassMetaInfo.VersionableObject,
         onTriggers = {@com.hitorro.util.typesystem.annotation.ImplClassMeta(className = VersionableObjectOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.OnNew),
                 @com.hitorro.util.typesystem.annotation.ImplClassMeta(className = VersionableObjectOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.BeforeSave),
@@ -76,34 +86,104 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     public static final int SerializationVersion = 4;
     // CATEGORIES
     public static final String CategoriesKey = "categories";
+    
+    @Column(name = "creationDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date creationDate = new Date();
+    
+    @Column(name = "modifiedDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date modifiedDate = new Date();
+    
+    @Column(name = "authoredDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date authoredDate = new Date();
+    
+    @Column(name = "note")
     protected String note = null;
+    
+    @Column(name = "creator", length = 80)
     protected String creator = null;
+    
+    @Column(name = "effectiveUser", length = 80)
     protected String effectiveUser = null;
+    
+    @Column(name = "realm", length = 80)
     protected String realm = null;
+    
+    @Column(name = "versionLabel", nullable = false)
     protected String versionLabel = new String("1.0");
+    
+    @Column(name = "canonicalGuid", nullable = false)
+    @org.hibernate.annotations.Index(name = "canonguid_idx")
     protected String canonicalGuid = null;
+    
     // root version is the canonical version
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "canonical")
     protected VersionableObject canonical = null;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "nextVersion")
     protected VersionableObject nextVersion = null;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branchVersion")
     protected VersionableObject branchVersion = null;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parentVersion")
     protected VersionableObject parentVersion = null;
 
-
     // index fields
+    @Column(name = "shouldIndex")
     protected boolean shouldIndex = false;
+    
+    @Column(name = "isIndexed")
     protected boolean isIndexed = false;
+    
+    @Column(name = "indexName")
     protected String indexName = null;
 
+    @Column(name = "identityHash")
+    @org.hibernate.annotations.Index(name = "identityHash_idx")
     protected long identityHash;
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "versionableobject_category", joinColumns = @JoinColumn(name = "system_id"))
+    @AttributeOverrides({
+        @AttributeOverride(name = "domain", column = @Column(name = "domain")),
+        @AttributeOverride(name = "value", column = @Column(name = "value"))
+    })
     protected Set<DomainValueIntf> categories = new HashSet<DomainValueIntf>();
+    
+    @Column(name = "state")
     private int state;
+    
+    @Column(name = "adapterSource")
     private String adapterSource;
+    
+    @Transient
     private String content;
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "versionableobject_contents",
+        joinColumns = @JoinColumn(name = "system_id"),
+        inverseJoinColumns = @JoinColumn(name = "content_id")
+    )
     private Set<Content> contents = new HashSet<Content>();
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "versionableobject_container",
+        joinColumns = @JoinColumn(name = "system_id"),
+        inverseJoinColumns = @JoinColumn(name = "container_id")
+    )
     private Set<Container> containers = new HashSet<Container>();
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owningContainer")
     private Container owningContainer = null;
 
     public VersionableObject() {

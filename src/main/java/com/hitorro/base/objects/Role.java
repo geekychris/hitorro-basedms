@@ -31,6 +31,8 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +41,9 @@ import java.util.Set;
  * User role. A role is a set of Permissions, which together describe the capabilities of a User. By convention, a role
  * names starts with a capital letter.
  */
+@Entity
+@Table(name = "Role")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Role,
         isView = false,
         isPersisted = true,
@@ -50,8 +55,20 @@ import java.util.Set;
 )
 public class Role extends VersionableObject {
     public static final int SerializationVersion = 1;
+    
+    @Column(name = "name", length = 20, nullable = false)
+    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
+    
+    @Column(name = "description", length = 255)
     private String description;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "role_permission",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
     private Set<Permission> permissions;
 
     public Role() {

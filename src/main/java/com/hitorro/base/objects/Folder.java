@@ -32,6 +32,8 @@ import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 import org.hibernate.query.Query;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,6 +42,9 @@ import java.util.List;
 /**
  * Basic, raw, container of arbitrary objects. This kind of container is used in our current rudimentary workflow.
  */
+@Entity
+@Table(name = "Folder")
+@PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Folder,
         isView = false,
         isPersisted = true,
@@ -52,7 +57,11 @@ public class Folder extends Container {
     private static final String FolderForNameQuery = "select bl from " + Folder.class.getName() + " as bl where name = :name";
     private static final String FolderForNameIsRootQuery = "select bl from " + Folder.class.getName() + " as bl where name = :name and isRootLevel=true";
     private static final String AllFolderNamesQuery = "select bl.folderName from " + Folder.class.getName() + " as bl";
+    
+    @Column(name = "name", length = 20, nullable = false)
     private String name;
+    
+    @Column(name = "isRootLevel")
     private boolean isRootLevel;
 
     public Folder() {

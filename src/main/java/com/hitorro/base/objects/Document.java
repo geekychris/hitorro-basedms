@@ -28,8 +28,13 @@ import com.hitorro.util.io.StoreException;
 import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 
+@Entity
+@Table(name = "document")
+@PrimaryKeyJoinColumn(name = "system_id")
 @com.hitorro.util.typesystem.annotation.TypeClassMetaInfo(shortTypeName = com.hitorro.util.typesystem.annotation.TypeClassMetaInfo.Document,
         adapters = {@com.hitorro.util.typesystem.annotation.AdapterClassMeta(className = DocumentRssItemAdapter.class, adapterGroup = VersionableObjectRssItem.AdapterGroup)},
         isView = false,
@@ -40,9 +45,15 @@ import java.io.IOException;
 public class Document extends VersionableObject implements Cloneable {
     public static final int SerializationVersion = 2;
 
+    @Column(name = "title", nullable = false)
     private String title;
+    
+    @Column(name = "titleHash")
     private long titleHash;
+    
     // the author of the post (if known)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
     private User author;
 
     @com.hitorro.util.typesystem.annotation.UiProperties(displayName = "System Id", displayType = com.hitorro.util.typesystem.annotation.UiProperties.TextFieldDisplay)

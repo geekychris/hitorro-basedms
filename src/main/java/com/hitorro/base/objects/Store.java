@@ -36,9 +36,13 @@ import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.Type;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
+
 import java.io.File;
 import java.io.IOException;
 
+@Entity
+@Table(name = "Store")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Store,
         isView = false,
         isPersisted = true,
@@ -47,19 +51,39 @@ import java.io.IOException;
         guidAccessor = GuidAccessor.class)
 public class Store extends BaseType {
     public static final int SerializationVersion = 1;
+    
+    @Transient
     private transient File openResourceLocation = null;
 
-
+    @Column(name = "defaultStore")
     private boolean isDefault = false;
+    
+    @Column(name = "storeType")
     private String storeType;
+    
+    @Column(name = "rootPath")
     private String rootPath;
+    
+    @Column(name = "docRoot")
     private String docRoot;
+    
+    @Column(name = "name")
     private String name;
+    
+    @Transient
     private BaseFile rootDir;
+    
+    @Transient
     private String rootDirAsString;
+    
+    @Column(name = "isPubliclyVisible")
     private boolean isPubliclyVisible;
+    
+    @Column(name = "offline")
     private boolean offline = false;
+    
     // not persisted
+    @Transient
     private StoreType type;
 
     public Store() {
