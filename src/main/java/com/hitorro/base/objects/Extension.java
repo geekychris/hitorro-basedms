@@ -27,16 +27,26 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 
+@Entity
+@Table(name = "Extensions")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Extension,
         isView = false,
         isPersisted = true,
         schemaVersion = Extension.SerializationVersion)
 public class Extension extends BaseType {
     public static final int SerializationVersion = 2;
+    
+    @Column(name = "extension", nullable = false)
     private String extension;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contenttype_id")
     private ContentType contentType;
+    
+    @Column(name = "isPrefered")
     private boolean isPrefered;
 
     public boolean getIsPrefered() {

@@ -32,6 +32,7 @@ import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.VersionBaseType;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,8 @@ import java.util.List;
 /**
  * <p/>
  */
+@Entity
+@Table(name = "reference")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Reference,
         isView = false,
         isPersisted = true,
@@ -50,13 +53,27 @@ public class Reference extends VersionBaseType {
     public static final String ShareReference = "share";
 
     public static final int SerializationVersion = 1;
+    
+    @Column(name = "fromGuid")
     private String fromGuid;
+    
+    @Column(name = "fromHash")
     private long fromHash;
 
+    @Column(name = "toGuid")
     private String toGuid;
+    
+    @Column(name = "toHash")
     private long toHash;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date")
     private Date date;
+    
+    @Column(name = "refType")
     private String refType;
+    
+    @Column(name = "auxData")
     private String auxData;
 
     /**

@@ -33,6 +33,7 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,6 +41,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Entity
+@Table(name = "contenttype")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.ContentType,
         isView = false,
         isPersisted = true,
@@ -60,7 +63,10 @@ public class ContentType extends GuidBaseType {
     public static final String MimeJavaSerializedObject = "application/java-serialized-object";
     public static final String MimeTypeAll = "all/all";
 
+    @Column(name = "mimeType", nullable = false)
     private String mimeType;
+    
+    @OneToMany(mappedBy = "contentType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Extension> fileExtensions;
 
     public static boolean importMimeTypes(File mimeTypeFile, BaseSession session) throws FileNotFoundException {

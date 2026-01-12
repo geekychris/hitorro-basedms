@@ -35,6 +35,7 @@ import com.hitorro.util.io.StoreException;
 import com.hitorro.util.job.JobParameters;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
@@ -46,6 +47,8 @@ import java.util.Set;
 
  * represents an item
  */
+@Entity
+@Table(name = "workflowitem")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.WorkFlowItem,
         isView = false,
         isPersisted = true,
@@ -54,11 +57,23 @@ public class WorkFlowItem extends VersionableObject implements com.hitorro.util.
     public static final String GeneralNotificationType = "NotificationType";
     public static final int SerializationVersion = 2;
     public static final String UploadDocKey = "HTPost";
+    
+    @Transient
     private static String s_query = null;
+    
+    @OneToMany(mappedBy = "workFlowItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<WorkFlowItemEntry> workflowItemEntries = new HashSet<WorkFlowItemEntry>();
+    
+    @OneToMany(mappedBy = "workFlowItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OutstandingWorkflowItem> outstandingWorkflowItems = new HashSet<OutstandingWorkflowItem>();
+    
+    @Column(name = "stateMachine")
     private String stateMachine;
+    
+    @Column(name = "currentState")
     private String currentState;
+    
+    @Column(name = "finished")
     private boolean finished = false;
 
     /**

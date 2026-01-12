@@ -70,4 +70,12 @@ public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     public boolean hasGuid() {
         return true;
     }
+
+    @PrePersist
+    protected void ensureGuidBeforePersist() {
+        // Ensure guid is generated before persisting
+        if (guid == null && HibernateService.s_isInitialized) {
+            guid = computeGuid(TypeManagerBase.get().getTypeForBaseType(this));
+        }
+    }
 }

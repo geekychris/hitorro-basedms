@@ -32,11 +32,13 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 
 /**
  */
-
+@Entity
+@Table(name = "domaininfo")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.DomainInfo,
         isView = false,
         isPersisted = true,
@@ -45,9 +47,17 @@ import java.io.IOException;
         guidAccessor = GuidAccessor.class)
 public class DomainInfo extends BaseType {
     public static final int SerializationVersion = 1;
+    
+    @Column(name = "domain")
     private String domain;
+    
+    @Column(name = "displayName")
     private String displayName;
+    
+    @Column(name = "description")
     private String description;
+    
+    @Column(name = "valueMapImpl")
     private String valueMapImpl;
 
     public DomainInfo() {

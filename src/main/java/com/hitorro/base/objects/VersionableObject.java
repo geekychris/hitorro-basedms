@@ -121,18 +121,22 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     // root version is the canonical version
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "canonical")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     protected VersionableObject canonical = null;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "nextVersion")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     protected VersionableObject nextVersion = null;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branchVersion")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     protected VersionableObject branchVersion = null;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parentVersion")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     protected VersionableObject parentVersion = null;
 
     // index fields
@@ -152,10 +156,10 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "versionableobject_category", joinColumns = @JoinColumn(name = "system_id"))
     @AttributeOverrides({
-        @AttributeOverride(name = "domain", column = @Column(name = "domain")),
-        @AttributeOverride(name = "value", column = @Column(name = "value"))
+        @AttributeOverride(name = "m_domain", column = @Column(name = "domain")),
+        @AttributeOverride(name = "m_value", column = @Column(name = "value"))
     })
-    protected Set<DomainValueIntf> categories = new HashSet<DomainValueIntf>();
+    protected Set<com.hitorro.util.objects.EmbeddableDomainValue> categories = new HashSet<com.hitorro.util.objects.EmbeddableDomainValue>();
     
     @Column(name = "state")
     private int state;
@@ -184,6 +188,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owningContainer")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     private Container owningContainer = null;
 
     public VersionableObject() {
@@ -310,11 +315,22 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
             luceneFieldName = CategoriesKey, stringLiteral = true, allField = false, stored = true,
             indexerClass = DomainValueIndexerAdapter.class)
     public Set<DomainValueIntf> getCategories() {
-        return categories;
+        // Return as interface type for compatibility
+        return new HashSet<DomainValueIntf>(categories);
     }
 
     public void setCategories(Set<DomainValueIntf> cat) {
-        categories = cat;
+        // Convert from interface to embeddable implementation
+        categories.clear();
+        if (cat != null) {
+            for (DomainValueIntf dv : cat) {
+                if (dv instanceof com.hitorro.util.objects.EmbeddableDomainValue) {
+                    categories.add((com.hitorro.util.objects.EmbeddableDomainValue) dv);
+                } else {
+                    categories.add(new com.hitorro.util.objects.EmbeddableDomainValue(dv.getDomain(), dv.getValue()));
+                }
+            }
+        }
     }
 
     /**
@@ -771,7 +787,9 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
         os.writeSetOfBaseType(contents);
         os.writeSetOfBaseType(containers);
         os.writeVersionedObject(owningContainer);
-        os.writeSetOfDomainValue(categories);
+        // Convert to interface type for serialization
+        Set<DomainValueIntf> categoriesIntf = new HashSet<DomainValueIntf>(categories);
+        os.writeSetOfDomainValue(categoriesIntf);
 
         os.writeBoolean(shouldIndex);
         // we should not say its indexed on the other side but this may be a simple reload.
@@ -816,7 +834,10 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
                 is.readSetOfHTSerializable(contents);
                 is.readSetOfHTSerializable(containers);
                 owningContainer = (Container) is.readVersionedObject();
-                is.readSetOfDomainValue(categories);
+                // Read into temp set and convert to embeddable
+                Set<DomainValueIntf> tempCategories = new HashSet<DomainValueIntf>();
+                is.readSetOfDomainValue(tempCategories);
+                setCategories(tempCategories);
                 shouldIndex = is.readBoolean();
                 isIndexed = is.readBoolean();
                 indexName = is.readString();

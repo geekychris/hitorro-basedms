@@ -56,7 +56,7 @@ public class Store extends BaseType {
     private transient File openResourceLocation = null;
 
     @Column(name = "defaultStore")
-    private boolean isDefault = false;
+    private boolean defaultStore = false;
     
     @Column(name = "storeType")
     private String storeType;
@@ -137,6 +137,7 @@ public class Store extends BaseType {
     /**
      * File system needs to be qualified with protocol type.
      */
+    @PostLoad
     public void init() {
         type = StoreType.get(storeType);
         if (type.isFileStore() || type.isUnmanagedFileStore()) {
@@ -177,11 +178,11 @@ public class Store extends BaseType {
     }
 
     public boolean getDefaultStore() {
-        return isDefault;
+        return defaultStore;
     }
 
     public void setDefaultStore(boolean defaultVal) {
-        isDefault = defaultVal;
+        defaultStore = defaultVal;
     }
 
     public String getStoreType() {
@@ -220,7 +221,7 @@ public class Store extends BaseType {
 
     public void serialize(HTObjectOutputStream os)
             throws IOException {
-        os.writeBoolean(isDefault);
+        os.writeBoolean(defaultStore);
         os.writeBoolean(isPubliclyVisible);
         os.writeString(storeType);
         os.writeString(rootPath);
@@ -232,7 +233,7 @@ public class Store extends BaseType {
             throws IOException, ClassNotFoundException {
         switch (version) {
             case 1:
-                isDefault = os.readBoolean();
+                defaultStore = os.readBoolean();
                 isPubliclyVisible = os.readBoolean();
                 storeType = os.readString();
                 rootPath = os.readString();

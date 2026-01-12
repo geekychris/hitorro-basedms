@@ -28,6 +28,7 @@ import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.VersionBaseType;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 
 /**
@@ -37,6 +38,8 @@ import java.io.IOException;
  *
  * @author chris
  */
+@Entity
+@Table(name = "NamedLongEntry")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.NamedLong,
         isView = false,
         isPersisted = true,
@@ -45,10 +48,17 @@ import java.io.IOException;
         guidAccessor = GuidAccessor.class)
 public class NamedLongEntry extends VersionBaseType {
     public static final int SerializationVersion = 1;
+    
+    @Column(name = "value")
     private long value;
+    
+    @Column(name = "incrementor")
     private long incrementor;
+    
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "name")
     private String name;
 
     public String getName() {

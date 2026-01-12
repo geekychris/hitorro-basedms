@@ -69,7 +69,7 @@ public class User extends VersionableObject {
     // username is the unique key, and used for login
     @Column(name = "name", length = 80, nullable = false)
     @org.hibernate.annotations.Index(name = "name_idx")
-    private String _name;
+    private String name;
     
     // displayname is the user friendly displayable name.  May not be unique!
     @Column(name = "displayName", length = 80)
@@ -114,7 +114,7 @@ public class User extends VersionableObject {
     public void copy(VersionableObject orig) {
         super.copy(orig);
         User other = (User) orig;
-        _name = other._name;
+        name = other.name;
         _displayName = other._displayName;
         _password = other._password;
         _emailAddress = other._emailAddress;
@@ -150,11 +150,11 @@ public class User extends VersionableObject {
 
     @UiProperties(displayName = "Name", displayType = UiProperties.TextFieldDisplay, order = 10)
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String userName) {
-        _name = userName;
+        name = userName;
     }
 
     @UiProperties(displayName = "Display Name", displayType = UiProperties.TextFieldDisplay, order = 20)
@@ -351,7 +351,7 @@ public class User extends VersionableObject {
         super.serialize(os);
         os.writeString(passwordHash);
         os.writeString(getActivationToken());
-        os.writeString(_name);
+        os.writeString(name);
         os.writeString(_displayName);
         os.writeString(_password);
         os.writeString(_emailAddress);
@@ -368,7 +368,7 @@ public class User extends VersionableObject {
                 passwordHash = os.readString();
                 setActivationToken(os.readString());
             case 1:
-                _name = os.readString();
+                name = os.readString();
                 _displayName = os.readString();
                 _password = os.readString();
                 _emailAddress = os.readString();

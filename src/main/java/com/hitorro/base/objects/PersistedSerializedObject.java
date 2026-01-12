@@ -32,6 +32,7 @@ import com.hitorro.util.io.StoreException;
 import com.hitorro.util.typesystem.annotation.ImplClassMeta;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,6 +47,8 @@ import java.util.List;
  * <p/>
  * Persist a non persisted versioned object.  Can be used for such things as workflow, persisted queue, etc
  */
+@Entity
+@Table(name = "persistedserializedobject")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.PersistedSerializedObject,
         onTriggers = {@ImplClassMeta(className = BaseTypeOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.OnNew),
                 @ImplClassMeta(className = BaseTypeOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.BeforeSave),
@@ -77,13 +80,27 @@ public class PersistedSerializedObject<T extends com.hitorro.util.typesystem.HTS
 
     public static final int SerializationVersion = 3;
 
-    private Blob blob;
+    @Lob
+    @Column(name = "blobContent")
+    private Blob blobContent;
+    
+    @Column(name = "name")
     private String name;
+    
+    @Column(name = "collectionId")
     private int collectionId;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "effectiveFrom")
     private Date effectiveFrom = new Date();
+    
+    @Column(name = "executor")
     private String executor;
 
+    @Transient
     private com.hitorro.util.typesystem.HTSerializable object = null;
+    
+    @Column(name = "priority")
     private int priority;
 
 
@@ -194,11 +211,11 @@ public class PersistedSerializedObject<T extends com.hitorro.util.typesystem.HTS
     }
 
     Blob getBlobContent() {
-        return blob;
+        return blobContent;
     }
 
     void setBlobContent(Blob blob) {
-        this.blob = blob;
+        this.blobContent = blob;
     }
 
     public int getSerializationVersion() {

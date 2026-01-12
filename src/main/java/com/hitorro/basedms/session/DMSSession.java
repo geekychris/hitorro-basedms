@@ -34,6 +34,8 @@ import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import com.hitorro.util.startupframework.ServiceContext;
+import com.hitorro.util.typesystem.BaseSessionFactory;
+import com.hitorro.util.typesystem.HTSerializable;
 import com.hitorro.util.typesystem.SessionException;
 import jakarta.persistence.FlushModeType;
 import org.hibernate.*;
@@ -110,7 +112,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
         return securityModel;
     }
 
-    public com.hitorro.util.typesystem.BaseSessionFactory getSessionFactory() {
+    public BaseSessionFactory getSessionFactory() {
         return DMSSessionFactory.getFactory();
     }
 
@@ -121,7 +123,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
      * @param key
      * @return
      */
-    public com.hitorro.util.typesystem.HTSerializable getSoftReference(com.hitorro.util.typesystem.Type t, String key) {
+    public HTSerializable getSoftReference(com.hitorro.util.typesystem.Type t, String key) {
         //XXX TODO should not cast, should have a better interface.
         GuidAccessor ga = (GuidAccessor) t.getGuidAccessor();
         return ga.getObjectSoftRef(key, this);
@@ -175,7 +177,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
                 com.hitorro.util.typesystem.Log.typemanager.error("Key past in did not include key part %s", key);
                 return null;
             }
-            if (builder.length() > 0) {
+            if (!builder.isEmpty()) {
                 builder.append(com.hitorro.util.typesystem.Type.SoftFieldSeperator);
             }
             builder.append(val);

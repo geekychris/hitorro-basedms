@@ -27,9 +27,12 @@ import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 
 
+@Entity
+@Table(name = "workflowitementry")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.WorkFlowItemEntry,
         isView = false,
         isPersisted = true,
@@ -37,8 +40,14 @@ import java.io.IOException;
 public class WorkFlowItemEntry extends BaseType {
     public static final int SerializationVersion = 1;
 
+    @Column(name = "itemGuid")
     private String itemGuid;
+    
+    @Column(name = "itemName")
     private String itemName;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workflowitem_id")
     private WorkFlowItem workFlowItem;
 
     public WorkFlowItem getWorkFlowItem() {

@@ -81,10 +81,10 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "content_category", joinColumns = @JoinColumn(name = "system_id"))
     @AttributeOverrides({
-        @AttributeOverride(name = "domain", column = @Column(name = "domain")),
-        @AttributeOverride(name = "value", column = @Column(name = "value"))
+        @AttributeOverride(name = "m_domain", column = @Column(name = "domain")),
+        @AttributeOverride(name = "m_value", column = @Column(name = "value"))
     })
-    protected Set<DomainValueIntf> categories = new HashSet<DomainValueIntf>();
+    protected Set<com.hitorro.util.objects.EmbeddableDomainValue> categories = new HashSet<com.hitorro.util.objects.EmbeddableDomainValue>();
     
     @Column(name = "referenceCount")
     protected int referenceCount = 0;
@@ -146,6 +146,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     private long contentSize = 0;
 
     @ManyToMany(mappedBy = "contents", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SELECT)
     private Set<VersionableObject> versionableObjects = new HashSet<VersionableObject>();
 
     public Content() {
@@ -780,7 +781,9 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
         os.writeSetOfBaseType(renditions);
         os.writeVersionedObject(parentRendition);
         os.writeSetOfBaseType(versionableObjects);
-        os.writeSetOfDomainValue(categories);
+        // Convert to interface type for serialization
+        Set<DomainValueIntf> categoriesIntf = new HashSet<DomainValueIntf>(categories);
+        os.writeSetOfDomainValue(categoriesIntf);
         os.writeInt(width);
         os.writeInt(height);
         os.writeInt(bitRate);
@@ -832,7 +835,10 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
                 is.readSetOfHTSerializable(renditions);
                 parentRendition = (Content) is.readVersionedObject();
                 is.readSetOfHTSerializable(versionableObjects);
-                is.readSetOfDomainValue(categories);
+                // Read into temp set and convert to embeddable
+                Set<DomainValueIntf> tempCategories = new HashSet<DomainValueIntf>();
+                is.readSetOfDomainValue(tempCategories);
+                setCategories(tempCategories);
                 width = is.readInt();
                 height = is.readInt();
                 bitRate = is.readInt();
@@ -871,11 +877,22 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     // category stuff
 
     public Set<DomainValueIntf> getCategories() {
-        return categories;
+        // Return as interface type for compatibility
+        return new HashSet<DomainValueIntf>(categories);
     }
 
     public void setCategories(Set<DomainValueIntf> cat) {
-        categories = cat;
+        // Convert from interface to embeddable implementation
+        categories.clear();
+        if (cat != null) {
+            for (DomainValueIntf dv : cat) {
+                if (dv instanceof com.hitorro.util.objects.EmbeddableDomainValue) {
+                    categories.add((com.hitorro.util.objects.EmbeddableDomainValue) dv);
+                } else {
+                    categories.add(new com.hitorro.util.objects.EmbeddableDomainValue(dv.getDomain(), dv.getValue()));
+                }
+            }
+        }
     }
 
     public void addCategory(String domain, String value) throws CategoryException {

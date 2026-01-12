@@ -62,7 +62,7 @@ public class RssFeedIn extends VersionableObject {
 
     @Column(name = "name", length = 80, nullable = false)
     @org.hibernate.annotations.Index(name = "name_idx")
-    private String _name;
+    private String name;
     
     @Column(name = "description", length = 255)
     private String _description;
@@ -179,7 +179,7 @@ public class RssFeedIn extends VersionableObject {
     public void copy(VersionableObject orig) {
         super.copy(orig);
         RssFeedIn other = (RssFeedIn) orig;
-        _name = other._name;
+        name = other.name;
         _uri = other._uri;
         _nextRead = (Date) other._nextRead.clone();
         _readInMinutes = other._readInMinutes;
@@ -193,11 +193,11 @@ public class RssFeedIn extends VersionableObject {
 
     @UiProperties(displayName = "Name", displayType = UiProperties.TextFieldDisplay, order = 10)
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String val) {
-        _name = val;
+        name = val;
     }
 
     @UiProperties(displayName = "Forum", displayType = UiProperties.VersionableObjectDisplay, order = 12)
@@ -338,7 +338,7 @@ public class RssFeedIn extends VersionableObject {
 
         os.writeInt(_forumType);
         os.writeInt(_priority);
-        os.writeString(_name);
+        os.writeString(name);
         os.writeString(_uri);
         os.writeInt(_readInMinutes);
         os.writeDate(_nextRead);
@@ -359,7 +359,7 @@ public class RssFeedIn extends VersionableObject {
                 _forumType = os.readInt();
                 _priority = os.readInt();
             case 1:
-                _name = os.readString();
+                name = os.readString();
                 _uri = os.readString();
                 _readInMinutes = os.readInt();
                 _nextRead = os.readDate();

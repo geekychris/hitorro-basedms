@@ -41,9 +41,9 @@ import java.util.List;
  * format, however there are some objects we want "soft links".  For instance: store:fs_store1
  */
 public class GuidAccessor implements com.hitorro.util.typesystem.Accessor {
-    protected static final String SysForIdQuery = "from %s where %s =:id";
+    protected static final String SysForIdQuery = "from %s e where e.%s =:id";
 
-    protected static final String SysForIdRealmQuery = "from %s where %s =:id AND (realm =:realm OR realm is null)";
+    protected static final String SysForIdRealmQuery = "from %s e where e.%s =:id AND (e.realm =:realm OR e.realm is null)";
     protected com.hitorro.util.typesystem.TypeManager manager;
     protected com.hitorro.util.typesystem.Type type;
     protected String softRefField[];
@@ -68,14 +68,16 @@ public class GuidAccessor implements com.hitorro.util.typesystem.Accessor {
      * sub class for such things as query initialization
      */
     public void initAux() {
-        query = Fmt.S(SysForIdQuery, type.getImplementationClass().getCanonicalName(), "guid");
-        queryRealm = Fmt.S(SysForIdRealmQuery, type.getImplementationClass().getCanonicalName(), "guid");
+        // Use simple class name for Hibernate 6 entity name resolution
+        String entityName = type.getImplementationClass().getSimpleName();
+        query = Fmt.S(SysForIdQuery, entityName, "guid");
+        queryRealm = Fmt.S(SysForIdRealmQuery, entityName, "guid");
 
 
         StringBuilder b = new StringBuilder();
         b.append("from ");
-        b.append(type.getImplementationClass().getCanonicalName());
-        b.append(" where");
+        b.append(entityName);
+        b.append(" e where");
         boolean notFirst = false;
         for (String f : softRefField) {
             if (notFirst) {
@@ -85,15 +87,16 @@ public class GuidAccessor implements com.hitorro.util.typesystem.Accessor {
                 b.append(" ");
             }
 
+            b.append("e.");
             b.append(f);
-            b.append("= :");
+            b.append(" = :");
             b.append(f);
         }
 
         softQuery = b.toString();
 
         if (isVersionable(type)) {
-            b.append(" AND (realm =:realm OR realm is null)");
+            b.append(" AND (e.realm =:realm OR e.realm is null)");
             softQueryRealm = b.toString();
         }
 
@@ -149,7 +152,7 @@ public class GuidAccessor implements com.hitorro.util.typesystem.Accessor {
         try {
             Query qq;
             if (session.getSecurityModel().isEnabled()) {
-                qq = session.createQuery(this.queryRealm);
+                qq = session.createQuery(this.softQueryRealm);
             } else {
                 qq = session.createQuery(this.softQuery);
             }

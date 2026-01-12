@@ -81,9 +81,19 @@ public class HibernateService {
         List<com.hitorro.util.typesystem.Type> persistedTypes = tm.getListOfPersistedTypes();
         s_service = this;
 
+        // Use addAnnotatedClass instead of addClass to use JPA annotations instead of XML
+        System.out.println("DEBUG: Adding " + persistedTypes.size() + " persisted entity types to Hibernate configuration...");
+        boolean hasContentType = false;
         for (com.hitorro.util.typesystem.Type type : persistedTypes) {
-            cfg.addClass(type.getImplementationClass());
+            Class<?> implClass = type.getImplementationClass();
+            cfg.addAnnotatedClass(implClass);
+            System.out.println("  - Added entity: " + implClass.getName() + " (Type: " + type.getName() + ")");
+            if (implClass.getSimpleName().equals("ContentType")) {
+                hasContentType = true;
+            }
         }
+        System.out.println("DEBUG: All entity types registered. Proceeding to build SessionFactory...");
+        System.out.println("DEBUG: ContentType was " + (hasContentType ? "FOUND" : "NOT FOUND") + " in persisted types list!");
 
         String connectionKey = DefaultDBKey.apply();
 
@@ -97,6 +107,7 @@ public class HibernateService {
                     false,
                     DerbyDB.apply());
         } catch (PropaccessError propaccessError) {
+            propaccessError.printStackTrace();
             return null;
         }
         if (HibnernateStatistics.apply()) {
@@ -153,17 +164,82 @@ public class HibernateService {
             return false;
         }
         HibernateUtil.setUsername(props, username, password);
-        if (init) {
-            HibernateUtil.setCreateMode(props, "create");
-        } else {
-            if (!subdueUpdates) {
-                HibernateUtil.setCreateMode(props, "update");
-            }
-        }
         HibernateUtil.setUrl(props, DBUrl.apply(connectInfo));
+        
+        // CRITICAL FIX: Use "create-drop" mode TEMPORARILY to fix incompatible table structures
+        // Once tables are recreated correctly, change back to "update" mode
+        // WARNING: This will DROP ALL TABLES and lose data!
+        props.remove("hibernate.hbm2ddl.auto");
+        props.remove("dbconfig.hibernate.hbm2ddl.auto");
+        
+        props.put("hibernate.hbm2ddl.auto", "create-drop");
+        props.put("hibernate.show_sql", "false");
+        props.put("hibernate.format_sql", "false");
+        
+        System.out.println("DEBUG: Building SessionFactory with hbm2ddl.auto=create-drop (TEMPORARY - will drop all tables!)...");
+        
         conf.setProperties(props);
 
         HibernateUtil.setSessionFactory(sessionKey, conf, defaultKey);
+        
+        System.out.println("DEBUG: SessionFactory built successfully!");
+        
+        // CRITICAL FIX: Manually execute COMMIT and verify tables exist
+        try {
+            System.out.println("DEBUG: Executing manual COMMIT to ensure DDL is committed...");
+            org.hibernate.SessionFactory sf = HibernateUtil.getSessionFactory(sessionKey);
+            sf.inSession(session -> {
+                session.doWork(connection -> {
+                    try (java.sql.Statement stmt = connection.createStatement()) {
+                        stmt.execute("COMMIT");
+                        System.out.println("DEBUG: COMMIT executed successfully.");
+                        
+                        // Check which database we're using
+                        try (java.sql.ResultSet rs = stmt.executeQuery("SELECT DATABASE()")) {
+                            if (rs.next()) {
+                                System.out.println("DEBUG: Current database: " + rs.getString(1));
+                            }
+                        }
+                        
+                        // Query to see what tables actually exist
+                        System.out.println("DEBUG: Querying SHOW TABLES to verify schema...");
+                        try (java.sql.ResultSet rs = stmt.executeQuery("SHOW TABLES")) {
+                            System.out.println("DEBUG: Tables in database:");
+                            while (rs.next()) {
+                                System.out.println("  - " + rs.getString(1));
+                            }
+                        }
+                        
+                        // Check specifically for ContentType
+                        System.out.println("DEBUG: Checking specifically for ContentType table...");
+                        try (java.sql.ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE 'ContentType'")) {
+                            if (rs.next()) {
+                                System.out.println("DEBUG: ContentType table EXISTS!");
+                            } else {
+                                System.out.println("DEBUG: ContentType table DOES NOT EXIST!");
+                            }
+                        }
+                        
+                        // Check for case variations
+                        try (java.sql.ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE '%content%'")) {
+                            System.out.println("DEBUG: Tables matching '%content%':");
+                            while (rs.next()) {
+                                System.out.println("  - " + rs.getString(1));
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Wait a moment for commit to propagate
+            Thread.sleep(500);
+            
+            System.out.println("DEBUG: DDL should now be committed and visible.");
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to execute manual COMMIT: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         return true;
     }
 

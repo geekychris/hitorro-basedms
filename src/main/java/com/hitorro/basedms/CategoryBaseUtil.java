@@ -62,7 +62,8 @@ public abstract class CategoryBaseUtil {
         }
         intf.processUnique(cats, domain, value);
 
-        categories.add(new DomainValue(domain, value));
+        categories.add(new com.hitorro.util.objects.EmbeddableDomainValue(domain, value));
+        intf.setCategories(categories);
     }
 
     /**

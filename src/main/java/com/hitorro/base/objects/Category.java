@@ -32,12 +32,15 @@ import com.hitorro.util.typesystem.annotation.UiProperties;
 import com.hitorro.util.typesystem.annotation.UiTypeProperties;
 import com.hitorro.util.typesystem.annotation.ViewClassReference;
 
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  */
+@Entity
+@Table(name = "category")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Category,
         isView = false,
         isPersisted = true,
@@ -52,13 +55,30 @@ public class Category extends BaseType {
     public static final int SerializationVersion = 2;
     public static final String HTEXTERNALCATEGORY = "htcategoryexternal";
     public static final String HTCATEGORY = "htcategory";
+    
+    @Column(name = "domain")
     private String domain;
+    
+    @Column(name = "value")
     private String value;
+    
+    @Column(name = "displayName")
     private String displayName;
+    
+    @Column(name = "description")
     private String description;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Category parent;
+    
+    @Column(name = "externalId")
     private String externalId;
+    
+    @Column(name = "adapterSource")
     private String adapterSource;
+    
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Category> children = new HashSet<Category>();
 
     public Category() {

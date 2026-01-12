@@ -61,7 +61,7 @@ public class SubjectArea extends VersionableObject {
     // name is the unique key
     @Column(name = "name", length = 20, nullable = false)
     @org.hibernate.annotations.Index(name = "name_idx")
-    private String _name;
+    private String name;
     
     // displayname is the user friendly displayable name.  May not be unique!
     @Column(name = "displayName", length = 100, nullable = false)
@@ -122,7 +122,7 @@ public class SubjectArea extends VersionableObject {
     public void copy(VersionableObject orig) {
         super.copy(orig);
         SubjectArea other = (SubjectArea) orig;
-        _name = other._name;
+        name = other.name;
         _displayName = other._displayName;
 
         // personalities
@@ -146,11 +146,11 @@ public class SubjectArea extends VersionableObject {
 
     @UiProperties(displayName = "Name", displayType = UiProperties.TextFieldDisplay, order = 10)
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String val) {
-        _name = val;
+        name = val;
     }
 
     @UiProperties(displayName = "Display Name", displayType = UiProperties.TextFieldDisplay, order = 20)
@@ -201,7 +201,7 @@ public class SubjectArea extends VersionableObject {
             throws IOException, StoreException {
         os.writeInt(getSerializationVersion());
         super.serialize(os);
-        os.writeString(_name);
+        os.writeString(name);
         os.writeString(_displayName);
         os.writeSetOfBaseType(_personalities);
         //os.writeSetOfBaseType(_forums);
@@ -214,7 +214,7 @@ public class SubjectArea extends VersionableObject {
 
         switch (version) {
             case 1:
-                _name = os.readString();
+                name = os.readString();
                 _displayName = os.readString();
                 os.readSetOfHTSerializable(_personalities);
                 //os.readSetOfHTSerializable(_forums);
