@@ -55,7 +55,7 @@ import java.util.Properties;
         debugCommands = {DumpCommand.class, Load.class, Hql.class, DumpHibernateStatistics.class, DumpSessionInfo.class},
         typeManagedClasses = {},
         uiDirectories = {})
-public class HibernateService {
+public class   HibernateService {
     public static final StringProperty DerbyDB = new StringProperty("db.embedded.name", "", null);
     public static final StringProperty DefaultDBKey = DatabaseUtil.DefaultDBKey;
     public static final StringProperty UserName = DatabaseUtil.UsernameKey;
