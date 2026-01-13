@@ -135,7 +135,7 @@ public class   HibernateService {
         }
     }
 
-    private final boolean createConfigFromProps(Configuration conf,
+    private boolean createConfigFromProps(Configuration conf,
                                                 String databaseConfigKey,
                                                 String connectConfigKey,
                                                 String sessionKey,

@@ -21,20 +21,21 @@ import jakarta.persistence.*;
 public class RenditionDescriptor extends BaseType {
     public static final int SerializationVersion = 1;
     
-    @Column(name = "m_name")
-    private String m_name;
+    @Column(name = "name")
+
+    private String name;
     
-    @Column(name = "m_description")
-    private String m_description;
+    @Column(name = "description")
+    private String description;
     
-    @Column(name = "m_width")
-    private Integer m_width;
+    @Column(name = "width")
+    private Integer width;
     
     @Column(name = "m_height")
-    private Integer m_height;
+    private Integer height;
     
     @Column(name = "m_format")
-    private String m_format;
+    private String format;
     
     public RenditionDescriptor() {
         super();
@@ -43,43 +44,43 @@ public class RenditionDescriptor extends BaseType {
     // Getters and Setters
     
     public String getName() {
-        return m_name;
+        return name;
     }
     
     public void setName(String name) {
-        this.m_name = name;
+        this.name = name;
     }
     
     public String getDescription() {
-        return m_description;
+        return description;
     }
     
     public void setDescription(String description) {
-        this.m_description = description;
+        this.description = description;
     }
     
     public Integer getWidth() {
-        return m_width;
+        return width;
     }
     
     public void setWidth(Integer width) {
-        this.m_width = width;
+        this.width = width;
     }
     
     public Integer getHeight() {
-        return m_height;
+        return height;
     }
     
     public void setHeight(Integer height) {
-        this.m_height = height;
+        this.height = height;
     }
     
     public String getFormat() {
-        return m_format;
+        return format;
     }
     
     public void setFormat(String format) {
-        this.m_format = format;
+        this.format = format;
     }
     
     @Override
