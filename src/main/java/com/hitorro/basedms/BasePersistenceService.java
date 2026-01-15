@@ -53,12 +53,14 @@ import com.hitorro.util.startupframework.ServiceContext;
 import com.hitorro.util.startupframework.phases.ServiceDefinition;
 import com.hitorro.util.typesystem.Bag;
 import com.hitorro.util.typesystem.BaseType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
 /**
  */
-@ServiceDefinition(dependentService = {HibernateService.class, ServletService.class, OpersService.class},
+@ServiceDefinition(dependentService = {HibernateService.class, OpersService.class},
         shortName = "basepersistence",
         description = "Base persistence Service",
         debugCommands = {DumpForUpgrade.class, ChangePasswordCommand.class, RemoveOrphanedFiles.class, UserManagerCommand.class, TouchObject.class},
@@ -71,18 +73,22 @@ import java.util.function.Predicate;
                 com.hitorro.base.objects.ExternalContent.class, com.hitorro.base.objects.ObjectFetcher.class, com.hitorro.base.objects.ContentSetter.class, com.hitorro.base.objects.EnqueueElement.class},
         uiDirectories = {})
 public class BasePersistenceService {
+    private static final Logger logger = LoggerFactory.getLogger(BasePersistenceService.class);
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         ContentTypeCache cache = ContentTypeCache.getCache();
 
 
+        // Register content servlet with ServletService if available (optional for Spring Boot)
         ServletService ss = (ServletService) ServiceContext.getSC().getInitializedModule(ServletService.class);
-        if (ss == null) {
-            return "ServletService not initialized";
+        if (ss != null) {
+            ContentSystemFileReaderServlet servlet = new ContentSystemFileReaderServlet();
+            // register ourselves with the servlet framework
+            ss.addExternalServlet(servlet, "/dmscontent/*");
+            logger.info("Registered DMS content servlet at /dmscontent/*");
+        } else {
+            logger.info("ServletService not available - skipping servlet registration (Spring Boot should register servlets via @WebServlet)");
         }
-        ContentSystemFileReaderServlet servlet = new ContentSystemFileReaderServlet();
-        // register ourselfs with the servlet framework
-        ss.addExternalServlet(servlet, "/dmscontent/*");
 
         ContentExtractorContext.getContext().addExtractor(new MP3Extractor());
         ContentExtractorContext.getContext().addExtractor(new JPEGImageExtractor());

@@ -28,7 +28,6 @@ import com.hitorro.basedms.commands.TestStreams;
 import com.hitorro.basedms.db.HibernateService;
 import com.hitorro.basedms.scheduler.SchedulerService;
 import com.hitorro.basedms.workflow.WorkflowService;
-import com.hitorro.network.resourcecache.ResourceService;
 import com.hitorro.util.auth.AuthenticationService;
 import com.hitorro.util.integrationevents.IntegrationEventsContext;
 import com.hitorro.util.integrationevents.ListIntegrationEvents;
@@ -39,8 +38,7 @@ import com.hitorro.util.startupframework.phases.ServiceDefinition;
 @ServiceDefinition(dependentService = {HibernateService.class,
         BasePersistenceService.class,
         SchedulerService.class,
-        WorkflowService.class,
-        ResourceService.class},
+        WorkflowService.class},
         shortName = "basedms",
         description = "Base document management system service",
         debugCommands = {DumpVersionTree.class,
