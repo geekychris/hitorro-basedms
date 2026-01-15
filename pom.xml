@@ -137,12 +137,9 @@
             <version>0.8.0</version>
         </dependency>
 
-        <!-- Amazon S3 -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
-            <version>0.9.4</version>
-        </dependency>
+        <!-- Amazon S3 support now provided by hadoop-aws in hitorro-util -->
+        <!-- Removed jets3t 0.9.4 (abandoned library from 2015) -->
+        <!-- Modern S3A implementation uses AWS SDK v2 via hadoop-aws 3.4.1 -->
 
         <!-- MongoDB Morphia -->
         <dependency>
