@@ -82,7 +82,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     @CollectionTable(name = "content_category", joinColumns = @JoinColumn(name = "system_id"))
     @AttributeOverrides({
         @AttributeOverride(name = "m_domain", column = @Column(name = "domain")),
-        @AttributeOverride(name = "m_value", column = @Column(name = "value"))
+        @AttributeOverride(name = "m_value", column = @Column(name = "`value`"))
     })
     protected Set<com.hitorro.util.objects.EmbeddableDomainValue> categories = new HashSet<com.hitorro.util.objects.EmbeddableDomainValue>();
     
@@ -508,6 +508,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
             throws IOException, StoreException {
         Content c = new Content();
         c.setResolutionAux(resolutionAux);
+        c.setParentRendition(this);  // CRITICAL: Set bidirectional relationship
         this.getRenditions().add(c);
         c.setContent(file.getName(), file, type);
         session.persist(c);
@@ -521,6 +522,7 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
             throws IOException, StoreException {
         Content c = new Content();
         c.setResolutionAux(resolutionAux);
+        c.setParentRendition(this);  // CRITICAL: Set bidirectional relationship
         this.getRenditions().add(c);
         c.setContent(file.getName(), file, type);
         session.persist(c);

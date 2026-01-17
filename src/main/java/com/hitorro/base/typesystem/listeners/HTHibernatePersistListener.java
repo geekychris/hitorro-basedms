@@ -21,6 +21,7 @@
  */
 package com.hitorro.base.typesystem.listeners;
 
+import com.hitorro.base.typesystem.GuidBaseType;
 import com.hitorro.util.typesystem.OnTrigger;
 import com.hitorro.util.typesystem.TypeManager;
 import org.hibernate.HibernateException;
@@ -28,6 +29,7 @@ import org.hibernate.event.spi.PersistContext;
 import org.hibernate.event.spi.PersistEvent;
 import org.hibernate.event.spi.PersistEventListener;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -35,17 +37,48 @@ import java.util.Map;
 public class HTHibernatePersistListener implements PersistEventListener {
     public void onPersist(PersistEvent persistEvent) throws HibernateException {
         Object o = persistEvent.getObject();
+        
+        // Manually trigger @PrePersist methods since DMSSession bypasses JPA
+        invokePrePersistCallbacks(o);
+        
         TypeManager.executeTrigger(OnTrigger.TriggerType.BeforePersist, o, true);
     }
 
     @Override
     public void onPersist(PersistEvent persistEvent, PersistContext createdAlready) throws HibernateException {
         Object o = persistEvent.getObject();
+        
+        // Manually trigger @PrePersist methods since DMSSession bypasses JPA
+        invokePrePersistCallbacks(o);
+        
         TypeManager.executeTrigger(OnTrigger.TriggerType.BeforePersist, o, true);
     }
 
     public void onPersist(PersistEvent persistEvent, Map map) throws HibernateException {
         Object o = persistEvent.getObject();
+        
+        // Manually trigger @PrePersist methods since DMSSession bypasses JPA
+        invokePrePersistCallbacks(o);
+        
         TypeManager.executeTrigger(OnTrigger.TriggerType.BeforePersist, o, true);
+    }
+    
+    /**
+     * Manually invoke @PrePersist callbacks since Hibernate Session API doesn't trigger them.
+     * This ensures GUID initialization and other pre-persist logic runs correctly.
+     */
+    private void invokePrePersistCallbacks(Object entity) {
+        if (entity == null) return;
+        
+        // For GuidBaseType, call ensureGuidBeforePersist() directly
+        if (entity instanceof GuidBaseType) {
+            try {
+                Method method = GuidBaseType.class.getDeclaredMethod("ensureGuidBeforePersist");
+                method.setAccessible(true);
+                method.invoke(entity);
+            } catch (Exception e) {
+                // Ignore - guid will be generated via getter if needed
+            }
+        }
     }
 }

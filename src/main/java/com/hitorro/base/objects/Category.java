@@ -59,7 +59,7 @@ public class Category extends BaseType {
     @Column(name = "domain")
     private String domain;
     
-    @Column(name = "value")
+    @Column(name = "`value`")
     private String value;
     
     @Column(name = "displayName")

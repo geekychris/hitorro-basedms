@@ -49,7 +49,7 @@ import java.io.IOException;
 public class NamedLongEntry extends VersionBaseType {
     public static final int SerializationVersion = 1;
     
-    @Column(name = "value")
+    @Column(name = "`value`")
     private long value;
     
     @Column(name = "incrementor")

@@ -157,7 +157,7 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     @CollectionTable(name = "versionableobject_category", joinColumns = @JoinColumn(name = "system_id"))
     @AttributeOverrides({
         @AttributeOverride(name = "m_domain", column = @Column(name = "domain")),
-        @AttributeOverride(name = "m_value", column = @Column(name = "value"))
+        @AttributeOverride(name = "m_value", column = @Column(name = "`value`"))
     })
     protected Set<com.hitorro.util.objects.EmbeddableDomainValue> categories = new HashSet<com.hitorro.util.objects.EmbeddableDomainValue>();
     
