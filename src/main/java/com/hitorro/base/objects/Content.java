@@ -206,7 +206,10 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     }
 
     private void init() {
-        this.setStoreName(com.hitorro.basedms.StoreUtil.getDefaultStore().getSoftGuid());
+        Store defaultStore = com.hitorro.basedms.StoreUtil.getDefaultStore();
+        if (defaultStore != null) {
+            this.setStoreName(defaultStore.getSoftGuid());
+        }
     }
 
     public String getCodec() {
