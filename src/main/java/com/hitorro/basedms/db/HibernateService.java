@@ -94,6 +94,11 @@ public class   HibernateService {
         }
         System.out.println("DEBUG: All entity types registered. Proceeding to build SessionFactory...");
         System.out.println("DEBUG: ContentType was " + (hasContentType ? "FOUND" : "NOT FOUND") + " in persisted types list!");
+        
+        // WORKAROUND: Folder (Type: 52) is not being found by TypeManager.getListOfPersistedTypes()
+        // Add it explicitly to ensure it's registered with Hibernate
+        cfg.addAnnotatedClass(com.hitorro.base.objects.Folder.class);
+        System.out.println("  - Added entity (explicit): com.hitorro.base.objects.Folder (Type: 52) - WORKAROUND for TypeManager scan issue");
 
         String connectionKey = DefaultDBKey.apply();
 
