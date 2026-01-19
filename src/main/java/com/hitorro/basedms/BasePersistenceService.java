@@ -66,7 +66,7 @@ import java.util.function.Predicate;
         debugCommands = {DumpForUpgrade.class, ChangePasswordCommand.class, RemoveOrphanedFiles.class, UserManagerCommand.class, TouchObject.class},
         typeManagedClasses = {BaseType.class, Bag.class, ObjectVersions.class, com.hitorro.base.objects.VersionableObject.class, com.hitorro.base.objects.User.class,
                 com.hitorro.base.objects.Permission.class, com.hitorro.base.objects.Role.class, com.hitorro.base.objects.NamedLongEntry.class, com.hitorro.base.objects.Store.class, com.hitorro.base.objects.Content.class,
-                com.hitorro.base.objects.ContentType.class, com.hitorro.base.objects.Extension.class, com.hitorro.base.objects.Container.class, com.hitorro.base.objects.DomainInfo.class, DomainValue.class,
+                com.hitorro.base.objects.ContentType.class, com.hitorro.base.objects.Extension.class, com.hitorro.base.objects.Container.class, com.hitorro.base.objects.Folder.class, com.hitorro.base.objects.DomainInfo.class, DomainValue.class,
                 com.hitorro.base.objects.Category.class, com.hitorro.base.objects.PersistedSerializedObject.class, FileNameMatchContentConstraint.class,
                 MimeTypeContentConstraint.class, TagConstraint.class, PersistableList.class,
                 HasRenditionConstraint.class, com.hitorro.base.objects.Reference.class, com.hitorro.base.objects.UserPreferences.class, com.hitorro.base.objects.UserMark.class,

@@ -31,7 +31,7 @@ public class ConvertionEdge {
 
     private String transformerName;
     private String tranformerMethod;
-    private String m_methodArgs;
+    private String methodArgs;
 
     public String getSourceMimeType() {
         return sourceMimeType;
@@ -66,11 +66,11 @@ public class ConvertionEdge {
     }
 
     public String getMethodArgs() {
-        return m_methodArgs;
+        return methodArgs;
     }
 
     public void setMethodArgs(String args) {
-        m_methodArgs = args;
+        this.methodArgs = args;
     }
 
     public TransformMethod getTransformerMethodImpl() {

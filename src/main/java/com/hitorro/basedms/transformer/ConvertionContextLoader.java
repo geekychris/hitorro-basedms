@@ -43,18 +43,18 @@ public class ConvertionContextLoader {
     public static final String Method = "method";
 
     public static final String MethodArgs = "methodargs";
-    private ConvertionContext m_context;
-    private String m_header[];
-    private Map<String, Integer> m_map;
+    private ConvertionContext context;
+    private String header[];
+    private Map<String, Integer> map;
 
     ConvertionContextLoader(ConvertionContext context) {
-        m_context = context;
+        this.context = context;
     }
 
     public void load(File f) throws IOException {
         CSVReader reader = new CSVReader(FileUtil.getBufferedFileInputStream(f));
-        m_header = reader.getColumnNames();
-        m_map = MapUtil.getMapColumnNameToIndexPosition(m_header, true);
+        header = reader.getColumnNames();
+        map = MapUtil.getMapColumnNameToIndexPosition(header, true);
         String[] row = reader.getNextRow();
         while (row != null) {
             line(row);
@@ -63,17 +63,17 @@ public class ConvertionContextLoader {
     }
 
     public void line(String[] line) {
-        String from = MapUtil.getColumnFromColumMap(MimeFrom, m_map, line, true);
-        String to = MapUtil.getColumnFromColumMap(MimeTo, m_map, line, true);
-        String transformer = MapUtil.getColumnFromColumMap(Transformer, m_map, line, true);
-        String method = MapUtil.getColumnFromColumMap(Method, m_map, line, true);
-        String methodArgs = MapUtil.getColumnFromColumMap(MethodArgs, m_map, line, true);
+        String from = MapUtil.getColumnFromColumMap(MimeFrom, map, line, true);
+        String to = MapUtil.getColumnFromColumMap(MimeTo, map, line, true);
+        String transformer = MapUtil.getColumnFromColumMap(Transformer, map, line, true);
+        String method = MapUtil.getColumnFromColumMap(Method, map, line, true);
+        String methodArgs = MapUtil.getColumnFromColumMap(MethodArgs, map, line, true);
         ConvertionEdge edge = new ConvertionEdge();
         edge.setSourceMimeType(from);
         edge.setTargetMimeType(to);
         edge.setTransformerName(transformer);
         edge.setTransformerMethod(method);
         edge.setMethodArgs(methodArgs);
-        this.m_context.add(edge);
+        this.context.add(edge);
     }
 }

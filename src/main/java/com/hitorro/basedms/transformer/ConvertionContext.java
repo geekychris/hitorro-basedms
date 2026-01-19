@@ -30,10 +30,10 @@ import java.util.List;
 
 
 public class ConvertionContext {
-    private List<ConvertionEdge> m_edges = new ArrayList<ConvertionEdge>();
+    private List<ConvertionEdge> edges = new ArrayList<ConvertionEdge>();
 
     public void add(ConvertionEdge edge) {
-        m_edges.add(edge);
+        edges.add(edge);
     }
 
     public void loadContext(File loadContext) throws IOException {
@@ -43,7 +43,7 @@ public class ConvertionContext {
 
     public List<ConvertionEdge> visit(HTPredicate<ConvertionEdge> constraint) {
         List<ConvertionEdge> list = new ArrayList<ConvertionEdge>();
-        for (ConvertionEdge edge : m_edges) {
+        for (ConvertionEdge edge : edges) {
             if (constraint.test(edge)) {
                 list.add(edge);
             }

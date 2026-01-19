@@ -53,22 +53,22 @@ public class TransformerService {
     public static final String PSO_JOB_NAME = "jobs";
     private static TransformerService s_service;
     private ConvertionContext convertionContext = new ConvertionContext();
-    private Map<String, TransformMethod> m_methods = new HashMap<String, TransformMethod>();
+    private Map<String, TransformMethod> methods = new HashMap<String, TransformMethod>();
 
-	private boolean m_startJobQueue = true;
-    private int m_threads = JobThreads.apply();
+	private boolean startJobQueue = true;
+    private int threads = JobThreads.apply();
 
     public static TransformerService getService() {
         return s_service;
     }
 
     private void startJobQueue() {
-        if (m_startJobQueue) {
+        if (startJobQueue) {
 
             JobFarmCommand jfc = new JobFarmCommand();
             // create a queue just for transcoder
             GroupSpacedPSOQueueProcessor<PersistedSerializedObject> httpQp = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(JobService.TranscoderKey, "PSO-TranscoderService",
-                    80, m_threads, jfc,
+                    80, threads, jfc,
                     PersistedSerializedObject.CollectionID_TranscoderQueue);
             httpQp.addNames(PSO_JOB_NAME);
             httpQp.start();
@@ -76,11 +76,11 @@ public class TransformerService {
     }
 
     public TransformMethod getMethod(String method) {
-        return m_methods.get(method.toLowerCase());
+        return methods.get(method.toLowerCase());
     }
 
     public void setMethod(TransformMethod method) {
-        m_methods.put(method.getMethodName().toLowerCase(), method);
+        methods.put(method.getMethodName().toLowerCase(), method);
     }
 
     public ConvertionContext getConvertionContext() {
