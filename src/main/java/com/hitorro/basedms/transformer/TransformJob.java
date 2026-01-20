@@ -30,6 +30,7 @@ import com.hitorro.util.io.StoreException;
 import com.hitorro.util.job.Job;
 import com.hitorro.util.job.JobExecutionResult;
 import com.hitorro.util.job.JobParameters;
+import com.hitorro.util.typesystem.BaseSession;
 import org.apache.log4j.Level;
 
 import java.io.IOException;
@@ -63,57 +64,11 @@ public class TransformJob extends Job {
     }
 
     public JobExecutionResult doAction(JobParameters parameters) throws IOException {
-        TransformJobParameters params = (TransformJobParameters) parameters;
+		JobExecutionResult WARN = TransformerUtil.getJobExecutionResult((TransformJobParameters) parameters, getSession());
+		if (WARN != null) return WARN;
 
-        String method = params.getTransformerMethod();
-        TransformMethod m = TransformerService.getService().getMethod(method);
-        if (m == null) {
-            return new JobExecutionResult(Level.WARN, "Unable to find convertion edge for  %s", method);
-        }
-        if (!m.ensureServiceAvailable()) {
-            return new JobExecutionResult(Level.WARN, "service not running for method %s", method);
-        }
-        String soGuid = params.getJobGuid();
-        VersionableObject so = (VersionableObject) getSession().getObjectFromGuid(soGuid);
-        if (so == null) {
-            return new JobExecutionResult(Level.WARN, "Unable to find system object for transformation %s", soGuid);
-        }
-
-        Content c = so.getContentByConstraint(params.getContentConstraint(), false);
-        if (c == null) {
-            return new JobExecutionResult(Level.WARN, "Unable to find content for system object for transformation %s", soGuid);
-        }
-
-        BaseFile sourceFile = c.getContentFile();
-        BaseFile targetFile = null;
-        try {
-            targetFile = m.convert(sourceFile, params.getJobId(), params.getTransformerMethodArgs(), params.getNotifyGuid(), 0);
-            if (!BaseFile.notNullAndExists(targetFile)) {
-                return new JobExecutionResult(Level.ERROR, "Unable to convertToPdf %s file %s no output file generated.", soGuid, sourceFile);
-            }
-            if (params.getAddContentAsChildOfContent()) {
-                long size = sourceFile.length();
-                params.getContentSetter().setFile(targetFile, getSession(), c, true);
-            } else {
-                params.getContentSetter().setFile(targetFile, getSession(), null, true);
-            }
-        } catch (IOException ioe) {
-            return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, ioe.getMessage());
-        } catch (CategoryException ce) {
-            return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, ce.getMessage());
-        } catch (StoreException se) {
-            return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, se.getMessage());
-        } finally {
-            //if (FileUtil.notNullAndExists(sourceFile))
-            //{
-            //    sourceFile.delete();
-            //}
-            if (!BaseFile.notNullAndExists(targetFile)) {
-                targetFile.delete();
-            }
-        }
-
-
-        return new JobExecutionResult(Level.INFO, "Done");
+		return new JobExecutionResult(Level.INFO, "Done");
     }
+
+
 }
