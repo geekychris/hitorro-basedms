@@ -92,12 +92,51 @@ public class TransformerService {
             convertionContext.loadContext(TransformerConfig.apply());
             JobService.getService().registerAppJob(TransformJob.class, "Transformation Job", TransformJobParameters.class);
             s_service = this;
+            
+            // Register transformation methods
+            registerTransformMethods();
+            
             ClusterService.getThisInstanceDefinition().addInstanceCapability(TransformationKey, "", "", "", true);
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
             return e.getMessage();
         }
         return null;
+    }
+    
+    /**
+     * Register available transformation methods
+     */
+    private void registerTransformMethods() {
+        // Register PDF to image transformer
+        com.hitorro.basedms.transformer.methods.PDFToImageTransformer pdfToImage = 
+                new com.hitorro.basedms.transformer.methods.PDFToImageTransformer();
+        if (pdfToImage.ensureServiceAvailable()) {
+            setMethod(pdfToImage);
+            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", pdfToImage.getMethodName());
+        } else {
+            com.hitorro.basedms.transformer.Log.transformer.warn("PDF to image transformer unavailable (pdftoppm not found)");
+        }
+        
+        // Register LibreOffice transformer
+        com.hitorro.basedms.transformer.methods.LibreOfficeTransformer libreOffice = 
+                new com.hitorro.basedms.transformer.methods.LibreOfficeTransformer();
+        if (libreOffice.ensureServiceAvailable()) {
+            setMethod(libreOffice);
+            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", libreOffice.getMethodName());
+        } else {
+            com.hitorro.basedms.transformer.Log.transformer.warn("LibreOffice transformer unavailable (soffice not found)");
+        }
+        
+        // Register ImageMagick transformer
+        com.hitorro.basedms.transformer.methods.ImageMagickTransformer imageMagick = 
+                new com.hitorro.basedms.transformer.methods.ImageMagickTransformer();
+        if (imageMagick.ensureServiceAvailable()) {
+            setMethod(imageMagick);
+            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", imageMagick.getMethodName());
+        } else {
+            com.hitorro.basedms.transformer.Log.transformer.warn("ImageMagick transformer unavailable (convert not found)");
+        }
     }
 
     public String start(boolean dbInit) {

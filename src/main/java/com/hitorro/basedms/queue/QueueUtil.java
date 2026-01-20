@@ -114,7 +114,7 @@ public class QueueUtil {
         pso.setName(JobService.PSO_JOB_NAME);
         pso.setPriority(priority);
         try {
-            pso.setSerializableObject(p);
+            pso.setSerializableObject(p, session);  // Pass session explicitly
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
             return null;
