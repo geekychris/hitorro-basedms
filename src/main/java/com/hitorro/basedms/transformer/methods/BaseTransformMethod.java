@@ -21,18 +21,31 @@
  */
 package com.hitorro.basedms.transformer.methods;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.basedms.transformer.TransformMethod;
+import com.hitorro.util.json.String2JsonMapper;
 
 /**
  * Common base class for transformer methods providing shared functionality
  */
 public abstract class BaseTransformMethod implements TransformMethod {
 
+    private static final String2JsonMapper jsonMapper = new String2JsonMapper();
+
     /**
-     * Helper to parse parameters in format key1=value1,key2=value2
+     * Helper to parse parameters in format key1=value1,key2=value2 or JSON
      */
     protected String getParameter(String parameters, String key, String defaultValue) {
         if (parameters == null || parameters.isEmpty()) {
+            return defaultValue;
+        }
+
+        if (isJson(parameters)) {
+            JsonNode node = jsonMapper.apply(parameters);
+            if (node != null && node.has(key)) {
+                JsonNode value = node.get(key);
+                return value.isNull() ? defaultValue : value.asText();
+            }
             return defaultValue;
         }
 
@@ -44,5 +57,20 @@ public abstract class BaseTransformMethod implements TransformMethod {
         }
 
         return defaultValue;
+    }
+
+    /**
+     * Parses the parameters string as a JSON node
+     */
+    protected JsonNode getJsonParameters(String parameters) {
+        if (parameters == null || parameters.isEmpty() || !isJson(parameters)) {
+            return null;
+        }
+        return jsonMapper.apply(parameters);
+    }
+
+    private boolean isJson(String parameters) {
+        String trimmed = parameters.trim();
+        return (trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"));
     }
 }
