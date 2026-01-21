@@ -1216,6 +1216,39 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     public Set<Content> getContents() {
         return contents;
     }
+    
+    /**
+     * Get all content including child renditions recursively.
+     * This returns direct content attached to this object plus all renditions
+     * of that content, and renditions of those renditions, etc.
+     * 
+     * @return List of all content including nested renditions
+     */
+    public java.util.List<Content> getAllContentsRecursively() {
+        java.util.List<Content> result = new java.util.ArrayList<>();
+        if (contents != null) {
+            for (Content content : contents) {
+                collectContentRecursively(content, result);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Helper method to recursively collect content and all its child renditions
+     */
+    private void collectContentRecursively(Content content, java.util.List<Content> result) {
+        // Add the current content
+        result.add(content);
+        
+        // Get child renditions if they exist
+        if (content.getRenditions() != null && !content.getRenditions().isEmpty()) {
+            for (Content childRendition : content.getRenditions()) {
+                // Recursively collect children
+                collectContentRecursively(childRendition, result);
+            }
+        }
+    }
 
     protected void setContents(Set<Content> m_contents) {
         this.contents = m_contents;

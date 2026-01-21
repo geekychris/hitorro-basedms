@@ -284,7 +284,7 @@ public class PSOQueueProcessor<P extends PersistedSerializedObject> extends Tran
 
     @Override
     public boolean add(final JobQueueElement<P> o) throws IOException, StoreException {
-        return false;
+		return consume(o);
     }
 
     @Override

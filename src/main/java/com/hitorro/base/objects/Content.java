@@ -22,6 +22,7 @@
 package com.hitorro.base.objects;
 
 import com.hitorro.base.typesystem.GuidBaseType;
+import com.hitorro.base.typesystem.accessors.GuidAccessor;
 import com.hitorro.basedms.cache.ContentTypeCache;
 import com.hitorro.basedms.contentpropertyextractor.ContentExtractorContext;
 import com.hitorro.basedms.exceptions.CategoryException;
@@ -69,7 +70,8 @@ import java.util.Set;
                 @com.hitorro.util.typesystem.annotation.ImplClassMeta(className = com.hitorro.basedms.BaseTypeOnTriggerGeneric.class, trigger = OnTrigger.TriggerType.OnLoad)},
         isView = false,
         isPersisted = true,
-        schemaVersion = Content.SerializationVersion)
+        schemaVersion = Content.SerializationVersion,
+		guidAccessor = GuidAccessor.class)
 @com.hitorro.util.typesystem.annotation.UiTypeProperties(name = "Content",
         views = {@com.hitorro.util.typesystem.annotation.ViewClassReference(name = com.hitorro.util.typesystem.annotation.ViewClassReference.ListView, viewClass = Content.ContentListView.class),
                 @com.hitorro.util.typesystem.annotation.ViewClassReference(name = com.hitorro.util.typesystem.annotation.ViewClassReference.EditView, viewClass = Content.ContentEditView.class),
