@@ -19,38 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.hitorro.basedms.transformer;
+package com.hitorro.basedms.transformer.methods;
 
-import com.hitorro.util.core.opers.HTPredicate;
+import com.hitorro.basedms.transformer.TransformMethod;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Common base class for transformer methods providing shared functionality
+ */
+public abstract class BaseTransformMethod implements TransformMethod {
 
-public class ConvertionContext {
-    private List<ConvertionEdge> edges = new ArrayList<ConvertionEdge>();
+    /**
+     * Helper to parse parameters in format key1=value1,key2=value2
+     */
+    protected String getParameter(String parameters, String key, String defaultValue) {
+        if (parameters == null || parameters.isEmpty()) {
+            return defaultValue;
+        }
 
-    public void add(ConvertionEdge edge) {
-        edges.add(edge);
-    }
-
-    public void loadContext(File loadContext) throws IOException {
-        ConvertionContextLoader loader = new ConvertionContextLoader(this);
-        loader.load(loadContext);
-    }
-
-    public List<ConvertionEdge> getEdges() {
-        return edges;
-    }
-
-    public List<ConvertionEdge> visit(HTPredicate<ConvertionEdge> constraint) {
-        List<ConvertionEdge> list = new ArrayList<ConvertionEdge>();
-        for (ConvertionEdge edge : edges) {
-            if (constraint.test(edge)) {
-                list.add(edge);
+        for (String param : parameters.split(",")) {
+            String[] parts = param.split("=", 2);
+            if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(key)) {
+                return parts[1].trim();
             }
         }
-        return list;
+
+        return defaultValue;
     }
 }

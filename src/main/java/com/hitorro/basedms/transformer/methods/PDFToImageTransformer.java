@@ -22,10 +22,8 @@
 package com.hitorro.basedms.transformer.methods;
 
 import com.hitorro.basedms.transformer.Log;
-import com.hitorro.basedms.transformer.TransformMethod;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.fs.file.FileFile;
-import com.hitorro.util.core.Env;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.json.keys.IntegerProperty;
 import com.hitorro.util.json.keys.StringProperty;
@@ -33,23 +31,19 @@ import com.hitorro.util.json.keys.StringProperty;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Convert PDF documents to images using pdftoppm (poppler-utils)
- * Supports conversion to JPEG, PNG, and TIFF formats
- */
-public class PDFToImageTransformer implements TransformMethod {
+public class PDFToImageTransformer extends BaseTransformMethod {
     public static final String METHOD_NAME = "pdf_to_image";
-    
+
     private static final StringProperty PdfToPpmPath = new StringProperty(
             "transformer.pdftoppm.path",
             "Path to pdftoppm executable",
             "pdftoppm");
-    
+
     private static final IntegerProperty DefaultDPI = new IntegerProperty(
             "transformer.pdf.image.dpi",
             "Default DPI for PDF to image conversion",
             150);
-    
+
     private static final IntegerProperty DefaultQuality = new IntegerProperty(
             "transformer.pdf.image.quality",
             "JPEG quality (1-100)",
@@ -64,7 +58,7 @@ public class PDFToImageTransformer implements TransformMethod {
     public boolean ensureServiceAvailable() {
         try {
             String cmd = PdfToPpmPath.apply();
-            Process p = Runtime.getRuntime().exec(new String[]{cmd, "-v"});
+            Process p = Runtime.getRuntime().exec(new String[] { cmd, "-v" });
             int exitCode = p.waitFor();
             return exitCode == 0 || exitCode == 1; // pdftoppm returns 1 for -v
         } catch (Exception e) {
@@ -74,12 +68,13 @@ public class PDFToImageTransformer implements TransformMethod {
     }
 
     @Override
-    public BaseFile convert(BaseFile sourceFile, String id, String parameters, String notifyGuid, int maxWaitTimeMinutes) 
+    public BaseFile convert(BaseFile sourceFile, String id, String parameters, String notifyGuid,
+            int maxWaitTimeMinutes)
             throws IOException {
         if (!sourceFile.isLocal()) {
             throw new IOException("PDF to image conversion requires local file system");
         }
-        
+
         File sourcePdf = ((FileFile) sourceFile).getJavaFile();
         if (!sourcePdf.exists()) {
             throw new IOException("Source PDF file does not exist: " + sourcePdf.getAbsolutePath());
@@ -90,7 +85,7 @@ public class PDFToImageTransformer implements TransformMethod {
         int dpi = Integer.parseInt(getParameter(parameters, "dpi", String.valueOf(DefaultDPI.apply())));
         int quality = Integer.parseInt(getParameter(parameters, "quality", String.valueOf(DefaultQuality.apply())));
         int page = Integer.parseInt(getParameter(parameters, "page", "1"));
-        
+
         // Determine output format flag
         String formatFlag;
         String extension;
@@ -111,12 +106,12 @@ public class PDFToImageTransformer implements TransformMethod {
                 extension = "jpg";
                 break;
         }
-        
+
         // Create temp output file
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
         File outputFile = new File(tempDir, Fmt.S("pdf_conv_%s.%s", id, extension));
         String outputPrefix = new File(tempDir, Fmt.S("pdf_conv_%s", id)).getAbsolutePath();
-        
+
         try {
             // Build pdftoppm command
             ProcessBuilder pb = new ProcessBuilder(
@@ -125,47 +120,47 @@ public class PDFToImageTransformer implements TransformMethod {
                     "-r", String.valueOf(dpi),
                     "-f", String.valueOf(page),
                     "-l", String.valueOf(page),
-                    "-singlefile"
-            );
-            
+                    "-singlefile");
+
             // Add quality for JPEG
             if (format.equals("jpeg") || format.equals("jpg")) {
                 pb.command().add("-jpegopt");
                 pb.command().add(Fmt.S("quality=%d", quality));
             }
-            
+
             pb.command().add(sourcePdf.getAbsolutePath());
             pb.command().add(outputPrefix);
-            
+
             pb.redirectErrorStream(true);
-            
+
             Log.transformer.info("Executing: %s", String.join(" ", pb.command()));
-            
+
             Process process = pb.start();
             int exitCode = process.waitFor();
-            
+
             if (exitCode != 0) {
                 throw new IOException(Fmt.S("pdftoppm failed with exit code %d", exitCode));
             }
-            
+
             // pdftoppm with -singlefile creates file without page number suffix
             File actualOutput = new File(outputPrefix + "." + extension);
             if (!actualOutput.exists()) {
                 throw new IOException("Output file was not created: " + actualOutput.getAbsolutePath());
             }
-            
+
             // Rename to expected output name
             if (!actualOutput.renameTo(outputFile)) {
                 // If rename fails, try copy
-                java.nio.file.Files.copy(actualOutput.toPath(), outputFile.toPath(), 
+                java.nio.file.Files.copy(actualOutput.toPath(), outputFile.toPath(),
                         java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 actualOutput.delete();
             }
-            
+
             Log.transformer.info("Successfully converted PDF to %s: %s", format, outputFile.getAbsolutePath());
-            com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(outputFile.getParentFile());
+            com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(
+                    outputFile.getParentFile());
             return ffs.getFile(outputFile.getName());
-            
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("PDF conversion interrupted", e);
@@ -175,20 +170,5 @@ public class PDFToImageTransformer implements TransformMethod {
             }
             throw new IOException("Failed to convert PDF to image: " + e.getMessage(), e);
         }
-    }
-    
-    private String getParameter(String parameters, String key, String defaultValue) {
-        if (parameters == null || parameters.isEmpty()) {
-            return defaultValue;
-        }
-        
-        for (String param : parameters.split(",")) {
-            String[] parts = param.split("=", 2);
-            if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(key)) {
-                return parts[1].trim();
-            }
-        }
-        
-        return defaultValue;
     }
 }

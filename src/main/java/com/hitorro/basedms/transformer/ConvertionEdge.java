@@ -22,7 +22,7 @@
 package com.hitorro.basedms.transformer;
 
 /**
-
+ * 
  * Defines end points of a transformation.
  */
 public class ConvertionEdge {
@@ -30,6 +30,7 @@ public class ConvertionEdge {
     private String targetMimeType;
 
     private String transformerName;
+    private String transformerClass;
     private String tranformerMethod;
     private String methodArgs;
 
@@ -55,6 +56,14 @@ public class ConvertionEdge {
 
     public void setTransformerName(String transformer) {
         transformerName = transformer;
+    }
+
+    public String getTransformerClass() {
+        return transformerClass;
+    }
+
+    public void setTransformerClass(String transformerClass) {
+        this.transformerClass = transformerClass;
     }
 
     public String getTransformerMethod() {

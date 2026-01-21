@@ -32,20 +32,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Convert images using ImageMagick convert command
- * Supports resizing, format conversion, compression, etc.
+ * Convert PostScript and EPS files to PDF using Ghostscript (ps2pdf)
+ * Supports quality settings and PDF version compatibility
  */
-public class ImageMagickTransformer extends BaseTransformMethod {
-    public static final String METHOD_NAME = "imagemagick_convert";
+public class PostScriptToPDFTransformer extends BaseTransformMethod {
+    public static final String METHOD_NAME = "ps_to_pdf";
 
-    private static final StringProperty ConvertPath = new StringProperty(
-            "transformer.imagemagick.path",
-            "Path to ImageMagick convert executable",
-            "convert");
+    private static final StringProperty Ps2PdfPath = new StringProperty(
+            "transformer.ps2pdf.path",
+            "Path to ps2pdf executable (Ghostscript)",
+            "ps2pdf");
 
     @Override
     public String getMethodName() {
@@ -55,12 +53,13 @@ public class ImageMagickTransformer extends BaseTransformMethod {
     @Override
     public boolean ensureServiceAvailable() {
         try {
-            String cmd = ConvertPath.apply();
-            Process p = Runtime.getRuntime().exec(new String[] { cmd, "-version" });
+            // ps2pdf is a shell script wrapper around gs (ghostscript)
+            // Check for ghostscript instead
+            Process p = Runtime.getRuntime().exec(new String[] { "gs", "--version" });
             int exitCode = p.waitFor();
             return exitCode == 0;
         } catch (Exception e) {
-            Log.transformer.warn("ImageMagick not available: %s", e.getMessage());
+            Log.transformer.warn("Ghostscript (ps2pdf) not available: %s", e.getMessage());
             return false;
         }
     }
@@ -70,57 +69,56 @@ public class ImageMagickTransformer extends BaseTransformMethod {
             int maxWaitTimeMinutes)
             throws IOException {
         if (!sourceFile.isLocal()) {
-            throw new IOException("ImageMagick conversion requires local file system");
+            throw new IOException("PostScript to PDF conversion requires local file system");
         }
 
-        File sourceImage = ((FileFile) sourceFile).getJavaFile();
-        if (!sourceImage.exists()) {
-            throw new IOException("Source image does not exist: " + sourceImage.getAbsolutePath());
+        File sourcePs = ((FileFile) sourceFile).getJavaFile();
+        if (!sourcePs.exists()) {
+            throw new IOException("Source PostScript file does not exist: " + sourcePs.getAbsolutePath());
         }
 
-        // Parse parameters: format=jpg,width=800,height=600,quality=85,resize=50%
-        String format = getParameter(parameters, "format", "jpg").toLowerCase();
-        String width = getParameter(parameters, "width", null);
-        String height = getParameter(parameters, "height", null);
-        String quality = getParameter(parameters, "quality", null);
-        String resize = getParameter(parameters, "resize", null);
+        // Parse parameters: quality=screen|ebook|printer|prepress,compatibility=1.4
+        String quality = getParameter(parameters, "quality", "ebook");
+        String compatibility = getParameter(parameters, "compatibility", "1.4");
+
+        // Validate quality setting
+        String pdfSettings;
+        switch (quality.toLowerCase()) {
+            case "screen":
+                pdfSettings = "screen"; // 72 dpi, low quality
+                break;
+            case "ebook":
+                pdfSettings = "ebook"; // 150 dpi, medium quality
+                break;
+            case "printer":
+                pdfSettings = "printer"; // 300 dpi, high quality
+                break;
+            case "prepress":
+                pdfSettings = "prepress"; // 300 dpi, highest quality
+                break;
+            default:
+                pdfSettings = "ebook";
+                Log.transformer.warn("Unknown quality setting '%s', using 'ebook'", quality);
+        }
 
         // Create temp output file
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        File outputFile = new File(tempDir, Fmt.S("img_conv_%s.%s", id, format));
+        File outputFile = new File(tempDir, Fmt.S("ps_conv_%s.pdf", id));
 
         try {
-            // Build ImageMagick command
-            List<String> command = new ArrayList<>();
-            command.add(ConvertPath.apply());
-            command.add(sourceImage.getAbsolutePath());
-
-            // Add resize options
-            if (resize != null && !resize.isEmpty()) {
-                command.add("-resize");
-                command.add(resize);
-            } else if (width != null || height != null) {
-                String geometry = "";
-                if (width != null) {
-                    geometry += width;
-                }
-                if (height != null) {
-                    geometry += "x" + height;
-                } else {
-                    geometry += "x";
-                }
-                command.add("-resize");
-                command.add(geometry);
-            }
-
-            // Add quality for lossy formats
-            if (quality != null && !quality.isEmpty()) {
-                command.add("-quality");
-                command.add(quality);
-            }
-
-            // Add output file
-            command.add(outputFile.getAbsolutePath());
+            // Build ps2pdf command
+            // ps2pdf is typically a shell script, so we'll call gs directly for better
+            // control
+            java.util.List<String> command = new java.util.ArrayList<>();
+            command.add("gs");
+            command.add("-dNOPAUSE");
+            command.add("-dBATCH");
+            command.add("-dSAFER");
+            command.add("-sDEVICE=pdfwrite");
+            command.add(Fmt.S("-dCompatibilityLevel=%s", compatibility));
+            command.add(Fmt.S("-dPDFSETTINGS=/%s", pdfSettings));
+            command.add(Fmt.S("-sOutputFile=%s", outputFile.getAbsolutePath()));
+            command.add(sourcePs.getAbsolutePath());
 
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.redirectErrorStream(true);
@@ -135,34 +133,35 @@ public class ImageMagickTransformer extends BaseTransformMethod {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append("\n");
-                    Log.transformer.debug("ImageMagick: %s", line);
+                    Log.transformer.debug("Ghostscript: %s", line);
                 }
             }
 
             int exitCode = process.waitFor();
 
             if (exitCode != 0) {
-                throw new IOException(Fmt.S("ImageMagick conversion failed with exit code %d: %s",
+                throw new IOException(Fmt.S("Ghostscript (ps2pdf) failed with exit code %d: %s",
                         exitCode, output.toString()));
             }
 
             if (!outputFile.exists()) {
-                throw new IOException("Output file was not created by ImageMagick");
+                throw new IOException("Output PDF was not created: " + outputFile.getAbsolutePath());
             }
 
-            Log.transformer.info("Successfully converted image to %s: %s", format, outputFile.getAbsolutePath());
+            Log.transformer.info("Successfully converted PostScript to PDF (quality=%s): %s",
+                    pdfSettings, outputFile.getAbsolutePath());
             com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(
                     outputFile.getParentFile());
             return ffs.getFile(outputFile.getName());
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new IOException("ImageMagick conversion interrupted", e);
+            throw new IOException("PostScript conversion interrupted", e);
         } catch (Exception e) {
             if (outputFile.exists()) {
                 outputFile.delete();
             }
-            throw new IOException("Failed to convert image: " + e.getMessage(), e);
+            throw new IOException("Failed to convert PostScript to PDF: " + e.getMessage(), e);
         }
     }
 }

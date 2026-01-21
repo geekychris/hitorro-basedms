@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
-
+ * 
  * Load ConvertionContexts from a csv file.
  */
 public class ConvertionContextLoader {
@@ -39,7 +39,7 @@ public class ConvertionContextLoader {
     public static final String MimeTo = "mimeto";
 
     public static final String Transformer = "transformer";
-
+    public static final String TransformerClass = "transformerclass";
     public static final String Method = "method";
 
     public static final String MethodArgs = "methodargs";
@@ -66,12 +66,14 @@ public class ConvertionContextLoader {
         String from = MapUtil.getColumnFromColumMap(MimeFrom, map, line, true);
         String to = MapUtil.getColumnFromColumMap(MimeTo, map, line, true);
         String transformer = MapUtil.getColumnFromColumMap(Transformer, map, line, true);
+        String transformerClass = MapUtil.getColumnFromColumMap(TransformerClass, map, line, true);
         String method = MapUtil.getColumnFromColumMap(Method, map, line, true);
         String methodArgs = MapUtil.getColumnFromColumMap(MethodArgs, map, line, true);
         ConvertionEdge edge = new ConvertionEdge();
         edge.setSourceMimeType(from);
         edge.setTargetMimeType(to);
         edge.setTransformerName(transformer);
+        edge.setTransformerClass(transformerClass);
         edge.setTransformerMethod(method);
         edge.setMethodArgs(methodArgs);
         this.context.add(edge);

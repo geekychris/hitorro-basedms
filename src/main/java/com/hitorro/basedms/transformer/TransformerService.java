@@ -29,7 +29,6 @@ import com.hitorro.basedms.transformer.debugcommand.DumpWorkflowTranscodeCurrent
 import com.hitorro.basedms.transformer.debugcommand.DumpWorkflowTranscodeQueue;
 import com.hitorro.network.rpc.cluster.ClusterService;
 import com.hitorro.util.core.Log;
-import com.hitorro.util.json.keys.BooleanProperty;
 import com.hitorro.util.json.keys.FileProperty;
 import com.hitorro.util.json.keys.IntegerProperty;
 import com.hitorro.util.startupframework.phases.ServiceDefinition;
@@ -38,12 +37,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@ServiceDefinition(dependentService = {JobService.class},
-        shortName = "transformer",
-        description = "Transformer service",
-        debugCommands = {DumpWorkflowTranscodeQueue.class, DumpWorkflowTranscodeCurrent.class},
-        typeManagedClasses = {},
-        uiDirectories = {})
+@ServiceDefinition(dependentService = {
+        JobService.class }, shortName = "transformer", description = "Transformer service", debugCommands = {
+                DumpWorkflowTranscodeQueue.class,
+                DumpWorkflowTranscodeCurrent.class }, typeManagedClasses = {}, uiDirectories = {})
 public class TransformerService {
     public static final String TransformationKey = "transformer";
     public static final FileProperty TransformerConfig = new FileProperty("transcoder.config",
@@ -55,7 +52,7 @@ public class TransformerService {
     private ConvertionContext convertionContext = new ConvertionContext();
     private Map<String, TransformMethod> methods = new HashMap<String, TransformMethod>();
 
-	private boolean startJobQueue = true;
+    private boolean startJobQueue = true;
     private int threads = JobThreads.apply();
 
     public static TransformerService getService() {
@@ -67,7 +64,8 @@ public class TransformerService {
 
             JobFarmCommand jfc = new JobFarmCommand();
             // create a queue just for transcoder
-            GroupSpacedPSOQueueProcessor<PersistedSerializedObject> httpQp = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(JobService.TranscoderKey, "PSO-TranscoderService",
+            GroupSpacedPSOQueueProcessor<PersistedSerializedObject> httpQp = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(
+                    JobService.TranscoderKey, "PSO-TranscoderService",
                     80, threads, jfc,
                     PersistedSerializedObject.CollectionID_TranscoderQueue);
             httpQp.addNames(PSO_JOB_NAME);
@@ -90,12 +88,13 @@ public class TransformerService {
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         try {
             convertionContext.loadContext(TransformerConfig.apply());
-            JobService.getService().registerAppJob(TransformJob.class, "Transformation Job", TransformJobParameters.class);
+            JobService.getService().registerAppJob(TransformJob.class, "Transformation Job",
+                    TransformJobParameters.class);
             s_service = this;
-            
+
             // Register transformation methods
             registerTransformMethods();
-            
+
             ClusterService.getThisInstanceDefinition().addInstanceCapability(TransformationKey, "", "", "", true);
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
@@ -103,39 +102,44 @@ public class TransformerService {
         }
         return null;
     }
-    
+
     /**
-     * Register available transformation methods
+     * Register available transformation methods dynamically from convertion context
      */
     private void registerTransformMethods() {
-        // Register PDF to image transformer
-        com.hitorro.basedms.transformer.methods.PDFToImageTransformer pdfToImage = 
-                new com.hitorro.basedms.transformer.methods.PDFToImageTransformer();
-        if (pdfToImage.ensureServiceAvailable()) {
-            setMethod(pdfToImage);
-            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", pdfToImage.getMethodName());
-        } else {
-            com.hitorro.basedms.transformer.Log.transformer.warn("PDF to image transformer unavailable (pdftoppm not found)");
-        }
-        
-        // Register LibreOffice transformer
-        com.hitorro.basedms.transformer.methods.LibreOfficeTransformer libreOffice = 
-                new com.hitorro.basedms.transformer.methods.LibreOfficeTransformer();
-        if (libreOffice.ensureServiceAvailable()) {
-            setMethod(libreOffice);
-            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", libreOffice.getMethodName());
-        } else {
-            com.hitorro.basedms.transformer.Log.transformer.warn("LibreOffice transformer unavailable (soffice not found)");
-        }
-        
-        // Register ImageMagick transformer
-        com.hitorro.basedms.transformer.methods.ImageMagickTransformer imageMagick = 
-                new com.hitorro.basedms.transformer.methods.ImageMagickTransformer();
-        if (imageMagick.ensureServiceAvailable()) {
-            setMethod(imageMagick);
-            com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s", imageMagick.getMethodName());
-        } else {
-            com.hitorro.basedms.transformer.Log.transformer.warn("ImageMagick transformer unavailable (convert not found)");
+        java.util.Set<String> registeredClasses = new java.util.HashSet<>();
+
+        for (ConvertionEdge edge : convertionContext.getEdges()) {
+            String className = edge.getTransformerClass();
+            if (className == null || className.isEmpty()) {
+                continue;
+            }
+
+            if (registeredClasses.contains(className)) {
+                continue;
+            }
+
+            try {
+                Class<?> clazz = Class.forName(className);
+                if (TransformMethod.class.isAssignableFrom(clazz)) {
+                    TransformMethod method = (TransformMethod) clazz.getDeclaredConstructor().newInstance();
+                    if (method.ensureServiceAvailable()) {
+                        setMethod(method);
+                        com.hitorro.basedms.transformer.Log.transformer.info("Registered transformer method: %s (%s)",
+                                method.getMethodName(), className);
+                    } else {
+                        com.hitorro.basedms.transformer.Log.transformer.warn("Transformer method %s (%s) unavailable",
+                                method.getMethodName(), className);
+                    }
+                    registeredClasses.add(className);
+                } else {
+                    com.hitorro.basedms.transformer.Log.transformer.error("Class %s does not implement TransformMethod",
+                            className);
+                }
+            } catch (Exception e) {
+                com.hitorro.basedms.transformer.Log.transformer.error("Failed to register transformer class %s: %s",
+                        className, e.getMessage());
+            }
         }
     }
 

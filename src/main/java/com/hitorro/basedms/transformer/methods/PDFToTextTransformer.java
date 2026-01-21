@@ -32,20 +32,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Convert images using ImageMagick convert command
- * Supports resizing, format conversion, compression, etc.
+ * Extract text from PDF documents using pdftotext (poppler-utils)
+ * Supports layout preservation, page ranges, and encoding options
  */
-public class ImageMagickTransformer extends BaseTransformMethod {
-    public static final String METHOD_NAME = "imagemagick_convert";
+public class PDFToTextTransformer extends BaseTransformMethod {
+    public static final String METHOD_NAME = "pdf_to_text";
 
-    private static final StringProperty ConvertPath = new StringProperty(
-            "transformer.imagemagick.path",
-            "Path to ImageMagick convert executable",
-            "convert");
+    private static final StringProperty PdfToTextPath = new StringProperty(
+            "transformer.pdftotext.path",
+            "Path to pdftotext executable",
+            "pdftotext");
 
     @Override
     public String getMethodName() {
@@ -55,12 +53,12 @@ public class ImageMagickTransformer extends BaseTransformMethod {
     @Override
     public boolean ensureServiceAvailable() {
         try {
-            String cmd = ConvertPath.apply();
-            Process p = Runtime.getRuntime().exec(new String[] { cmd, "-version" });
+            String cmd = PdfToTextPath.apply();
+            Process p = Runtime.getRuntime().exec(new String[] { cmd, "-v" });
             int exitCode = p.waitFor();
-            return exitCode == 0;
+            return exitCode == 0 || exitCode == 1 || exitCode == 99; // pdftotext returns various codes for -v
         } catch (Exception e) {
-            Log.transformer.warn("ImageMagick not available: %s", e.getMessage());
+            Log.transformer.warn("pdftotext not available: %s", e.getMessage());
             return false;
         }
     }
@@ -70,56 +68,63 @@ public class ImageMagickTransformer extends BaseTransformMethod {
             int maxWaitTimeMinutes)
             throws IOException {
         if (!sourceFile.isLocal()) {
-            throw new IOException("ImageMagick conversion requires local file system");
+            throw new IOException("PDF to text conversion requires local file system");
         }
 
-        File sourceImage = ((FileFile) sourceFile).getJavaFile();
-        if (!sourceImage.exists()) {
-            throw new IOException("Source image does not exist: " + sourceImage.getAbsolutePath());
+        File sourcePdf = ((FileFile) sourceFile).getJavaFile();
+        if (!sourcePdf.exists()) {
+            throw new IOException("Source PDF file does not exist: " + sourcePdf.getAbsolutePath());
         }
 
-        // Parse parameters: format=jpg,width=800,height=600,quality=85,resize=50%
-        String format = getParameter(parameters, "format", "jpg").toLowerCase();
-        String width = getParameter(parameters, "width", null);
-        String height = getParameter(parameters, "height", null);
-        String quality = getParameter(parameters, "quality", null);
-        String resize = getParameter(parameters, "resize", null);
+        // Parse parameters: layout=true,encoding=utf-8,firstpage=1,lastpage=10,eol=unix
+        boolean layout = Boolean.parseBoolean(getParameter(parameters, "layout", "false"));
+        String encoding = getParameter(parameters, "encoding", "UTF-8");
+        String firstPage = getParameter(parameters, "firstpage", null);
+        String lastPage = getParameter(parameters, "lastpage", null);
+        String eol = getParameter(parameters, "eol", "unix"); // unix, dos, mac
 
         // Create temp output file
         File tempDir = new File(System.getProperty("java.io.tmpdir"));
-        File outputFile = new File(tempDir, Fmt.S("img_conv_%s.%s", id, format));
+        File outputFile = new File(tempDir, Fmt.S("pdf_text_%s.txt", id));
 
         try {
-            // Build ImageMagick command
-            List<String> command = new ArrayList<>();
-            command.add(ConvertPath.apply());
-            command.add(sourceImage.getAbsolutePath());
+            // Build pdftotext command
+            java.util.List<String> command = new java.util.ArrayList<>();
+            command.add(PdfToTextPath.apply());
 
-            // Add resize options
-            if (resize != null && !resize.isEmpty()) {
-                command.add("-resize");
-                command.add(resize);
-            } else if (width != null || height != null) {
-                String geometry = "";
-                if (width != null) {
-                    geometry += width;
-                }
-                if (height != null) {
-                    geometry += "x" + height;
-                } else {
-                    geometry += "x";
-                }
-                command.add("-resize");
-                command.add(geometry);
+            // Add layout option
+            if (layout) {
+                command.add("-layout");
             }
 
-            // Add quality for lossy formats
-            if (quality != null && !quality.isEmpty()) {
-                command.add("-quality");
-                command.add(quality);
+            // Add encoding
+            command.add("-enc");
+            command.add(encoding);
+
+            // Add EOL style
+            if ("dos".equalsIgnoreCase(eol)) {
+                command.add("-eol");
+                command.add("dos");
+            } else if ("mac".equalsIgnoreCase(eol)) {
+                command.add("-eol");
+                command.add("mac");
+            } else {
+                command.add("-eol");
+                command.add("unix");
             }
 
-            // Add output file
+            // Add page range
+            if (firstPage != null && !firstPage.isEmpty()) {
+                command.add("-f");
+                command.add(firstPage);
+            }
+            if (lastPage != null && !lastPage.isEmpty()) {
+                command.add("-l");
+                command.add(lastPage);
+            }
+
+            // Add input and output files
+            command.add(sourcePdf.getAbsolutePath());
             command.add(outputFile.getAbsolutePath());
 
             ProcessBuilder pb = new ProcessBuilder(command);
@@ -135,34 +140,33 @@ public class ImageMagickTransformer extends BaseTransformMethod {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append("\n");
-                    Log.transformer.debug("ImageMagick: %s", line);
+                    Log.transformer.debug("pdftotext: %s", line);
                 }
             }
 
             int exitCode = process.waitFor();
 
             if (exitCode != 0) {
-                throw new IOException(Fmt.S("ImageMagick conversion failed with exit code %d: %s",
-                        exitCode, output.toString()));
+                throw new IOException(Fmt.S("pdftotext failed with exit code %d: %s", exitCode, output.toString()));
             }
 
             if (!outputFile.exists()) {
-                throw new IOException("Output file was not created by ImageMagick");
+                throw new IOException("Output file was not created: " + outputFile.getAbsolutePath());
             }
 
-            Log.transformer.info("Successfully converted image to %s: %s", format, outputFile.getAbsolutePath());
+            Log.transformer.info("Successfully extracted text from PDF: %s", outputFile.getAbsolutePath());
             com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(
                     outputFile.getParentFile());
             return ffs.getFile(outputFile.getName());
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new IOException("ImageMagick conversion interrupted", e);
+            throw new IOException("PDF text extraction interrupted", e);
         } catch (Exception e) {
             if (outputFile.exists()) {
                 outputFile.delete();
             }
-            throw new IOException("Failed to convert image: " + e.getMessage(), e);
+            throw new IOException("Failed to extract text from PDF: " + e.getMessage(), e);
         }
     }
 }

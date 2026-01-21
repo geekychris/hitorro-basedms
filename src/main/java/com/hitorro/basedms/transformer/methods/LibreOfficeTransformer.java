@@ -35,11 +35,12 @@ import java.io.InputStreamReader;
 
 /**
  * Convert documents using LibreOffice/OpenOffice
- * Supports: doc/docx -> PDF, xls/xlsx -> PDF, ppt/pptx -> PDF, odt/ods/odp -> PDF
+ * Supports: doc/docx -> PDF, xls/xlsx -> PDF, ppt/pptx -> PDF, odt/ods/odp ->
+ * PDF
  */
-public class LibreOfficeTransformer implements TransformMethod {
+public class LibreOfficeTransformer extends BaseTransformMethod {
     public static final String METHOD_NAME = "libreoffice_convert";
-    
+
     private static final StringProperty LibreOfficePath = new StringProperty(
             "transformer.libreoffice.path",
             "Path to LibreOffice soffice executable",
@@ -54,7 +55,7 @@ public class LibreOfficeTransformer implements TransformMethod {
     public boolean ensureServiceAvailable() {
         try {
             String cmd = LibreOfficePath.apply();
-            Process p = Runtime.getRuntime().exec(new String[]{cmd, "--version"});
+            Process p = Runtime.getRuntime().exec(new String[] { cmd, "--version" });
             int exitCode = p.waitFor();
             return exitCode == 0;
         } catch (Exception e) {
@@ -64,12 +65,13 @@ public class LibreOfficeTransformer implements TransformMethod {
     }
 
     @Override
-    public BaseFile convert(BaseFile sourceFile, String id, String parameters, String notifyGuid, int maxWaitTimeMinutes) 
+    public BaseFile convert(BaseFile sourceFile, String id, String parameters, String notifyGuid,
+            int maxWaitTimeMinutes)
             throws IOException {
         if (!sourceFile.isLocal()) {
             throw new IOException("LibreOffice conversion requires local file system");
         }
-        
+
         File sourceDoc = ((FileFile) sourceFile).getJavaFile();
         if (!sourceDoc.exists()) {
             throw new IOException("Source document does not exist: " + sourceDoc.getAbsolutePath());
@@ -77,13 +79,13 @@ public class LibreOfficeTransformer implements TransformMethod {
 
         // Parse parameters: format=pdf (default)
         String format = getParameter(parameters, "format", "pdf").toLowerCase();
-        
+
         // Create temp output directory
         File tempDir = new File(System.getProperty("java.io.tmpdir"), Fmt.S("libreoffice_conv_%s", id));
         tempDir.mkdirs();
-        
+
         File outputFile = null;
-        
+
         try {
             // Build LibreOffice command
             // --headless: run without GUI
@@ -94,15 +96,14 @@ public class LibreOfficeTransformer implements TransformMethod {
                     "--headless",
                     "--convert-to", format,
                     "--outdir", tempDir.getAbsolutePath(),
-                    sourceDoc.getAbsolutePath()
-            );
-            
+                    sourceDoc.getAbsolutePath());
+
             pb.redirectErrorStream(true);
-            
+
             Log.transformer.info("Executing: %s", String.join(" ", pb.command()));
-            
+
             Process process = pb.start();
-            
+
             // Capture output for debugging
             StringBuilder output = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -112,23 +113,24 @@ public class LibreOfficeTransformer implements TransformMethod {
                     Log.transformer.debug("LibreOffice: %s", line);
                 }
             }
-            
+
             int exitCode = process.waitFor();
-            
+
             if (exitCode != 0) {
-                throw new IOException(Fmt.S("LibreOffice conversion failed with exit code %d: %s", 
+                throw new IOException(Fmt.S("LibreOffice conversion failed with exit code %d: %s",
                         exitCode, output.toString()));
             }
-            
-            // Find the output file (LibreOffice creates it with same base name + new extension)
+
+            // Find the output file (LibreOffice creates it with same base name + new
+            // extension)
             String baseName = sourceDoc.getName();
             int lastDot = baseName.lastIndexOf('.');
             if (lastDot > 0) {
                 baseName = baseName.substring(0, lastDot);
             }
-            
+
             outputFile = new File(tempDir, baseName + "." + format);
-            
+
             if (!outputFile.exists()) {
                 // Try to find any file in the output directory
                 File[] files = tempDir.listFiles();
@@ -138,11 +140,12 @@ public class LibreOfficeTransformer implements TransformMethod {
                     throw new IOException("Output file was not created by LibreOffice");
                 }
             }
-            
+
             Log.transformer.info("Successfully converted document to %s: %s", format, outputFile.getAbsolutePath());
-            com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(outputFile.getParentFile());
+            com.hitorro.util.basefile.fs.file.FileFileSystem ffs = new com.hitorro.util.basefile.fs.file.FileFileSystem(
+                    outputFile.getParentFile());
             return ffs.getFile(outputFile.getName());
-            
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("LibreOffice conversion interrupted", e);
@@ -156,20 +159,5 @@ public class LibreOfficeTransformer implements TransformMethod {
             }
             throw new IOException("Failed to convert document: " + e.getMessage(), e);
         }
-    }
-    
-    private String getParameter(String parameters, String key, String defaultValue) {
-        if (parameters == null || parameters.isEmpty()) {
-            return defaultValue;
-        }
-        
-        for (String param : parameters.split(",")) {
-            String[] parts = param.split("=", 2);
-            if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(key)) {
-                return parts[1].trim();
-            }
-        }
-        
-        return defaultValue;
     }
 }
