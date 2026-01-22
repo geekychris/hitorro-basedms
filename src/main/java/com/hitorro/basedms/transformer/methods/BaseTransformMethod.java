@@ -52,7 +52,8 @@ public abstract class BaseTransformMethod implements TransformMethod {
         for (String param : parameters.split(",")) {
             String[] parts = param.split("=", 2);
             if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(key)) {
-                return parts[1].trim();
+                String val = parts[1].trim();
+                return val;
             }
         }
 

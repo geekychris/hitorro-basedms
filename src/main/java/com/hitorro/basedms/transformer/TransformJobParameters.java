@@ -33,14 +33,9 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
 import java.io.IOException;
 
-
-
-@TypeClassMetaInfo(shortTypeName = "TransformJobParams",
-        isView = false,
-        isPersisted = false,
-        schemaVersion = TransformJobParameters.SerializationVersion)
+@TypeClassMetaInfo(shortTypeName = "TransformJobParams", isView = false, isPersisted = false, schemaVersion = TransformJobParameters.SerializationVersion)
 public class TransformJobParameters extends JobParameters implements HTSerializable {
-    public static final int SerializationVersion = 2;
+    public static final int SerializationVersion = 3;
 
     private ContentSetter contentSetter;
     private HTPredicate<Content> contentConstraint;
@@ -50,9 +45,11 @@ public class TransformJobParameters extends JobParameters implements HTSerializa
     private String transformerMethod;
     private String transformerMethodArgs;
     private boolean addContentAsChildOfContent;
+    private String templateGuid;
 
     /**
-     * When you create the job, you must provision a job id, this id is used to track the files on disk as they go
+     * When you create the job, you must provision a job id, this id is used to
+     * track the files on disk as they go
      * through the transform process.
      */
     public void provisionId() {
@@ -71,6 +68,7 @@ public class TransformJobParameters extends JobParameters implements HTSerializa
         os.writeString(transformer);
         os.writeString(transformerMethod);
         os.writeString(transformerMethodArgs);
+        os.writeString(templateGuid);
     }
 
     public void deserialize(HTObjectInputStream os)
@@ -78,6 +76,17 @@ public class TransformJobParameters extends JobParameters implements HTSerializa
         int version = os.readInt();
         super.deserialize(os);
         switch (version) {
+            case 3:
+                addContentAsChildOfContent = os.readBoolean();
+                setContentSetter((ContentSetter) os.readVersionedObject());
+                setContentConstraint((HTPredicate<Content>) os.readVersionedObject());
+                setJobGuid(os.readString());
+                setJobId(os.readString());
+                transformer = os.readString();
+                transformerMethod = os.readString();
+                transformerMethodArgs = os.readString();
+                templateGuid = os.readString();
+                break;
             case 2:
                 addContentAsChildOfContent = os.readBoolean();
             case 1:
@@ -88,6 +97,7 @@ public class TransformJobParameters extends JobParameters implements HTSerializa
                 transformer = os.readString();
                 transformerMethod = os.readString();
                 transformerMethodArgs = os.readString();
+                break;
         }
     }
 
@@ -173,5 +183,13 @@ public class TransformJobParameters extends JobParameters implements HTSerializa
 
     public void setAddContentAsChildOfContent(boolean flag) {
         addContentAsChildOfContent = flag;
+    }
+
+    public String getTemplateGuid() {
+        return templateGuid;
+    }
+
+    public void setTemplateGuid(String templateGuid) {
+        this.templateGuid = templateGuid;
     }
 }

@@ -42,78 +42,96 @@ import org.apache.log4j.Level;
 import java.io.IOException;
 import java.util.List;
 
-
 public class TransformerUtil {
 
-    public static final TransformJobParameters createJobParameters(String notificationGuid,
-                                                                   String notificationGuidState,
-                                                                   HTPredicate<Content> contentConstraint,
-                                                                   String sysObjectGuid,
-                                                                   HTPredicate<ConvertionEdge> constraint,
-                                                                   String tagDomain,
-                                                                   String tagValue,
-                                                                   String targetFileNameSansExtension,
-                                                                   boolean addAsChild) {
-        // now let try to convertToPdf it.
-        TransformJobParameters params = new TransformJobParameters();
-        params.provisionId();
+	public static final TransformJobParameters createJobParameters(String notificationGuid,
+			String notificationGuidState,
+			HTPredicate<Content> contentConstraint,
+			String sysObjectGuid,
+			HTPredicate<ConvertionEdge> constraint,
+			String tagDomain,
+			String tagValue,
+			String targetFileNameSansExtension,
+			boolean addAsChild) {
+		return createJobParameters(notificationGuid, notificationGuidState, contentConstraint, sysObjectGuid,
+				constraint, tagDomain, tagValue, targetFileNameSansExtension, addAsChild, null, null);
+	}
 
-        params.setContentConstraint(contentConstraint);
-        params.setJobGuid(sysObjectGuid);
-        ContentSetter setter = new ContentSetter();
+	public static final TransformJobParameters createJobParameters(String notificationGuid,
+			String notificationGuidState,
+			HTPredicate<Content> contentConstraint,
+			String sysObjectGuid,
+			HTPredicate<ConvertionEdge> constraint,
+			String tagDomain,
+			String tagValue,
+			String targetFileNameSansExtension,
+			boolean addAsChild,
+			String templateGuid,
+			String parameters) {
+		// now let try to convertToPdf it.
+		TransformJobParameters params = new TransformJobParameters();
+		params.provisionId();
 
-        TransformerService s = TransformerService.getService();
-        List<ConvertionEdge> edges = TransformerService.getService().getConvertionContext().visit(constraint);
-        if (ListUtil.nullOrEmpty(edges)) {
-            Log.transformer.error("Unable to find a transformation edge");
-            return null;
-        }
-        ConvertionEdge edge = edges.get(0);
-        params.setTransformerMethod(edge.getTransformerMethod());
-        setter.setMimeType(edge.getTargetMimeType());
-        setter.setSysGuid(sysObjectGuid);
+		params.setContentConstraint(contentConstraint);
+		params.setJobGuid(sysObjectGuid);
+		params.setTransformerMethodArgs(parameters);
+		ContentSetter setter = new ContentSetter();
 
-        String extension = ContentTypeCache.getCache().getFileNameExtensionForContentType(edge.getTargetMimeType());
+		TransformerService s = TransformerService.getService();
+		List<ConvertionEdge> edges = TransformerService.getService().getConvertionContext().visit(constraint);
+		if (ListUtil.nullOrEmpty(edges)) {
+			Log.transformer.error("Unable to find a transformation edge");
+			return null;
+		}
+		ConvertionEdge edge = edges.get(0);
+		params.setTransformerMethod(edge.getTransformerMethod());
+		setter.setMimeType(edge.getTargetMimeType());
+		setter.setSysGuid(sysObjectGuid);
 
-        if (!StringUtil.nullOrEmptyString(extension)) {
-            setter.setFileName(Fmt.S("%s.%s", targetFileNameSansExtension, extension));
-        } else {
-            setter.setFileName(targetFileNameSansExtension);
-        }
+		String extension = ContentTypeCache.getCache().getFileNameExtensionForContentType(edge.getTargetMimeType());
 
-        setter.setTagDomain(tagDomain);
-        setter.setTagValue(tagValue);
-        params.setContentSetter(setter);
+		if (!StringUtil.nullOrEmptyString(extension)) {
+			setter.setFileName(Fmt.S("%s.%s", targetFileNameSansExtension, extension));
+		} else {
+			setter.setFileName(targetFileNameSansExtension);
+		}
 
-        params.setNotifyGuid(notificationGuid);
-        params.setNotifyGuidState(notificationGuidState);
-        params.setAddContentAsChildOfContent(addAsChild);
+		setter.setTagDomain(tagDomain);
+		setter.setTagValue(tagValue);
+		params.setContentSetter(setter);
 
-        return params;
-    }
+		params.setNotifyGuid(notificationGuid);
+		params.setNotifyGuidState(notificationGuidState);
+		params.setAddContentAsChildOfContent(addAsChild);
+		params.setTemplateGuid(templateGuid);
 
-    public static PersistedSerializedObject queueTransformJob(TransformJobParameters params,
-                                                              DMSSession session,
-                                                              boolean commit) {
-        return QueueUtil.enqueJob(params, session, commit, PersistedSerializedObject.CollectionID_TranscoderQueue, 0);
-    }
+		return params;
+	}
 
-	public static final JobExecutionResult executeJobInline (String notificationGuid,
-																   String notificationGuidState,
-																   HTPredicate<Content> contentConstraint,
-																   String sysObjectGuid,
-																   HTPredicate<ConvertionEdge> constraint,
-																   String tagDomain,
-																   String tagValue,
-																   String targetFileNameSansExtension,
-																   boolean addAsChild,
-																   BaseSession session) throws IOException {
-		TransformJobParameters params = createJobParameters(notificationGuid, notificationGuidState, contentConstraint, sysObjectGuid, constraint, tagDomain, tagValue, targetFileNameSansExtension, addAsChild);
+	public static PersistedSerializedObject queueTransformJob(TransformJobParameters params,
+			DMSSession session,
+			boolean commit) {
+		return QueueUtil.enqueJob(params, session, commit, PersistedSerializedObject.CollectionID_TranscoderQueue, 0);
+	}
+
+	public static final JobExecutionResult executeJobInline(String notificationGuid,
+			String notificationGuidState,
+			HTPredicate<Content> contentConstraint,
+			String sysObjectGuid,
+			HTPredicate<ConvertionEdge> constraint,
+			String tagDomain,
+			String tagValue,
+			String targetFileNameSansExtension,
+			boolean addAsChild,
+			BaseSession session) throws IOException {
+		TransformJobParameters params = createJobParameters(notificationGuid, notificationGuidState, contentConstraint,
+				sysObjectGuid, constraint, tagDomain, tagValue, targetFileNameSansExtension, addAsChild, null, null);
 
 		return getJobExecutionResult(params, session);
 	}
 
-	public static JobExecutionResult getJobExecutionResult(TransformJobParameters parameters, BaseSession session) throws IOException {
+	public static JobExecutionResult getJobExecutionResult(TransformJobParameters parameters, BaseSession session)
+			throws IOException {
 		TransformJobParameters params = parameters;
 
 		String method = params.getTransformerMethod();
@@ -132,15 +150,34 @@ public class TransformerUtil {
 
 		Content c = so.getContentByConstraint(params.getContentConstraint(), false);
 		if (c == null) {
-			return new JobExecutionResult(Level.WARN, "Unable to find content for system object for transformation %s", soGuid);
+			return new JobExecutionResult(Level.WARN, "Unable to find content for system object for transformation %s",
+					soGuid);
 		}
 
 		BaseFile sourceFile = c.getContentFile();
 		BaseFile targetFile = null;
 		try {
-			targetFile = m.convert(sourceFile, params.getJobId(), params.getTransformerMethodArgs(), params.getNotifyGuid(), 0);
+			String methodArgs = params.getTransformerMethodArgs();
+			String templateGuid = params.getTemplateGuid();
+			if (!StringUtil.nullOrEmptyString(templateGuid)) {
+				Content templateContent = (Content) session.getObjectFromGuid(templateGuid);
+				if (templateContent != null) {
+					BaseFile templateFile = templateContent.getContentFile();
+					if (BaseFile.notNullAndExists(templateFile)) {
+						String templatePath = templateFile.getAbsolutePath();
+						if (StringUtil.nullOrEmptyString(methodArgs)) {
+							methodArgs = "_template_path=" + templatePath;
+						} else {
+							methodArgs += ",_template_path=" + templatePath;
+						}
+					}
+				}
+			}
+
+			targetFile = m.convert(sourceFile, params.getJobId(), methodArgs, params.getNotifyGuid(), 0);
 			if (!BaseFile.notNullAndExists(targetFile)) {
-				return new JobExecutionResult(Level.ERROR, "Unable to convertToPdf %s file %s no output file generated.", soGuid, sourceFile);
+				return new JobExecutionResult(Level.ERROR,
+						"Unable to convertToPdf %s file %s no output file generated.", soGuid, sourceFile);
 			}
 			if (params.getAddContentAsChildOfContent()) {
 				long size = sourceFile.length();
@@ -149,16 +186,19 @@ public class TransformerUtil {
 				params.getContentSetter().setFile(targetFile, session, null, true);
 			}
 		} catch (IOException ioe) {
-			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, ioe.getMessage());
+			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile,
+					ioe.getMessage());
 		} catch (CategoryException ce) {
-			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, ce.getMessage());
+			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile,
+					ce.getMessage());
 		} catch (StoreException se) {
-			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile, se.getMessage());
+			return new JobExecutionResult(Level.WARN, "Unable to convertToPdf %s file %s error %s", soGuid, sourceFile,
+					se.getMessage());
 		} finally {
-			//if (FileUtil.notNullAndExists(sourceFile))
-			//{
-			//    sourceFile.delete();
-			//}
+			// if (FileUtil.notNullAndExists(sourceFile))
+			// {
+			// sourceFile.delete();
+			// }
 			if (!BaseFile.notNullAndExists(targetFile)) {
 				targetFile.delete();
 			}

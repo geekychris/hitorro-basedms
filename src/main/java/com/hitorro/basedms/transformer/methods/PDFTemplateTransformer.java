@@ -68,13 +68,25 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
     public BaseFile convert(BaseFile sourceFile, String id, String parameters, String notifyGuid,
             int maxWaitTimeMinutes)
             throws IOException {
-        if (!sourceFile.isLocal()) {
-            throw new IOException("PDF templating requires local file system");
+
+        File templatePdf;
+        String data;
+
+        String templatePath = getParameter(parameters, "_template_path", null);
+        if (templatePath != null) {
+            templatePdf = new File(templatePath);
+            // Read data from source file
+            data = sourceFile.readString();
+        } else {
+            if (!sourceFile.isLocal()) {
+                throw new IOException("PDF templating requires local file system when source is the template");
+            }
+            templatePdf = ((FileFile) sourceFile).getJavaFile();
+            data = parameters;
         }
 
-        File sourcePdf = ((FileFile) sourceFile).getJavaFile();
-        if (!sourcePdf.exists()) {
-            throw new IOException("Source PDF file does not exist: " + sourcePdf.getAbsolutePath());
+        if (!templatePdf.exists()) {
+            throw new IOException("Template PDF file does not exist: " + templatePdf.getAbsolutePath());
         }
 
         // Create temp files
@@ -86,12 +98,12 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
             boolean flatten = Boolean.parseBoolean(getParameter(parameters, "flatten", "true"));
 
             // Generate FDF file
-            generateFdf(parameters, fdfFile);
+            generateFdf(data, parameters, fdfFile);
 
             // Build pdftk command
             java.util.List<String> command = new java.util.ArrayList<>();
             command.add(PdftkPath.apply());
-            command.add(sourcePdf.getAbsolutePath());
+            command.add(templatePdf.getAbsolutePath());
             command.add("fill_form");
             command.add(fdfFile.getAbsolutePath());
             command.add("output");
@@ -151,7 +163,7 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
         }
     }
 
-    private void generateFdf(String parameters, File fdfFile) throws IOException {
+    private void generateFdf(String data, String parameters, File fdfFile) throws IOException {
         try (PrintWriter writer = new PrintWriter(
                 new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fdfFile), "ISO-8859-1")))) {
             writer.println("%FDF-1.2");
@@ -159,7 +171,7 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
             writer.println("<<");
             writer.println("/FDF << /Fields [");
 
-            JsonNode node = getJsonParameters(parameters);
+            JsonNode node = getJsonParameters(data);
             if (node != null && node.isObject()) {
                 JsonNode vars = node.has("variables") ? node.get("variables") : node;
                 if (vars.isObject()) {
@@ -167,20 +179,21 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
                     while (fields.hasNext()) {
                         Map.Entry<String, JsonNode> field = fields.next();
                         String fieldName = field.getKey();
-                        if (fieldName.equalsIgnoreCase("flatten") || fieldName.equalsIgnoreCase("variables"))
+                        if (fieldName.equalsIgnoreCase("flatten") || fieldName.equalsIgnoreCase("variables")
+                                || fieldName.equalsIgnoreCase("_template_path"))
                             continue;
                         writer.println(Fmt.S("<< /V (%s) /T (%s) >>",
                                 escapeFdf(field.getValue().asText()),
                                 escapeFdf(fieldName)));
                     }
                 }
-            } else if (parameters != null) {
+            } else if (data != null) {
                 // Fallback to CSV parameters
-                for (String param : parameters.split(",")) {
+                for (String param : data.split(",")) {
                     String[] parts = param.split("=", 2);
                     if (parts.length == 2) {
                         String key = parts[0].trim();
-                        if (key.equalsIgnoreCase("flatten"))
+                        if (key.equalsIgnoreCase("flatten") || key.equalsIgnoreCase("_template_path"))
                             continue;
                         writer.println(Fmt.S("<< /V (%s) /T (%s) >>",
                                 escapeFdf(parts[1].trim()),
