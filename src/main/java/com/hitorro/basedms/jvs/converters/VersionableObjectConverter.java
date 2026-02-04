@@ -230,23 +230,38 @@ public class VersionableObjectConverter implements DMSToJVSConverter<Versionable
         try {
             Set<Content> contents = obj.getContents();
             if (contents == null || contents.isEmpty()) {
+                com.hitorro.basedms.Log.basedms.debug("No contents found for document: {}", obj.getGuid());
                 return;
             }
+            
+            com.hitorro.basedms.Log.basedms.debug("Found {} content objects for document: {}", 
+                                                  contents.size(), obj.getGuid());
             
             StringBuilder fullText = new StringBuilder();
             
             for (Content content : contents) {
+                com.hitorro.basedms.Log.basedms.debug("Processing content: hasStringValue={}, contentType={}",
+                                                      content.hasStringValue(),
+                                                      content.getContentType() != null ? content.getContentType().getMimeType() : "null");
+                
                 String text = extractor.extractText(content);
                 if (text != null && !text.isEmpty()) {
+                    com.hitorro.basedms.Log.basedms.debug("Extracted text length: {}", text.length());
                     if (fullText.length() > 0) {
                         fullText.append("\n\n");
                     }
                     fullText.append(text);
+                } else {
+                    com.hitorro.basedms.Log.basedms.debug("No text extracted from content");
                 }
             }
             
             if (fullText.length() > 0) {
                 jvs.set("fullText", fullText.toString());
+                com.hitorro.basedms.Log.basedms.info("Mapped fullText with {} characters for document: {}", 
+                                                     fullText.length(), obj.getGuid());
+            } else {
+                com.hitorro.basedms.Log.basedms.warn("No text extracted from any content for document: {}", obj.getGuid());
             }
             
         } catch (Exception e) {

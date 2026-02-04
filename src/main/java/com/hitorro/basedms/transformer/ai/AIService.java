@@ -76,6 +76,16 @@ public interface AIService {
     float[] generateEmbedding(String text);
     
     /**
+     * Translate text from one language to another
+     * 
+     * @param text The text to translate
+     * @param sourceLanguage ISO 639-1 language code of source (e.g., "en", "de", "es")
+     * @param targetLanguage ISO 639-1 language code of target (e.g., "de", "ja", "zh")
+     * @return Translated text
+     */
+    String translate(String text, String sourceLanguage, String targetLanguage);
+    
+    /**
      * Check if the AI service is available
      * 
      * @return true if service is ready to use

@@ -1,5 +1,6 @@
 {
   "name": "dm_versionable_object",
+  "super": "core_sysobject",
   "fields": [
     {
       "name": "id",
