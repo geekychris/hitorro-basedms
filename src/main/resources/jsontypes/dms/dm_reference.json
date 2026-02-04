@@ -1,0 +1,11 @@
+{
+  "name": "dm_reference",
+  "fields": [
+    {
+      "name": "did",
+      "type": "identifier",
+      "vector": false,
+      "groups": ["index"]
+    }
+  ]
+}

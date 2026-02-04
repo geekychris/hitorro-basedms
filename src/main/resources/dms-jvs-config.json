@@ -1,0 +1,25 @@
+{
+  "indexableContentTypes": [
+    "text/plain",
+    "text/html",
+    "text/xml",
+    "application/xml",
+    "application/json",
+    "text/csv",
+    "text/markdown",
+    "text/css",
+    "text/javascript",
+    "application/javascript"
+  ],
+  "typeDefinitions": {
+    "baseTypesPath": "jsontypes/dms",
+    "types": [
+      "dm_id",
+      "dm_times",
+      "dm_metadata",
+      "dm_category",
+      "dm_reference",
+      "dm_versionable_object"
+    ]
+  }
+}

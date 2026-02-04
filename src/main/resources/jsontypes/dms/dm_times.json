@@ -1,0 +1,23 @@
+{
+  "name": "dm_times",
+  "fields": [
+    {
+      "name": "created",
+      "type": "date",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "modified",
+      "type": "date",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "authored",
+      "type": "date",
+      "vector": false,
+      "groups": ["index"]
+    }
+  ]
+}

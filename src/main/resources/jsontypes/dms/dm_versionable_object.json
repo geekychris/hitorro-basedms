@@ -1,0 +1,53 @@
+{
+  "name": "dm_versionable_object",
+  "fields": [
+    {
+      "name": "id",
+      "type": "dm_id",
+      "vector": false,
+      "groups": ["index", "store"]
+    },
+    {
+      "name": "times",
+      "type": "dm_times",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "metadata",
+      "type": "dm_metadata",
+      "vector": false,
+      "groups": ["index", "store"]
+    },
+    {
+      "name": "fullText",
+      "type": "text",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "categories",
+      "type": "dm_category",
+      "vector": true,
+      "groups": ["index"]
+    },
+    {
+      "name": "parent",
+      "type": "dm_reference",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "canonical",
+      "type": "dm_reference",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "container",
+      "type": "dm_reference",
+      "vector": false,
+      "groups": ["index"]
+    }
+  ]
+}

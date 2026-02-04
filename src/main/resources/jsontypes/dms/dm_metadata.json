@@ -1,0 +1,29 @@
+{
+  "name": "dm_metadata",
+  "fields": [
+    {
+      "name": "creator",
+      "type": "text",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "realm",
+      "type": "text",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "versionLabel",
+      "type": "text",
+      "vector": false,
+      "groups": ["index", "store"]
+    },
+    {
+      "name": "note",
+      "type": "text",
+      "vector": false,
+      "groups": ["store"]
+    }
+  ]
+}

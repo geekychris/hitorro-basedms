@@ -1,0 +1,17 @@
+{
+  "name": "dm_id",
+  "fields": [
+    {
+      "name": "did",
+      "type": "identifier",
+      "vector": false,
+      "groups": ["index", "store"]
+    },
+    {
+      "name": "domain",
+      "type": "identifier",
+      "vector": false,
+      "groups": ["index", "store"]
+    }
+  ]
+}

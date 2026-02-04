@@ -1,0 +1,17 @@
+{
+  "name": "dm_category",
+  "fields": [
+    {
+      "name": "domain",
+      "type": "text",
+      "vector": false,
+      "groups": ["index"]
+    },
+    {
+      "name": "value",
+      "type": "text",
+      "vector": false,
+      "groups": ["index"]
+    }
+  ]
+}
