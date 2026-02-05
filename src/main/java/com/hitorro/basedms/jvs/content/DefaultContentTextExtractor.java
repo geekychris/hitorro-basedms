@@ -33,9 +33,11 @@ import java.util.Set;
 public class DefaultContentTextExtractor implements ContentTextExtractor {
     
     private final Set<String> indexableContentTypes;
+    private boolean useTextPrefixMatching;
     
     public DefaultContentTextExtractor() {
         this.indexableContentTypes = new HashSet<>();
+        this.useTextPrefixMatching = true;
         // Initialize default indexable content types
         indexableContentTypes.add("text/plain");
         indexableContentTypes.add("text/html");
@@ -48,6 +50,7 @@ public class DefaultContentTextExtractor implements ContentTextExtractor {
     
     public DefaultContentTextExtractor(Set<String> customIndexableTypes) {
         this.indexableContentTypes = new HashSet<>(customIndexableTypes);
+        this.useTextPrefixMatching = false; // Custom types = exact matching only
     }
     
     @Override
@@ -76,14 +79,15 @@ public class DefaultContentTextExtractor implements ContentTextExtractor {
             return false;
         }
         
+        String lowerMime = mimeType.toLowerCase();
+        
         // Check exact match first
-        if (indexableContentTypes.contains(mimeType.toLowerCase())) {
+        if (indexableContentTypes.contains(lowerMime)) {
             return true;
         }
         
-        // Check prefix match for text/* types
-        String lowerMime = mimeType.toLowerCase();
-        if (lowerMime.startsWith("text/")) {
+        // Check prefix match for text/* types (only for default extractor)
+        if (useTextPrefixMatching && lowerMime.startsWith("text/")) {
             return true;
         }
         
@@ -117,8 +121,11 @@ public class DefaultContentTextExtractor implements ContentTextExtractor {
     
     /**
      * Remove a content type from indexable list.
+     * Note: Removing any type disables prefix matching for text/* types.
      */
     public void removeIndexableContentType(String mimeType) {
         indexableContentTypes.remove(mimeType.toLowerCase());
+        // Disable prefix matching since explicit removal indicates fine-grained control is desired
+        this.useTextPrefixMatching = false;
     }
 }
