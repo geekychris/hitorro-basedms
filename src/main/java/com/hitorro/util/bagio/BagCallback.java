@@ -23,9 +23,7 @@ package com.hitorro.util.bagio;
 
 import com.hitorro.util.typesystem.Bag;
 
-/**
- *
- */
+
 public interface BagCallback {
     public void addBag(Bag bag);
 }

@@ -22,7 +22,7 @@
 package com.hitorro.basedms.commands;
 
 import com.hitorro.basedms.BaseUtil;
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -39,7 +39,7 @@ public class TouchObject extends Command {
     @CommandArgument(required = false)
     private StringProperty Guid = new StringProperty("guid", "guid to touch", null);
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
 
         String guid = Guid.apply(args);
         if (StringUtil.nullOrEmptyString(guid)) {

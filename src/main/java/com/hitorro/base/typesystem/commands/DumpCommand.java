@@ -21,7 +21,7 @@
  */
 package com.hitorro.base.typesystem.commands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -45,7 +45,7 @@ public class DumpCommand extends Command {
     @CommandArgument(required = true)
     private BooleanProperty IncludeContent = new BooleanProperty("includecontent", "include content files", true);
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         DumpContext dc = new DumpContext(new File(FileName.apply(args)), IncludeContent.apply(args));
         dc.addQuery(Hql.apply(args));
         int counter = 0;

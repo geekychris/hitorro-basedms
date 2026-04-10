@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.commands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.auth.AuthResponse;
 import com.hitorro.util.auth.AuthenticationService;
 import com.hitorro.util.commandandcontrol.Command;
@@ -40,7 +40,7 @@ public class ChangePasswordCommand extends Command {
     @CommandArgument(required = true)
     private StringProperty Password = new StringProperty("password", "password", "");
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         AuthResponse resp = AuthenticationService.getService().changeUserPasswordSU(Username.apply(args),
                 Password.apply(args));
 

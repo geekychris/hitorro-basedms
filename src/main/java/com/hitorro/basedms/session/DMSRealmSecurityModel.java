@@ -21,9 +21,7 @@
  */
 package com.hitorro.basedms.session;
 
-/**
- *
- */
+
 public class DMSRealmSecurityModel extends DMSSecurityModel {
     public static DMSRealmSecurityModel me = new DMSRealmSecurityModel();
 

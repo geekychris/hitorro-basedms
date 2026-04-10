@@ -53,7 +53,7 @@ public class ActionUtil {
         ActionRequest ar = new ActionRequest();
         ar.setMethod(command);
 
-        ar.setArgs(args);
+        ar.setArgs((com.fasterxml.jackson.databind.node.ObjectNode) args.getJsonNode());
         message.setPayload(ar);
         RPCMessage resp = null;
         try {

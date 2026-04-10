@@ -39,6 +39,15 @@ public class HibernateUtil {
     private static Map<String, SessionFactory> s_map = new HashMap<String, SessionFactory>();
 
     public static void setSessionFactory(String key, Configuration conf, boolean isDefault) {
+        // Skip building if already set (e.g., by Spring Boot's DMSAutoConfiguration bridge)
+        if (isDefault && s_session != null) {
+            Log.util.info("SessionFactory already set (Spring Boot bridge) - skipping native build for key: %s", key);
+            return;
+        }
+        if (s_map.containsKey(key)) {
+            Log.util.info("SessionFactory already set for key: %s - skipping native build", key);
+            return;
+        }
         try {
             SessionFactory sf = conf.buildSessionFactory();
             s_map.put(key, sf);

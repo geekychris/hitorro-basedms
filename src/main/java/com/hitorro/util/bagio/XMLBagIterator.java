@@ -30,9 +30,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-/**
- *
- */
+
 public class XMLBagIterator extends BaseStaxIterator<Bag> {
 
     public XMLBagIterator(InputStream is, String encoding) throws XMLStreamException, UnsupportedEncodingException {

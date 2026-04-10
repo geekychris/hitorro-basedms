@@ -25,9 +25,7 @@ import com.hitorro.util.core.iterator.mappers.BaseMapper;
 
 import java.util.ArrayList;
 
-/**
- *
- */
+
 public class LongMapCollector extends BaseMapper<Long, Long> {
     private ArrayList<Long> list = new ArrayList<Long>();
 

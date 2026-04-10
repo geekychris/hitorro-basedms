@@ -52,24 +52,27 @@ public class WorkflowService {
         return s_service;
     }
 
+    private GroupSpacedPSOQueueProcessor<PersistedSerializedObject> workflowQueue;
+
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         s_service = this;
         NotifyJobCommand jfc = new NotifyJobCommand();
-        // create a queue just for workflows
-        GroupSpacedPSOQueueProcessor<PersistedSerializedObject> workflow = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(JobService.WorkflowKey, "PSO-NotifierService",
+        // create a queue just for workflows — defer start() to the Start phase
+        workflowQueue = new GroupSpacedPSOQueueProcessor<PersistedSerializedObject>(JobService.WorkflowKey, "PSO-NotifierService",
                 80, JobThreads.apply(), jfc,
                 PersistedSerializedObject.CollectionID_NotificationQueue);
-        workflow.addNames(PSO_JOB_NAME);
-        workflow.start();
-
-        // start a poller to look for dormant wfi's
-        RestartableService rs = new RestartableService("DormontWorkflow", "DormontWorkflow", 100, new DormontWorkflowItemTickler(), true);
-        RestartableServiceDaemon.addService(rs);
+        workflowQueue.addNames(PSO_JOB_NAME);
 
         return null;
     }
 
     public String start(boolean dbInit) {
+        if (workflowQueue != null) {
+            workflowQueue.start();
+        }
+        // start a poller to look for dormant wfi's
+        RestartableService rs = new RestartableService("DormontWorkflow", "DormontWorkflow", 100, new DormontWorkflowItemTickler(), true);
+        RestartableServiceDaemon.addService(rs);
         return null;
     }
 

@@ -25,9 +25,7 @@ import com.hitorro.util.core.iterator.mappers.BaseMapper;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.typesystem.Bag;
 
-/**
- *
- */
+
 public class LongMinMaxBagMapper extends BaseMapper<Bag, Bag> {
     private long min = Long.MAX_VALUE;
     private long max = Long.MIN_VALUE;

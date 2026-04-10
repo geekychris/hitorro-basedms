@@ -27,9 +27,7 @@ import com.hitorro.util.core.iterator.mappers.SettableMapper;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.typesystem.Bag;
 
-/**
- *
- */
+
 public class BF2TwitterBagSetting extends SettableMapper<BaseFile, Bag, Bag> {
     private String fileField;
     private String fetchDateField;

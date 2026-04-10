@@ -21,7 +21,7 @@
  */
 package com.hitorro.base.typesystem.commands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -40,7 +40,7 @@ public class DumpForUpgrade extends Command {
     @CommandArgument(required = true)
     private StringProperty FileName = new StringProperty("file", "file to write out the serialized content as", "");
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         DumpContext dc = DumpContext.getDumpContextForUpgrade(new File(FileName.apply(args)));
 
         int counter = 0;

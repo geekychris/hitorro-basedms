@@ -68,12 +68,12 @@ public class ScpFile implements HTSerializable {
 
     public ScpFile(Direction direction, JVS transferProperties, String sourceFilepathName, String targetFilePathName) {
         m_direction = direction;
-        m_host = HostsUtil.HostKey.apply(transferProperties);
-        m_port = HostsUtil.PortKey.apply(transferProperties);
-        trust = HostsUtil.TrustKey.apply(transferProperties);
-        m_user = HostsUtil.UserKey.apply(transferProperties);
-        m_password = HostsUtil.PasswordKey.apply(transferProperties);
-        targetBaseFilePath = HostsUtil.TargetBasePathKey.apply(transferProperties);
+        m_host = HostsUtil.HostKey.apply(transferProperties.getJsonNode());
+        m_port = HostsUtil.PortKey.apply(transferProperties.getJsonNode());
+        trust = HostsUtil.TrustKey.apply(transferProperties.getJsonNode());
+        m_user = HostsUtil.UserKey.apply(transferProperties.getJsonNode());
+        m_password = HostsUtil.PasswordKey.apply(transferProperties.getJsonNode());
+        targetBaseFilePath = HostsUtil.TargetBasePathKey.apply(transferProperties.getJsonNode());
         this.targetFilePathName = targetFilePathName;
         sourceFilePathName = sourceFilepathName;
     }

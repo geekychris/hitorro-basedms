@@ -26,9 +26,7 @@ import com.hitorro.util.typesystem.Bag;
 import com.hitorro.util.typesystem.HTSerializableUtil;
 
 
-/**
- *
- */
+
 public class Buff2BagMapper extends BaseMapper<byte[], Bag> {
     public Buff2BagMapper() {
 

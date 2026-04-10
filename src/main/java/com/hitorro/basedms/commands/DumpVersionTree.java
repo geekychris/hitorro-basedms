@@ -23,7 +23,7 @@ package com.hitorro.basedms.commands;
 
 import com.hitorro.base.objects.VersionableObject;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.commandandcontrol.ano.RespColumn;
@@ -49,7 +49,7 @@ public class DumpVersionTree extends com.hitorro.util.commandandcontrol.Command 
                     @RespColumn(name = "Content Shares", lName = "contshares")})
     private com.hitorro.util.commandandcontrol.ResponseShape shape = new com.hitorro.util.commandandcontrol.ResponseShape();
 
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         BaseSession dmsSession = DMSSessionFactory.getFactory().getSession();
         try {
             String guid = Guid.apply(args);

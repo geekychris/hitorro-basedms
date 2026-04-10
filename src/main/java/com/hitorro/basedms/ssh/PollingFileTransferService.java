@@ -257,12 +257,12 @@ public class PollingFileTransferService {
                 new ArrayList<String>());
 
         /*   get transfer property key values   */
-        _sourceHost = fileTransferSourceHostKey.apply(jvs);
-        _sourcePort = fileTransferSourcePortKey.apply(jvs);
-        _sourceUsername = fileTransferSourceUsernameKey.apply(jvs);
-        _sourcePassword = fileTransferSourcePasswordKey.apply(jvs);
-        _destinationPath = fileTransferDestinationPathKey.apply(jvs);
-        List filePathNameList = fileTransferSourceFilePathnameKey.apply(jvs);
+        _sourceHost = fileTransferSourceHostKey.apply(jvs.getJsonNode());
+        _sourcePort = fileTransferSourcePortKey.apply(jvs.getJsonNode());
+        _sourceUsername = fileTransferSourceUsernameKey.apply(jvs.getJsonNode());
+        _sourcePassword = fileTransferSourcePasswordKey.apply(jvs.getJsonNode());
+        _destinationPath = fileTransferDestinationPathKey.apply(jvs.getJsonNode());
+        List filePathNameList = fileTransferSourceFilePathnameKey.apply(jvs.getJsonNode());
         _sourceFilePathname = StringUtil.listToArray(filePathNameList);
     }
 

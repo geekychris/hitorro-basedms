@@ -216,7 +216,7 @@ public class DecisionJobParameters extends JobParameters {
             return new JVS();
         }
         try {
-            return CommandArgs.getParameters(appStepParameters, true);
+            return new JVS(CommandArgs.getParameters(appStepParameters, true));
         } catch (ParseException | PropaccessError e) {
             Log.statemachine.error("Unable to parse parameters%s %e", e, e);
             return new JVS();

@@ -26,7 +26,7 @@ import com.hitorro.base.objects.User;
 import com.hitorro.base.objects.UserMark;
 import com.hitorro.base.objects.UserPreferences;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -147,7 +147,7 @@ public class UserManagerCommand extends Command {
                     @RespColumn(name = "Description", lName = "desc")})
     private ResponseShape codeHeader = new ResponseShape();
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session) throws Exception {
         String operation = Operation.apply(args);
         String user = UserName.apply(args);
 
@@ -210,7 +210,7 @@ public class UserManagerCommand extends Command {
 
     }
 
-    private boolean createUser(User u, Response response, String user, JVS args, String hash, BaseSession sess) {
+    private boolean createUser(User u, Response response, String user, JsonNode args, String hash, BaseSession sess) {
         if (u != null) {
             writeResponse(response, NACK, "User: %s exists already, cant create.", user);
             return false;
@@ -233,7 +233,7 @@ public class UserManagerCommand extends Command {
         return true;
     }
 
-    private void activate(JVS args, User u, BaseSession sess, Response response) {
+    private void activate(JsonNode args, User u, BaseSession sess, Response response) {
         String tok = ActivationToken.apply(args);
         if (u.getActivationToken().equals(tok)) {
             u.setState(Constants.ActiveState);
@@ -244,7 +244,7 @@ public class UserManagerCommand extends Command {
         }
     }
 
-    private boolean setPassword(User u, String hash, JVS args, BaseSession sess, Response response, String operation) {
+    private boolean setPassword(User u, String hash, JsonNode args, BaseSession sess, Response response, String operation) {
         if (u.getPasswordHash().equals(hash)) {
             String newHash = NewHash.apply(args);
             String newPassword = NewPassword.apply(args);
@@ -259,7 +259,7 @@ public class UserManagerCommand extends Command {
         return false;
     }
 
-    private boolean addBookmark(JVS args, Response response, User u, BaseSession sess) {
+    private boolean addBookmark(JsonNode args, Response response, User u, BaseSession sess) {
         String id = Id.apply(args);
         String idType = IdType.apply(args);
         String desc = Description.apply(args);

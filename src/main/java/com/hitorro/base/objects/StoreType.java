@@ -24,9 +24,7 @@ package com.hitorro.base.objects;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
+
 public enum StoreType {
     Blob(false, true, false, false),
     File(true, false, false, false),

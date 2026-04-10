@@ -25,9 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.typesystem.Bag;
 
-/**
- *
- */
+
 public class BagLogicalOperator2FieldLogicalOperator<S> implements HTPredicate<Bag> {
     private HTPredicate<S> lo;
     private String field;

@@ -21,9 +21,7 @@
  */
 package com.hitorro.basedms.session;
 
-/**
- *
- */
+
 public abstract class DMSSecurityModel {
     public boolean isEnabled() {
         return false;

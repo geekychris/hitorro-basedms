@@ -29,9 +29,7 @@ import com.hitorro.util.typesystem.Bag;
 import java.text.ParseException;
 import java.util.Date;
 
-/**
- *
- */
+
 public class DateMinMaxMapper extends BaseMapper<Bag, Bag> {
     private Date min;
     private Date max;

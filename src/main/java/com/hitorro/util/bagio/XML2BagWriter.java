@@ -34,9 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import java.io.IOException;
 import java.io.Writer;
 
-/**
- *
- */
+
 public class XML2BagWriter implements Sink<Bag> {
     public static final BasefileProperty BaseFileKey = new BasefileProperty("outfile", "output file using basefile syntax");
 

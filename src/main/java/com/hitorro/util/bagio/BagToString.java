@@ -24,9 +24,7 @@ package com.hitorro.util.bagio;
 import com.hitorro.util.core.iterator.mappers.BaseMapper;
 import com.hitorro.util.typesystem.Bag;
 
-/**
- *
- */
+
 public class BagToString extends BaseMapper<Bag, String> {
     private String field;
 

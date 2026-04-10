@@ -22,7 +22,7 @@
 package com.hitorro.base.typesystem;
 
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.core.string.Fmt;
@@ -43,7 +43,7 @@ public class Load extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = true)
     private BooleanProperty LoadContent = new BooleanProperty("includecontent", "load the content in from disk", true);
 
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         boolean results = true;
         String fileName = FileName.apply(args);
         boolean includeContent = LoadContent.apply(args);

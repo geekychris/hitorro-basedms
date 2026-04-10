@@ -27,9 +27,7 @@ import gnu.trove.set.hash.TLongHashSet;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.opers.HTPredicate;
 
-/**
- *
- */
+
 public class InSetLogicalOperator implements HTPredicate<Long> {
     private TLongHashSet set;
 

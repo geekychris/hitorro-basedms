@@ -25,7 +25,7 @@ import com.hitorro.base.objects.Store;
 import com.hitorro.base.objects.StoreType;
 import com.hitorro.basedms.StoreUtil;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.tools.queue.reader.DirectoryVisitorIterator;
 import com.hitorro.util.basefile.tools.queue.reader.GoodFileKeyWriter;
@@ -60,7 +60,7 @@ public class RemoveOrphanedFiles extends Command {
     @CommandArgument(required = true)
     private StringProperty FileName = new StringProperty("outputfile", "output file name", "");
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         HTAssert.assertThat(false, "command does not work at the moment you need to work through the fact that enumeration is over base file");
         BaseSession dmsSession = DMSSessionFactory.getFactory().getSession();
         try {

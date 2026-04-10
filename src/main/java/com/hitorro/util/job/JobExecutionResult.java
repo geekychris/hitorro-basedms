@@ -99,7 +99,16 @@ public class JobExecutionResult {
      */
     public void applyMessageToLogger(Logger logger) {
         if (m_hasMessage) {
-            logger.log(m_messageLevel, getMessage());
+            String msg = getMessage();
+            if (m_messageLevel == Level.FATAL) {
+                logger.fatal(msg);
+            } else if (m_messageLevel == Level.ERROR) {
+                logger.error(msg);
+            } else if (m_messageLevel == Level.WARN) {
+                logger.warn(msg);
+            } else {
+                logger.info(msg);
+            }
         }
     }
 
