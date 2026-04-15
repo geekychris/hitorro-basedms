@@ -27,7 +27,7 @@ import com.hitorro.util.json.keys.StringProperty;
 
 
 public class TransformerMethodConstraint implements HTPredicate<ConvertionEdge> {
-    public static final StringProperty FieldKey = new StringProperty("field", "", null);
+    public static StringProperty FieldKey = new StringProperty("field", "", null);
     private String m_field;
 
     public TransformerMethodConstraint(String field) {

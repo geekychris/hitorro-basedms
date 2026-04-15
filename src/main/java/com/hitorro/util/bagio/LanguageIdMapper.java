@@ -33,8 +33,8 @@ import com.hitorro.util.typesystem.valuesource.ValueSourceForClass;
  * Value me that given text will classify the language
  */
 public class LanguageIdMapper extends ValueMapMapper {
-    public static final StringProperty SrcLangKey = new StringProperty("srclang", "field that contains an iso639 code from the data provider", null);
-    public static final BooleanProperty SrcLangTakesPriority = new BooleanProperty("srclangpriority", "language from provider takes priority", false);
+    public static StringProperty SrcLangKey = new StringProperty("srclang", "field that contains an iso639 code from the data provider", null);
+    public static BooleanProperty SrcLangTakesPriority = new BooleanProperty("srclangpriority", "language from provider takes priority", false);
     protected ThreadLocal<Iso639Table> threadData = new ThreadLocal();
     private boolean srcLangTakesPriority;
     private String srcLang;

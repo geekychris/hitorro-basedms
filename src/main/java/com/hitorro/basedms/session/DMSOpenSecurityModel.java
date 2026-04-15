@@ -23,5 +23,5 @@ package com.hitorro.basedms.session;
 
 
 public class DMSOpenSecurityModel extends DMSSecurityModel {
-    public static final DMSOpenSecurityModel m = new DMSOpenSecurityModel();
+    public static DMSOpenSecurityModel m = new DMSOpenSecurityModel();
 }

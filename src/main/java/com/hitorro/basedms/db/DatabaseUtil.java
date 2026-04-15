@@ -48,18 +48,18 @@ public class DatabaseUtil {
     public static final String DefaultDB = "defaultdb";
 
     /*   key key  */
-    public static final StringProperty DefaultDBKey = new StringProperty("defaultdbkey", "Default DB connect info", DefaultDB);
+    public static StringProperty DefaultDBKey = new StringProperty("defaultdbkey", "Default DB connect info", DefaultDB);
 
     /*  database connection keys  */
-    public static final StringProperty UsernameKey = new StringProperty("username", "database user name", null);
-    public static final StringProperty PasswordKey = new StringProperty("password", "database password", null);
-    public static final StringProperty DatabaseUrlKey = new StringProperty("url", "database url", null);
-    public static final StringProperty HostNameKey = new StringProperty("hostname", "host database resides on", "localhost");
-    public static final StringProperty DatabaseNameKey = new StringProperty("databasename", "database name", null);
+    public static StringProperty UsernameKey = new StringProperty("username", "database user name", null);
+    public static StringProperty PasswordKey = new StringProperty("password", "database password", null);
+    public static StringProperty DatabaseUrlKey = new StringProperty("url", "database url", null);
+    public static StringProperty HostNameKey = new StringProperty("hostname", "host database resides on", "localhost");
+    public static StringProperty DatabaseNameKey = new StringProperty("databasename", "database name", null);
 
-    public static final StringProperty RootUsernameKey = new StringProperty("rootusername", "database user name", null);
-    public static final StringProperty RootPasswordKey = new StringProperty("rootpassword", "database password name", null);
-    public static final StringProperty RootDatabaseUrlKey = new StringProperty("rooturl", "system database url", null);
+    public static StringProperty RootUsernameKey = new StringProperty("rootusername", "database user name", null);
+    public static StringProperty RootPasswordKey = new StringProperty("rootpassword", "database password name", null);
+    public static StringProperty RootDatabaseUrlKey = new StringProperty("rooturl", "system database url", null);
 
 
     /**
@@ -72,7 +72,7 @@ public class DatabaseUtil {
      * @throws IOException
      * @throws SQLException
      */
-    public static final boolean createUser(JVS dbProperties,
+    public static boolean createUser(JVS dbProperties,
                                            String username,
                                            String password) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
@@ -100,7 +100,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean createUser(JVS dbProperties) throws IOException, SQLException, PropaccessError {
+    public static boolean createUser(JVS dbProperties) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
 
         String databaseName = DatabaseUtil.DatabaseNameKey.apply(connectInfo);
@@ -129,7 +129,7 @@ public class DatabaseUtil {
      * @throws IOException
      * @throws SQLException
      */
-    public static final boolean createUser(String rootUsername,
+    public static boolean createUser(String rootUsername,
                                            String rootPassword,
                                            String rootUrl,
                                            String username,
@@ -159,7 +159,7 @@ public class DatabaseUtil {
      * @return true if the root user can connect.  false if the root user cannot connect.
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean canRootUserConnect(JVS dbProperties) throws PropaccessError {
+    public static boolean canRootUserConnect(JVS dbProperties) throws PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String rootUrl = RootDatabaseUrlKey.apply(connectInfo);
         String rootUsername = RootUsernameKey.apply(connectInfo);
@@ -177,7 +177,7 @@ public class DatabaseUtil {
      * @return true if the root user can connect.  false if the root user cannot connect.
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean canUserConnect(JVS dbProperties) throws PropaccessError {
+    public static boolean canUserConnect(JVS dbProperties) throws PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String url = DatabaseUrlKey.apply(connectInfo);
         String username = UsernameKey.apply(connectInfo);
@@ -199,7 +199,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean canUserConnect(String username, String password, String url) {
+    public static boolean canUserConnect(String username, String password, String url) {
         try {
             Log.util.debug("dbms util attempting connection: username: %s; password: %s; url: %s.", username, password, url);
             Connection connection = Executor.newConnection(username, password, url);
@@ -222,7 +222,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean dropDatabase(JVS dbProperties, String databaseName) throws IOException, SQLException, PropaccessError {
+    public static boolean dropDatabase(JVS dbProperties, String databaseName) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String rootUsername = RootUsernameKey.apply(connectInfo);
         String rootPassword = RootPasswordKey.apply(connectInfo);
@@ -244,7 +244,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean dropDatabase(JVS dbProperties) throws IOException, SQLException, PropaccessError {
+    public static boolean dropDatabase(JVS dbProperties) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String rootUsername = RootUsernameKey.apply(connectInfo);
         String rootPassword = RootPasswordKey.apply(connectInfo);
@@ -268,7 +268,7 @@ public class DatabaseUtil {
      * @throws IOException
      * @throws SQLException
      */
-    public static final boolean dropDatabase(String rootUsername,
+    public static boolean dropDatabase(String rootUsername,
                                              String rootPassword,
                                              String rootUrl,
                                              String databaseName) throws IOException, SQLException {
@@ -294,7 +294,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean createDatabase(JVS dbProperties, String databaseName) throws IOException, SQLException, PropaccessError {
+    public static boolean createDatabase(JVS dbProperties, String databaseName) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String rootUsername = RootUsernameKey.apply(connectInfo);
         String rootPassword = RootPasswordKey.apply(connectInfo);
@@ -316,7 +316,7 @@ public class DatabaseUtil {
      * @throws SQLException
      * @see DatabaseUtil#getDefaultDBContext()
      */
-    public static final boolean createDatabase(JVS dbProperties) throws IOException, SQLException, PropaccessError {
+    public static boolean createDatabase(JVS dbProperties) throws IOException, SQLException, PropaccessError {
         JsonNode connectInfo = getConnectionInfoMap(dbProperties);
         String rootUsername = RootUsernameKey.apply(connectInfo);
         String rootPassword = RootPasswordKey.apply(connectInfo);
@@ -340,7 +340,7 @@ public class DatabaseUtil {
      * @throws IOException
      * @throws SQLException
      */
-    public static final boolean createDatabase(String rootUsername,
+    public static boolean createDatabase(String rootUsername,
                                                String rootPassword,
                                                String rootUrl,
                                                String databaseName) throws IOException, SQLException {
@@ -374,7 +374,7 @@ public class DatabaseUtil {
      *
      * @return new instance of Executor.
      */
-    public static final Executor createExecutor(String username, String password, String url) {
+    public static Executor createExecutor(String username, String password, String url) {
         return new Executor(username, password, url);
     }
 
@@ -476,7 +476,7 @@ public class DatabaseUtil {
      *
      * @return HTProperties TreeMap narrowed to just database-related properties.
      */
-    public static final JVS getDefaultDBContext() throws PropaccessError {
+    public static JVS getDefaultDBContext() throws PropaccessError {
 
         JsonNode connectInfo = getConnectionInfoMap(JVSProperties.getProperties());
         String databaseUrl = DatabaseUtil.DatabaseUrlKey.apply(connectInfo);
@@ -507,7 +507,7 @@ public class DatabaseUtil {
      * @param databaseName - database within the specified host rdbms instance.
      * @return HTProperties TreeMap narrowed to just database-related properties.
      */
-    public static final JVS getDefaultDBContext(String databaseName) throws PropaccessError {
+    public static JVS getDefaultDBContext(String databaseName) throws PropaccessError {
         JVS properties = DatabaseUtil.getDefaultDBContext();
         properties.set(getFullyQualifiedKey(DatabaseNameKey), databaseName);
 
@@ -529,7 +529,7 @@ public class DatabaseUtil {
      * @param rootPassword - root user password to make the root user connection.
      * @return HTProperties TreeMap narrowed to just database-related properties.
      */
-    public static final JVS getDBContext(String username,
+    public static JVS getDBContext(String username,
                                          String password,
                                          String hostname,
                                          String databaseName,

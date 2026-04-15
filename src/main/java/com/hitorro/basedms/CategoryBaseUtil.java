@@ -42,7 +42,7 @@ public abstract class CategoryBaseUtil {
      * @param domain
      * @param value
      */
-    public static final void addCategory(String domain, String value, CategoryBaseInterface intf) throws CategoryException {
+    public static void addCategory(String domain, String value, CategoryBaseInterface intf) throws CategoryException {
         domain = domain.toLowerCase();
         value = value.toLowerCase();
         ValueMap<Category> cats = DomainValueCache.getCache().get(domain);
@@ -73,7 +73,7 @@ public abstract class CategoryBaseUtil {
      * @param value
      * @return true if exists.
      */
-    public static final boolean getCategoryValueExists(String domain, String value, CategoryBaseInterface intf) {
+    public static boolean getCategoryValueExists(String domain, String value, CategoryBaseInterface intf) {
         return getDomainValueFromCategory(domain, value, intf) != null;
     }
 
@@ -84,7 +84,7 @@ public abstract class CategoryBaseUtil {
      * @param value
      * @return true if a category was removed.
      */
-    public static final boolean removeCategory(String domain, String value, CategoryBaseInterface intf) {
+    public static boolean removeCategory(String domain, String value, CategoryBaseInterface intf) {
         domain = domain.toLowerCase();
         value = value.toLowerCase();
         DomainValueIntf dv = getDomainValueFromCategory(domain, value, intf);
@@ -94,7 +94,7 @@ public abstract class CategoryBaseUtil {
         return false;
     }
 
-    public static final boolean getCategoryDomainExists(String domain, CategoryBaseInterface intf) {
+    public static boolean getCategoryDomainExists(String domain, CategoryBaseInterface intf) {
         for (DomainValueIntf dv : intf.getCategories()) {
             if (dv.getDomain().equals(domain)) {
                 // we found the element already.

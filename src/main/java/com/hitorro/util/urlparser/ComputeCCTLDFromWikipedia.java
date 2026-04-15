@@ -49,7 +49,7 @@ import java.util.TreeSet;
  * domain without too much "fluff".
  */
 public class ComputeCCTLDFromWikipedia {
-    public static final String[] RemoveAnthingWith = {"www", "regi", "examp", "goog", "yout", "yahoo", "visa", "example", "nike", "blow", "mobil", "#", "%"};
+    public static String[] RemoveAnthingWith = {"www", "regi", "examp", "goog", "yout", "yahoo", "visa", "example", "nike", "blow", "mobil", "#", "%"};
 
     private TreeSet<String> good = new TreeSet();
     private List<GenericKeyValue<String, String>> rejected = new ArrayList();

@@ -28,7 +28,7 @@ import com.hitorro.util.typesystem.TypeManager;
 
 
 public class ItemBeanToBagMapper extends BaseMapper<ItemBean, Bag> {
-    public static final ItemBeanToBagMapper map = new ItemBeanToBagMapper();
+    public static ItemBeanToBagMapper map = new ItemBeanToBagMapper();
     private String typeString = "webdoc";
     private Type type;
 

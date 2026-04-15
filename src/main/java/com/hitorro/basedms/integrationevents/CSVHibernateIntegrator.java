@@ -35,9 +35,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class CSVHibernateIntegrator implements Integrator {
-    public static final StringProperty ClassKey =
+    public static StringProperty ClassKey =
             new StringProperty("consumer", "csv integration consumer", null);
-    public static final StringProperty FileNameKey =
+    public static StringProperty FileNameKey =
             new StringProperty("filename", "filename of csv file to load", null);
 
     public boolean integrate(JsonNode args, String name) {

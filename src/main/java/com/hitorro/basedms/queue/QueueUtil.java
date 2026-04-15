@@ -44,7 +44,7 @@ import java.util.Date;
 public class QueueUtil {
 
 
-    public static final void enqueueHtmlForContentAddition(String url, int retries, String targetGuid, String contentLabel, int priority) {
+    public static void enqueueHtmlForContentAddition(String url, int retries, String targetGuid, String contentLabel, int priority) {
         BaseSession session = DMSSessionFactory.getFactory().getSession();
 
         try {
@@ -54,7 +54,7 @@ public class QueueUtil {
         }
     }
 
-    public static final PersistedSerializedObject enqueueUrlFetchPostGenerator(BaseSession session,
+    public static PersistedSerializedObject enqueueUrlFetchPostGenerator(BaseSession session,
                                                                                String url,
                                                                                int retries,
                                                                                String parentGuid,
@@ -80,7 +80,7 @@ public class QueueUtil {
         }
     }
 
-    public static final PersistedSerializedObject enqueueHtmlForContentAddition(String url,
+    public static PersistedSerializedObject enqueueHtmlForContentAddition(String url,
                                                                                 int retries,
                                                                                 String targetGuid,
                                                                                 String contentLabel,
@@ -96,11 +96,11 @@ public class QueueUtil {
         return enqueJob(p, session, true, PersistedSerializedObject.CollectionID_Queue, priority);
     }
 
-    public static final PersistedSerializedObject enqueJob(JobParameters p, BaseSession session, boolean commit, int id, int priority) {
+    public static PersistedSerializedObject enqueJob(JobParameters p, BaseSession session, boolean commit, int id, int priority) {
         return enqueJob(p, session, commit, id, null, priority);
     }
 
-    public static final PersistedSerializedObject enqueJob(JobParameters p,
+    public static PersistedSerializedObject enqueJob(JobParameters p,
                                                            BaseSession session,
                                                            boolean commit,
                                                            int id,

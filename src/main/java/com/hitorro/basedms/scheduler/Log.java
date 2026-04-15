@@ -27,5 +27,5 @@ public class Log extends com.hitorro.network.servlet.Log {
     /**
      * General logger for tapestry work.
      */
-    public static final Logger scheduler = Logger.getLogger("ht.scheduler");
+    public static Logger scheduler = Logger.getLogger("ht.scheduler");
 }

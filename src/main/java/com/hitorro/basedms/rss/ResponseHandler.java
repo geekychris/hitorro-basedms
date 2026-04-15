@@ -35,7 +35,7 @@ public class ResponseHandler {
 
     private static Pattern characterEncodingPattern = Pattern.compile("charset=([.[^; ]]*)");
 
-    public static String getCharacterEncoding(URLConnection connection) {
+    public static final String getCharacterEncoding(URLConnection connection) {
         return getCharacterEncoding(connection.getContentType());
     }
 
@@ -45,7 +45,7 @@ public class ResponseHandler {
      * @param contentTypeHeader the value of the content-type HTTP header eg: text/html; charset=ISO-8859-4
      * @return the character encoding, eg: ISO-8859-4
      */
-    public static String getCharacterEncoding(String contentTypeHeader) {
+    public static final String getCharacterEncoding(String contentTypeHeader) {
         if (contentTypeHeader == null) {
             return defaultCharacterEncoding;
         }

@@ -73,16 +73,16 @@ public class HibernateUtil {
         return s_map.get(key);
     }
 
-    public static final void setUsername(Properties props, String username, String password) {
+    public static void setUsername(Properties props, String username, String password) {
         props.put("hibernate.connection.username", username);
         props.put("hibernate.connection.password", password);
     }
 
-    public static final void setCreateMode(Properties props, String createMode) {
+    public static void setCreateMode(Properties props, String createMode) {
         props.put("hibernate.hbm2ddl.auto", createMode);
     }
 
-    public static final void setUrl(Properties props, String url) {
+    public static void setUrl(Properties props, String url) {
         props.put("hibernate.connection.url", url);
     }
 

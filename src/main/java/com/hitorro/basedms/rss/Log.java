@@ -24,5 +24,5 @@ package com.hitorro.basedms.rss;
 import com.hitorro.util.log.Logger;
 
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger rss = Logger.getLogger("ht.rss");
+    public static Logger rss = Logger.getLogger("ht.rss");
 }

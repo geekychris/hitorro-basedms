@@ -44,17 +44,17 @@ public abstract class HostsUtil {
 
 
     //   individual host keys
-    public static final StringProperty HostKey = new StringProperty(HostsUtil.propHost, "Host Name", null);
-    public static final IntegerProperty PortKey = new IntegerProperty(HostsUtil.propPort, "Hosts port number", 80);
-    public static final BooleanProperty TrustKey = new BooleanProperty(HostsUtil.propTrust, "Trust key", false);
+    public static StringProperty HostKey = new StringProperty(HostsUtil.propHost, "Host Name", null);
+    public static IntegerProperty PortKey = new IntegerProperty(HostsUtil.propPort, "Hosts port number", 80);
+    public static BooleanProperty TrustKey = new BooleanProperty(HostsUtil.propTrust, "Trust key", false);
 
-    public static final StringProperty UserKey = new StringProperty(HostsUtil.propUsername, "Host Name", null);
-    public static final StringProperty PasswordKey = new StringProperty(HostsUtil.propPassword, "Login password", null);
-    public static final StringProperty TargetBasePathKey = new StringProperty(HostsUtil.propTargetBasePath, "Target base path", null);
-    public static final StringProperty TargetBaseUrlKey = new StringProperty(HostsUtil.propTargetBaseUrl, "Target base url", null);
+    public static StringProperty UserKey = new StringProperty(HostsUtil.propUsername, "Host Name", null);
+    public static StringProperty PasswordKey = new StringProperty(HostsUtil.propPassword, "Login password", null);
+    public static StringProperty TargetBasePathKey = new StringProperty(HostsUtil.propTargetBasePath, "Target base path", null);
+    public static StringProperty TargetBaseUrlKey = new StringProperty(HostsUtil.propTargetBaseUrl, "Target base url", null);
 
 
-    public static String getHostNameByCategory(String category) {
+    public static final String getHostNameByCategory(String category) {
         return HTProperties.getProperties().get(Fmt.S("%s.%s.%s", HostPath, category, "hostname"));
     }
 }

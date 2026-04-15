@@ -24,13 +24,13 @@ package com.hitorro.basedms;
 import com.hitorro.util.log.Logger;
 
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger basedms = Logger.getLogger("ht.basedms");
+    public static Logger basedms = Logger.getLogger("ht.basedms");
     /**
      * General logger for object handling.
      */
-    public static final Logger objectHandling = Logger.getLogger("ht.objectHandling");
+    public static Logger objectHandling = Logger.getLogger("ht.objectHandling");
     /**
      * General application-level logging.
      */
-    public static final Logger application = Logger.getLogger("ht.application");
+    public static Logger application = Logger.getLogger("ht.application");
 }

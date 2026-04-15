@@ -43,10 +43,10 @@ import java.util.Map;
                 DumpWorkflowTranscodeCurrent.class }, typeManagedClasses = {}, uiDirectories = {})
 public class TransformerService {
     public static final String TransformationKey = "transformer";
-    public static final FileProperty TransformerConfig = new FileProperty("transcoder.config",
+    public static FileProperty TransformerConfig = new FileProperty("transcoder.config",
             "General transcoding config",
             "${HT_BIN}/data/transcoder/edges.csv");
-    public static final IntegerProperty JobThreads = new IntegerProperty("transcoder.threads", "Number of threads", 2);
+    public static IntegerProperty JobThreads = new IntegerProperty("transcoder.threads", "Number of threads", 2);
     public static final String PSO_JOB_NAME = "jobs";
     private static TransformerService s_service;
     private ConvertionContext convertionContext = new ConvertionContext();

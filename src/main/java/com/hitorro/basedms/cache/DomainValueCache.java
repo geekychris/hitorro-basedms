@@ -49,7 +49,7 @@ public class DomainValueCache extends BaseMapper<String, ValueMap<Category>> {
     public DomainValueCache() {
     }
 
-    public static final HashCache<String, ValueMap<Category>> getCache() {
+    public static HashCache<String, ValueMap<Category>> getCache() {
         return s_cache;
     }
 

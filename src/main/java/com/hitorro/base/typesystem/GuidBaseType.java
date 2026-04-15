@@ -45,7 +45,7 @@ public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     @org.hibernate.annotations.Index(name = "guid_idx")
     protected String guid = null;
 
-    public static String computeGuid(TypeIntf type) {
+    public static final String computeGuid(TypeIntf type) {
         TypeClassMetaInfo meta = type.getTypeMeta();
 
         int id = Env.getGlobalId();

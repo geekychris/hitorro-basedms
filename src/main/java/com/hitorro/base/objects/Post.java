@@ -232,7 +232,7 @@ public class Post extends Document {
      * @param link the permalink of the Post.
      * @return the identity hash a Post would have with the given permalink
      */
-    public static long calculateIdentityHash(String link) {
+    public static final long calculateIdentityHash(String link) {
         return FPHash64.getFP(link);
     }
 
@@ -683,7 +683,7 @@ public class Post extends Document {
             return s_byShortName.get(name.toLowerCase());
         }
 
-        public static int size() {
+        public static final int size() {
             return s_byShortName.size();
         }
 

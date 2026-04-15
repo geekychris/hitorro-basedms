@@ -34,7 +34,7 @@ import java.util.List;
 /**
  */
 public class TypeFieldsCache extends BaseMapper<TypeIntf, List<TypeFieldIntf>> {
-    public static String EventName = "TypeFieldsCache";
+    public static final String EventName = "TypeFieldsCache";
 
     private static final HashCache<TypeIntf, List<TypeFieldIntf>> s_cache = new HashCache<TypeIntf, List<TypeFieldIntf>>(EventName, new TypeFieldsCache());
     public HTPredicate<TypeFieldIntf> indexConstraint = new IsFullTextable();
@@ -42,7 +42,7 @@ public class TypeFieldsCache extends BaseMapper<TypeIntf, List<TypeFieldIntf>> {
     public TypeFieldsCache() {
     }
 
-    public static final HashCache<TypeIntf, List<TypeFieldIntf>> getCache() {
+    public static HashCache<TypeIntf, List<TypeFieldIntf>> getCache() {
         return s_cache;
     }
 

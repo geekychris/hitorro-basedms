@@ -78,7 +78,7 @@ public class SchedulerService implements SchedulerIntf, EventListener {
         return (SchedulerService) ServiceContext.getSC().getInitializedModule(SchedulerService.class);
     }
 
-    public static final Class getJobClass(String jname, JVS jproperties, String jobClassString) throws PropaccessError {
+    public static Class getJobClass(String jname, JVS jproperties, String jobClassString) throws PropaccessError {
         Class jobClass;
         JobRegistration ajr = JobService.getService().getAppJobRegistrationByName(jobClassString);
 

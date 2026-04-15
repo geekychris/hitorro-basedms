@@ -61,9 +61,9 @@ public class JobService implements com.hitorro.util.job.JobServiceIntf {
     public static final String HTMLFetcherKey = "htmlFetcher";
     public static final String WorkflowKey = "workflow";
 
-    public static final IntegerProperty JobThreads = new IntegerProperty("jobs.threads", "Number of threads", 5);
-    public static final IntegerProperty HTTPJobThreads = new IntegerProperty("jobs.http.threads", "Number of threads", 5);
-    public static final BooleanProperty DisableJobService = new BooleanProperty("jobs.disable", "", false);
+    public static IntegerProperty JobThreads = new IntegerProperty("jobs.threads", "Number of threads", 5);
+    public static IntegerProperty HTTPJobThreads = new IntegerProperty("jobs.http.threads", "Number of threads", 5);
+    public static BooleanProperty DisableJobService = new BooleanProperty("jobs.disable", "", false);
     public static final String PSO_JOB_NAME = "jobs";
     public static JobService _service;
     private static List<PSOQueueProcessor> queues = new ArrayList<PSOQueueProcessor>();

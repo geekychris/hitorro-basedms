@@ -84,7 +84,7 @@ public class Reference extends VersionBaseType {
      * @param type
      * @return
      */
-    public static int assertReference(String from, String to, String type) {
+    public static final int assertReference(String from, String to, String type) {
         BaseSession session = null;
         try {
             session = DMSSessionFactory.getFactory().getSession();

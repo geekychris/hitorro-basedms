@@ -36,7 +36,7 @@ import java.io.Writer;
 
 
 public class XML2BagWriter implements Sink<Bag> {
-    public static final BasefileProperty BaseFileKey = new BasefileProperty("outfile", "output file using basefile syntax");
+    public static BasefileProperty BaseFileKey = new BasefileProperty("outfile", "output file using basefile syntax");
 
     public static final String Bags = "bags";
     AttributesImpl attribs = new AttributesImpl();

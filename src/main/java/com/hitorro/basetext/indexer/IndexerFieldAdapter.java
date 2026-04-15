@@ -35,16 +35,16 @@ import java.util.Map;
  */
 public class IndexerFieldAdapter {
     public static final String DEFAULT_SEARCH_FIELD = "content";
-    public static final DateTools.Resolution IndexingDateResolution = DateTools.Resolution.HOUR;
+    public static DateTools.Resolution IndexingDateResolution = DateTools.Resolution.HOUR;
 
-    public static final Field.Store getStore(boolean stored) {
+    public static Field.Store getStore(boolean stored) {
         if (stored) {
             return Field.Store.YES;
         }
         return Field.Store.NO;
     }
 
-    public static final IFT getIndexEnum(boolean indexed, boolean stored, boolean literal) {
+    public static IFT getIndexEnum(boolean indexed, boolean stored, boolean literal) {
         IFT ift = new IFT();
         if (!literal) {
             ift.setTokenized();

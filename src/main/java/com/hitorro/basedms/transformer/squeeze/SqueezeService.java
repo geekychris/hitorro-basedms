@@ -65,7 +65,7 @@ import java.util.Map;
 public class SqueezeService implements TerminationKey {
     public static final String SqueezeKey = "squeeze";
 
-    public static final IntegerProperty RotatingBufferSize = new IntegerProperty("transcoder.sorenson.rotatingbuffersize",
+    public static IntegerProperty RotatingBufferSize = new IntegerProperty("transcoder.sorenson.rotatingbuffersize",
             "Size of the out and err buffers used by running clients",
             1024 * 10);
     private static final FileProperty SorensonExec = new FileProperty("transcoder.sorenson.exe",

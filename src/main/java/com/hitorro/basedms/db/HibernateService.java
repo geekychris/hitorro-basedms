@@ -56,15 +56,15 @@ import java.util.Properties;
         typeManagedClasses = {},
         uiDirectories = {})
 public class   HibernateService {
-    public static final StringProperty DerbyDB = new StringProperty("db.embedded.name", "", null);
-    public static final StringProperty DefaultDBKey = DatabaseUtil.DefaultDBKey;
-    public static final StringProperty UserName = DatabaseUtil.UsernameKey;
-    public static final StringProperty Password = DatabaseUtil.PasswordKey;
-    public static final StringProperty DBUrl = DatabaseUtil.DatabaseUrlKey;
-    public static final BooleanProperty AllowUpgrade = new BooleanProperty("allowupgrade", "", false);
-    public static final StringProperty DBConfigKey = new StringProperty("dbconfigkey", "Key used to get the hibernate properties", null);
-    public static final StringProperty ConnectionKey = new StringProperty("connectionkey", "Connection info", null);
-    public static final BooleanProperty HibnernateStatistics = new BooleanProperty("hibernate.enablestats", "", false);
+    public static StringProperty DerbyDB = new StringProperty("db.embedded.name", "", null);
+    public static StringProperty DefaultDBKey = DatabaseUtil.DefaultDBKey;
+    public static StringProperty UserName = DatabaseUtil.UsernameKey;
+    public static StringProperty Password = DatabaseUtil.PasswordKey;
+    public static StringProperty DBUrl = DatabaseUtil.DatabaseUrlKey;
+    public static BooleanProperty AllowUpgrade = new BooleanProperty("allowupgrade", "", false);
+    public static StringProperty DBConfigKey = new StringProperty("dbconfigkey", "Key used to get the hibernate properties", null);
+    public static StringProperty ConnectionKey = new StringProperty("connectionkey", "Connection info", null);
+    public static BooleanProperty HibnernateStatistics = new BooleanProperty("hibernate.enablestats", "", false);
     public static boolean s_isInitialized = false;
     public static HibernateService s_service;
     BootstrapServiceRegistry bootstrapRegistry;

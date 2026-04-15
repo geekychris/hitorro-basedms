@@ -53,7 +53,7 @@ public class NamedLong {
         this.description = description;
     }
 
-    public static final NamedLong getNamedLong(String name) {
+    public static NamedLong getNamedLong(String name) {
         return s_namedLongs.get(name);
     }
 
@@ -63,7 +63,7 @@ public class NamedLong {
         return list;
     }
 
-    public static final NamedLong registerNamedLong(String name, long initialValue, long incrementor, String description) {
+    public static NamedLong registerNamedLong(String name, long initialValue, long incrementor, String description) {
         NamedLong nl = new NamedLong(name, initialValue, incrementor, description);
         s_namedLongs.put(name, nl);
         return nl;

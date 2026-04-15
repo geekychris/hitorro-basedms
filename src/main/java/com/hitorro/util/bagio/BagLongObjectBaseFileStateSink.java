@@ -37,11 +37,11 @@ import java.io.IOException;
  * Given two fields of a bag(long, Object) we apply these to long, string apply
  */
 public class BagLongObjectBaseFileStateSink extends LongObjectBaseFileStateSink<Bag, String> {
-    public static final BasefileProperty BaseFileKey = new BasefileProperty("outputfile", "output file using basefile syntax");
-    public static final IntegerProperty SizeKey = new IntegerProperty("mapsize", "size of the apply", 1000000);
-    public static final StringProperty LongField = new StringProperty("longfield", "field which represents the long value", null);
+    public static BasefileProperty BaseFileKey = new BasefileProperty("outputfile", "output file using basefile syntax");
+    public static IntegerProperty SizeKey = new IntegerProperty("mapsize", "size of the apply", 1000000);
+    public static StringProperty LongField = new StringProperty("longfield", "field which represents the long value", null);
 
-    public static final StringProperty ValueField = new StringProperty("valuefield", "field which represents the value field", null);
+    public static StringProperty ValueField = new StringProperty("valuefield", "field which represents the value field", null);
     private String longField;
     private String valueField;
 

@@ -25,7 +25,7 @@ import com.hitorro.util.log.Logger;
 
 
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger transformer = Logger.getLogger("ht.base.transformer");
+    public static Logger transformer = Logger.getLogger("ht.base.transformer");
 
-    public static final Logger db = Logger.getLogger("ht.db");
+    public static Logger db = Logger.getLogger("ht.db");
 }

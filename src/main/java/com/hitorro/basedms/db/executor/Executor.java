@@ -80,7 +80,7 @@ public class Executor {
      * @param database
      * @return Database Connection URL
      */
-    public static String generateURL(String host, String database) {
+    public static final String generateURL(String host, String database) {
         return Fmt.S("%s%s/%s%s%s", MYSQL_URL, host, database, AUTO_RECONNECT, CHARACTER_ENCODING);
     }
 

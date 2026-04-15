@@ -33,7 +33,7 @@ import java.util.Iterator;
  * content (we ignore the flag!)
  */
 public class DomainValueIndexerAdapter extends IndexerFieldAdapter {
-    public static final Class DVAdapter = DomainValueIndexerAdapter.class;
+    public static Class DVAdapter = DomainValueIndexerAdapter.class;
 
     public void index(boolean isDate, Object valueRaw, boolean stored, boolean indexed, Document doc, String field, boolean literal, boolean addToDefaultField) {
         Collection<DomainValue> col = (Collection<DomainValue>) valueRaw;

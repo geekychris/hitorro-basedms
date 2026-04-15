@@ -44,7 +44,7 @@ import java.util.List;
 
 public class TransformerUtil {
 
-	public static final TransformJobParameters createJobParameters(String notificationGuid,
+	public static TransformJobParameters createJobParameters(String notificationGuid,
 			String notificationGuidState,
 			HTPredicate<Content> contentConstraint,
 			String sysObjectGuid,
@@ -57,7 +57,7 @@ public class TransformerUtil {
 				constraint, tagDomain, tagValue, targetFileNameSansExtension, addAsChild, null, null);
 	}
 
-	public static final TransformJobParameters createJobParameters(String notificationGuid,
+	public static TransformJobParameters createJobParameters(String notificationGuid,
 			String notificationGuidState,
 			HTPredicate<Content> contentConstraint,
 			String sysObjectGuid,
@@ -114,7 +114,7 @@ public class TransformerUtil {
 		return QueueUtil.enqueJob(params, session, commit, PersistedSerializedObject.CollectionID_TranscoderQueue, 0);
 	}
 
-	public static final JobExecutionResult executeJobInline(String notificationGuid,
+	public static JobExecutionResult executeJobInline(String notificationGuid,
 			String notificationGuidState,
 			HTPredicate<Content> contentConstraint,
 			String sysObjectGuid,

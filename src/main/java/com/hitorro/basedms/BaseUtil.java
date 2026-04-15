@@ -160,7 +160,7 @@ public class BaseUtil {
      * @param deletePSO
      * @return
      */
-    public static final JobExecutionResult notify(BaseSession session,
+    public static JobExecutionResult notify(BaseSession session,
                                                   com.hitorro.base.objects.PersistedSerializedObject pso,
                                                   boolean deletePSO) {
 
@@ -264,7 +264,7 @@ public class BaseUtil {
      * @throws IOException
      * @throws StoreException
      */
-    public static final com.hitorro.base.objects.VersionableObject getDocumentFromPathCreatingWithEmptyContent(String path,
+    public static com.hitorro.base.objects.VersionableObject getDocumentFromPathCreatingWithEmptyContent(String path,
                                                                                                                String docName,
                                                                                                                DMSSession session,
                                                                                                                boolean create)

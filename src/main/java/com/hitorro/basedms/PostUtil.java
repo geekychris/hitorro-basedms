@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class PostUtil {
     public static final int MaxUrlLength = 1024;
-    public static final IntegerProperty MaxDepth = new IntegerProperty("dirfileprocessor.posts.maxdepth", "Depth of crawling for post fetching", 2);
+    public static IntegerProperty MaxDepth = new IntegerProperty("dirfileprocessor.posts.maxdepth", "Depth of crawling for post fetching", 2);
 
 
     private static final com.hitorro.util.html.constraint.UrlStartsWithLinkConstraint s_HttpOnlyConstraint = new com.hitorro.util.html.constraint.UrlStartsWithLinkConstraint("http://");

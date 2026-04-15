@@ -53,7 +53,7 @@ public class AutoDBCreateService {
     public static final String DestroyDB = "destroyDB.txt";
     public static final String InitDB = "initDbDone.txt";
     public static final String AutoCreateKey = "autodbcreate";
-    public static final BooleanProperty DefaultDBKey = new BooleanProperty(AutoCreateKey, "Test for the db user, create it and run initdb", false);
+    public static BooleanProperty DefaultDBKey = new BooleanProperty(AutoCreateKey, "Test for the db user, create it and run initdb", false);
 
     private String m_username;
     private String m_password;

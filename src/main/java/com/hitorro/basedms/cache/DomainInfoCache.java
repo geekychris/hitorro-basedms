@@ -43,7 +43,7 @@ public class DomainInfoCache extends BaseMapper<String, DomainInfo> {
     public DomainInfoCache() {
     }
 
-    public static final HashCache<String, DomainInfo> getCache() {
+    public static HashCache<String, DomainInfo> getCache() {
         return s_cache;
     }
 

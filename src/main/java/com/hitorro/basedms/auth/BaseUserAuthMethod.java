@@ -35,9 +35,9 @@ public class BaseUserAuthMethod implements AuthenticationMethod {
     /**
      * global password
      */
-    public static final StringProperty Password =
+    public static StringProperty Password =
             new StringProperty("ui.password", "cheapo authentication", "zz");
-    public static final BooleanProperty PasswordBackdoor =
+    public static BooleanProperty PasswordBackdoor =
             new BooleanProperty("ui.passwordbackdoor", "switch off auth", false);
     public static final String Key = "baseuserauth";
 

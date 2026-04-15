@@ -43,8 +43,8 @@ import com.hitorro.util.statemachine.StateMachineService;
 public class WorkflowService {
     public static final String PSO_JOB_NAME = "notify";
 
-    public static final IntegerProperty JobThreads = new IntegerProperty("workflow.threads", "Number of threads", 1);
-    public static final BooleanProperty DisableJobService = new BooleanProperty("workflow.disablequeue", "", false);
+    public static IntegerProperty JobThreads = new IntegerProperty("workflow.threads", "Number of threads", 1);
+    public static BooleanProperty DisableJobService = new BooleanProperty("workflow.disablequeue", "", false);
 
     private static WorkflowService s_service;
 

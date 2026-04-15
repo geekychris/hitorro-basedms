@@ -43,16 +43,16 @@ public class MysqlUtil {
     protected static SimpleDateFormat DATE_FORMAT_DISPLAY = new SimpleDateFormat(DATE_FORMAT_DISPLAY_STRING);
 
 
-    public static String toTimestamp(String date) {
+    public static final String toTimestamp(String date) {
         return " unix_timestamp('" + date + "') ";
     }
 
-    public static String toDateIntervalTimestamp(Calendar dateFrom, String periodType, int periodFrame) {
+    public static final String toDateIntervalTimestamp(Calendar dateFrom, String periodType, int periodFrame) {
         return toDateIntervalTimestamp(DATE_FORMAT.format(dateFrom.getTime()), periodType, periodFrame);
     }
 
 
-    public static String toDateIntervalTimestamp(String strDateFrom, String periodType, int periodFrame) {
+    public static final String toDateIntervalTimestamp(String strDateFrom, String periodType, int periodFrame) {
         return " unix_timestamp(" + toDateInterval(strDateFrom, periodType, periodFrame) + ") ";
     }
 
@@ -62,11 +62,11 @@ public class MysqlUtil {
      * @param periodFrame Amount of Period Type frames to add to Start Date
      * @return MySQL SQL statement to add a time period to the specified date
      */
-    public static String toDateInterval(String strDateFrom, String periodType, int periodFrame) {
+    public static final String toDateInterval(String strDateFrom, String periodType, int periodFrame) {
         return " DATE_ADD('" + strDateFrom + "', INTERVAL " + periodFrame + " " + periodType + ") ";
     }
 
-    public static String toDateInterval(Calendar dateFrom, String periodType, int periodFrame) {
+    public static final String toDateInterval(Calendar dateFrom, String periodType, int periodFrame) {
         return " DATE_ADD('" + formatCalendar(dateFrom) + "', INTERVAL " + periodFrame + " " + periodType + ") ";
     }
 
@@ -75,11 +75,11 @@ public class MysqlUtil {
      * @param calendar java.util.Calendar to be formatted as String
      * @return Calendar's underlying date formatted using the Date Format
      */
-    public static String formatCalendar(Calendar calendar) {
+    public static final String formatCalendar(Calendar calendar) {
         return DATE_FORMAT.format(calendar.getTime());
     }
 
-    public static String formatCalendarDisplay(Calendar calendar) {
+    public static final String formatCalendarDisplay(Calendar calendar) {
         return DATE_FORMAT_DISPLAY.format(calendar.getTime());
     }
 
@@ -87,7 +87,7 @@ public class MysqlUtil {
      * @param filter Target string being searched
      * @return filter for finding all items like the specified filter
      */
-    public static String filterLikeAll(String filter) {
+    public static final String filterLikeAll(String filter) {
         return "'%" + filter + "%'";
     }
 
@@ -100,7 +100,7 @@ public class MysqlUtil {
      * @param date String date (e.g. "2007/01/05")
      * @return Date of Saturday for week containing the specified date
      */
-    public static String getFirstDayOfWeek(String date) {
+    public static final String getFirstDayOfWeek(String date) {
         return "DATE_SUB('" + date + "', INTERVAL DATE_FORMAT('" + date + "', '%w') + 1 DAY)";
     }
 
