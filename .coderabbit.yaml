@@ -1,0 +1,69 @@
+language: en-US
+
+tone_instructions: >
+  Be concise and pragmatic. This is a storage/persistence module — flag transaction, index, and consistency issues aggressively.
+
+early_access: false
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "`@coderabbitai` summary"
+  high_level_summary_in_walkthrough: true
+  auto_title_placeholder: "`@coderabbitai` title"
+  sequence_diagrams: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  poem: false
+  suggested_labels: true
+  suggested_reviewers: false
+  related_issues: true
+  related_prs: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!**/*.md"
+    - "!**/target/**"
+  path_instructions:
+    - path: "**/*"
+      instructions: >
+        Flag correctness, concurrency, resource-leak,
+        security, and performance issues aggressively. When a change appears to
+        alter an existing architectural pattern or introduce new shared/stateful
+        infrastructure, call that out explicitly as an "architecture" concern
+        rather than a routine style comment.
+        In addition to routine correctness review, explicitly call out:
+        (1) Security-relevant concerns — injection risks (e.g. building
+        glob/regex/SQL/shell patterns from variable input), credential or
+        secret handling, unsafe deserialization, missing input validation,
+        or SSRF/timeout gaps in network/process-execution code.
+        (2) Performance/concurrency concerns — thread-safety of shared
+        mutable state, blocking calls inside virtual threads, unbounded
+        resource usage, and missing cancellation/cleanup on
+        timeout/failure paths.
+        (3) Architectural concerns — new stateful/shared infrastructure,
+        changes to existing module contracts, or new coupling between
+        packages that weren't previously related. When such a change is
+        found, describe the concern and suggest what should be verified
+        or documented.
+        Module-specific additions for this repository:
+        This module is a storage/persistence layer (RocksDB / Lucene / Hibernate / MongoDB / Solr, depending on the module). In addition to the standard checks, watch for: (1) transaction boundaries — missing @Transactional, transactions held across network calls, read-only vs read-write mismatch; (2) resource leaks — unclosed IndexWriter/IndexReader/RocksIterator/JDBC statements, especially on exception paths; (3) N+1 query patterns and missing indexes/covering-fetches; (4) writer concurrency and reader-vs-writer race conditions; (5) commit/flush semantics — unflushed writes that assume durability, or over-frequent commits that hurt throughput; (6) migration/schema changes without a backward-compat story; (7) key/value serialization compatibility across versions.
+  abort_on_close: true
+  finishing_touches:
+    docstrings:
+      enabled: true
+    unit_tests:
+      enabled: true
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto
