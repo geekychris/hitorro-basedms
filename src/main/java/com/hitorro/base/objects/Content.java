@@ -770,26 +770,20 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
                 return true;
 
             case KVStore:
-                // Mirror the File branch: allocate a fresh id, set fileName
-                // (so the Content object round-trips like any other), stream
-                // bytes into the KV, capture size. Uses the SAME idToHexPath
-                // scheme as File so a later "copy between backends" tool
-                // wouldn't have to translate names.
+                // Allocate a fresh id then delegate the whole write to
+                // KvStoreBackend.writeContent — same idToHexPath naming
+                // convention as the File branch, extracted so it's
+                // testable without the Hibernate ↔ NamedLong chain.
                 long kvTempID = 0;
                 try {
                     kvTempID = ContentIdNamedLong.getNextValue();
                 } catch (Exception e) {
                     com.hitorro.basedms.Log.basedms.error("%s %e", e, e);
                 }
-                String kvFn = FileUtil.idToHexPath(kvTempID);
-                if (store.getIsPubliclyVisible()) {
-                    String ext = FileUtil.getFileExtension(originalFileName);
-                    if (!StringUtil.nullOrEmptyOrBlankString(ext)) {
-                        kvFn = Fmt.S("%s.%s", kvFn, ext);
-                    }
-                }
-                this.setFileName(kvFn);
-                contentSize = KvStoreBackend.put(store, kvFn, is);
+                KvStoreBackend.WriteResult kvRes =
+                        KvStoreBackend.writeContent(store, originalFileName, kvTempID, is);
+                this.setFileName(kvRes.fileName());
+                contentSize = kvRes.size();
                 return true;
         }
         return false;

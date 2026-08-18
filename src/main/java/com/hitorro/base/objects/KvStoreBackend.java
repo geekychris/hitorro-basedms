@@ -7,6 +7,9 @@ import com.hitorro.kvstore.DatabaseConfig;
 import com.hitorro.kvstore.KVStore;
 import com.hitorro.kvstore.RocksDBStore;
 import com.hitorro.util.basefile.fs.BaseFile;
+import com.hitorro.util.core.string.Fmt;
+import com.hitorro.util.core.string.StringUtil;
+import com.hitorro.util.io.FileUtil;
 import com.hitorro.util.io.IOUtil;
 import com.hitorro.util.io.StoreException;
 
@@ -110,6 +113,35 @@ public final class KvStoreBackend {
             throws StoreException, IOException {
         return putRaw(forStore(store), fileName, is);
     }
+
+    /**
+     * Full-DMS write path: derive a fresh {@code fileName} the same
+     * way the File backend does (hex-encoded content id, plus the
+     * original extension when the Store is publicly visible), copy
+     * the input bytes into RocksDB, return the assigned name + byte
+     * count. Called from {@code Content.setContentAux()}'s KVStore
+     * switch branch — extracted here so the branch is testable
+     * without the full Content ↔ Hibernate ↔ NamedLong chain.
+     */
+    public static WriteResult writeContent(Store store, String originalFileName,
+                                           long assignedId, InputStream is)
+            throws StoreException, IOException {
+        String fn = FileUtil.idToHexPath(assignedId);
+        if (store.getIsPubliclyVisible()) {
+            String ext = FileUtil.getFileExtension(originalFileName);
+            if (!StringUtil.nullOrEmptyOrBlankString(ext)) {
+                fn = Fmt.S("%s.%s", fn, ext);
+            }
+        }
+        long size = put(store, fn, is);
+        return new WriteResult(fn, size);
+    }
+
+    /** Return of {@link #writeContent} — the fileName the caller
+     *  should record on the Content plus the byte count for
+     *  {@code contentSize}. Kept immutable so callers can't drift
+     *  from what actually landed in RocksDB. */
+    public record WriteResult(String fileName, long size) {}
 
     /** Test overload — accepts a caller-supplied KVStore directly. */
     static long putRaw(KVStore kv, String fileName, InputStream is)

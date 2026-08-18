@@ -140,8 +140,15 @@ public class Store extends BaseType {
     @PostLoad
     public void init() {
         type = StoreType.get(storeType);
-        if (type.isFileStore() || type.isUnmanagedFileStore()) {
-            rootDirAsString = JVSProperties.getProperties().resolveJsonVariable(rootPath);
+        // KVStore needs the same rootDir resolution — its RocksDB
+        // directory lives under <rootDir>/rocksdb/ via KvStoreBackend.
+        if (type.isFileStore() || type.isUnmanagedFileStore() || type.isKvStore()) {
+            // JVSProperties may be null in test / embedded contexts —
+            // fall through to the raw rootPath then.
+            var jvsProps = JVSProperties.getProperties();
+            rootDirAsString = jvsProps != null
+                    ? jvsProps.resolveJsonVariable(rootPath)
+                    : rootPath;
             try {
                 rootDir = BaseFileSystem.getBaseFileFromPath(rootDirAsString);
             } catch (IOException e) {
