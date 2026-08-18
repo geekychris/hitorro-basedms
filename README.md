@@ -36,6 +36,65 @@ hitorro-basedms/
 └── README.md
 ```
 
+## Storage backends
+
+The DMS resolves each `Content` to a physical bytes-source via its
+`Store`. `Store.storeType` picks the backend; the four shipped types
+plug in as `case` branches in `Content.setContentAux()` +
+`Content.getContent()`.
+
+| StoreType | Bytes live in | Requires | Pick when |
+|---|---|---|---|
+| `Blob` | JDBC BLOB column | Hibernate-backed DB | Small contents that must be transactionally consistent with metadata; simplest ops model. |
+| `File` | `<Store.rootPath>/<hex-idToHexPath>` | Filesystem writable at `rootPath` (via `BaseFile` — supports `file:`, `hdfs://`, `s3://`, `ftp://`) | Default for large + medium contents; scales with the underlying FS. |
+| `Unmanaged` | External path stored verbatim in `originalFileName` | Read-only source | Registering pre-existing files without copying — DMS metadata over foreign bytes. |
+| `Link` | Fetched from a URL at read time | Reachable HTTP endpoint | Content sourced from an external system; no local copy at rest. |
+| `KVStore` | RocksDB at `<Store.rootPath>/rocksdb/` | `hitorro-kvstore` on classpath (~15 MB rocksdbjni) | Many small contents where LSM compaction beats one-file-per-content; single-process access. |
+
+### Choosing a backend
+
+* **`File`** is still the default for most workloads — cheap, streamable,
+  works with any filesystem `BaseFile` knows about (local, HDFS, S3).
+* **`Blob`** for transactional consistency with metadata (single DB
+  commit covers both) — but tops out at practical BLOB sizes.
+* **`Unmanaged`** and **`Link`** for foreign bytes the DMS doesn't own.
+* **`KVStore`** when you have millions of small contents (few KB each)
+  and one-file-per-content overwhelms the FS inode table. RocksDB's
+  LSM merges keep it compact; ideal for chat message attachments,
+  thumbnails, per-user profile blobs.
+
+### KVStore key layout
+
+Content bytes under `content:<fileName>` — `fileName` uses the same
+`FileUtil.idToHexPath` scheme as the `File` backend, so a future
+File ↔ KVStore migration tool wouldn't have to translate names.
+The `content:` prefix reserves the keyspace for future row kinds
+(index metadata, version pointers, etc.) without a migration.
+
+Handle lifecycle: one `RocksDBStore` per DMS Store, cached
+process-wide by absolute rootPath. Multiple concurrent Content ops on
+the same Store share a single open handle (no file-lock races). A JVM
+shutdown hook closes every cached handle so RocksDB releases its
+locks cleanly on graceful exit.
+
+### Adding a new backend
+
+`StoreType` is an enum + inline switches — no strategy pattern today.
+To add a fifth backend:
+
+1. Add the enum value + capability flag (`isXStore()`) in
+   `StoreType.java`.
+2. Add a `case` branch in `Content.getContent()` (read path).
+3. Add a `case` branch in `Content.setContentAux()` (write path).
+4. If the backend needs lifecycle management (open handles, connection
+   pools), model it on `KvStoreBackend`: static cache keyed by Store
+   rootPath, shutdown hook to close all.
+
+If the switch grows unwieldy, refactor to a `StoreBackend` strategy —
+each `StoreType` maps to a `StoreBackend` bean; `Content` delegates to
+`registry.forStoreType(type).read(...)`. Out of scope for the current
+codebase but a natural next step if a sixth backend arrives.
+
 ## Building
 
 ```bash
