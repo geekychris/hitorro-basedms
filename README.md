@@ -121,21 +121,36 @@ WHERE store_id = ?`) to confirm.
 
 ### Adding a new backend
 
-`StoreType` is an enum + inline switches — no strategy pattern today.
-To add a fifth backend:
+Backends plug in via the `StoreBackend` interface + `StoreBackendRegistry`.
+`Content.getContent()` / `setContent()` dispatch through the registry
+— no switch statements to modify. To add a sixth backend:
 
 1. Add the enum value + capability flag (`isXStore()`) in
    `StoreType.java`.
-2. Add a `case` branch in `Content.getContent()` (read path).
-3. Add a `case` branch in `Content.setContentAux()` (write path).
-4. If the backend needs lifecycle management (open handles, connection
-   pools), model it on `KvStoreBackend`: static cache keyed by Store
-   rootPath, shutdown hook to close all.
+2. Implement `StoreBackend`:
+   ```java
+   final class MyBackend implements StoreBackend {
+       @Override public StoreType type() { return StoreType.MyType; }
+       @Override public InputStream read(Store store, Content content) { … }
+       @Override public boolean write(Store store, Content content,
+                                      String originalFileName,
+                                      InputStream is, long assignedId) { … }
+   }
+   ```
+3. Register: `StoreBackendRegistry.register(new MyBackend())` — either
+   in the registry's static init block (built-in) or from a
+   ServiceLoader-loaded module (optional dep).
+4. Lifecycle management (open handles, connection pools) — model on
+   `KvStoreBackend`: static cache keyed by Store rootPath, JVM
+   shutdown hook to close all cached handles.
 
-If the switch grows unwieldy, refactor to a `StoreBackend` strategy —
-each `StoreType` maps to a `StoreBackend` bean; `Content` delegates to
-`registry.forStoreType(type).read(...)`. Out of scope for the current
-codebase but a natural next step if a sixth backend arrives.
+Read-only backends (`Link`, `Unmanaged`) throw a `StoreException`
+from `write` — see `LinkBackend.java` for the pattern.
+
+**Module-split future:** `KvStoreBackend` + `KvStoreBackendAdapter` +
+`StoreMigrator` + `StoreMigratorCli` are already adapter-shaped —
+splitting into `hitorro-basedms-kvstore` is a mechanical file move
+plus a ServiceLoader entry, no `basedms` code change required.
 
 ## Building
 

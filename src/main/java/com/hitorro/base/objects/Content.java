@@ -650,41 +650,11 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
             com.hitorro.basedms.Log.basedms.error("Content object %s, does not have a store object", this.getId());
             return null;
         }
-        switch (st) {
-            case Link:
-                try {
-                    URL url = new URL(getOriginalFileName());
-                    return url.openStream();
-                } catch (MalformedURLException e) {
-                    throw new StoreException(e.getMessage());
-                } catch (IOException e) {
-                    throw new StoreException(e.getMessage());
-                }
-
-            case File:
-            case Unmanaged:
-                Store s = this.getStore();
-                BaseFile file = getStoreFile(s);
-                if (!BaseFile.notNullAndExists(file)) {
-                    return null;
-                }
-                return file.getDataInputStream();
-
-            case Blob:
-                try {
-                    return this.getBlobContent().getBinaryStream();
-                } catch (SQLException e) {
-                    throw new StoreException(e.getMessage());
-                }
-
-            case KVStore:
-                // Bytes live under content:<fileName> in the per-Store
-                // RocksDB. Same fileName convention as the File backend,
-                // so migrating a Store between File ↔ KVStore is a
-                // future possibility via a small copy job.
-                return KvStoreBackend.get(store, this.getFileName());
-        }
-        return null;
+        // Dispatch to the backend registered for this StoreType.
+        // Each concrete backend lives in its own class; adding a
+        // sixth backend is "new class + registry entry" instead of
+        // "modify this switch and the write switch below".
+        return StoreBackendRegistry.forType(st).read(store, this);
     }
 
 
@@ -722,71 +692,17 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
     private boolean setContentAux(Store store, String originalFileName, InputStream is)
             throws StoreException, IOException {
         StoreType st = store.getStoreTypeType();
-        switch (st) {
-            case Link:
-                throw new StoreException("Cannot set content for a content object with store type of Link");
-            case Unmanaged:
-                throw new StoreException("Cannot set content for a content object with store type of UnmanagedLink");
-            case File:
-                long tempID = 0;
-                try {
-                    tempID = ContentIdNamedLong.getNextValue();
-                } catch (Exception e) {
-                    com.hitorro.basedms.Log.basedms.error("%s %e", e, e);
-                }
-                String fn = FileUtil.idToHexPath(tempID);
-                if (store.getIsPubliclyVisible()) {
-                    // public files need to have a good extension so they can be understood by the client
-                    String ext = FileUtil.getFileExtension(originalFileName);
-                    if (!StringUtil.nullOrEmptyOrBlankString(ext)) {
-                        fn = Fmt.S("%s.%s", fn, ext);
-                    }
-                }
-                this.setFileName(fn);
-                BaseFile destFile = store.getRootPathPath().getChild(fn);
-
-                if (destFile.mkParentDir()) {
-                    OutputStream os = destFile.getDataOutputStream();
-
-                    IOUtil.copyStream(is, os);
-                    os.flush();
-                    os.close();
-                    contentSize = destFile.length();
-                    return true;
-                } else {
-                    throw new StoreException(Fmt.S("Unable to write file %s", destFile.getAbsolutePath()));
-                }
-            case Blob:
-
-                //TODO UPDATE
-                //Blob blob = Hibernate.createBlob(is);
-                Blob blob = null;
-                this.setBlobContent(blob);
-                try {
-                    contentSize = blob.length();
-                } catch (SQLException e) {
-                    throw new StoreException(Fmt.S("Unable to get blob size %s %e", e, e));
-                }
-                return true;
-
-            case KVStore:
-                // Allocate a fresh id then delegate the whole write to
-                // KvStoreBackend.writeContent — same idToHexPath naming
-                // convention as the File branch, extracted so it's
-                // testable without the Hibernate ↔ NamedLong chain.
-                long kvTempID = 0;
-                try {
-                    kvTempID = ContentIdNamedLong.getNextValue();
-                } catch (Exception e) {
-                    com.hitorro.basedms.Log.basedms.error("%s %e", e, e);
-                }
-                KvStoreBackend.WriteResult kvRes =
-                        KvStoreBackend.writeContent(store, originalFileName, kvTempID, is);
-                this.setFileName(kvRes.fileName());
-                contentSize = kvRes.size();
-                return true;
+        // Allocate a fresh id up front — id allocation is DMS
+        // orchestration, not backend concern. Backends that don't
+        // need it (Link, Blob) ignore the arg.
+        long assignedId = 0L;
+        try {
+            assignedId = ContentIdNamedLong.getNextValue();
+        } catch (Exception e) {
+            com.hitorro.basedms.Log.basedms.error("%s %e", e, e);
         }
-        return false;
+        return StoreBackendRegistry.forType(st)
+                .write(store, this, originalFileName, is, assignedId);
     }
 
     /**
