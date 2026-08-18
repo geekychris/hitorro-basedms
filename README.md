@@ -77,6 +77,48 @@ the same Store share a single open handle (no file-lock races). A JVM
 shutdown hook closes every cached handle so RocksDB releases its
 locks cleanly on graceful exit.
 
+### Migrating between backends
+
+`StoreMigrator` bulk-copies contents between two Stores. Because
+File and KVStore use the same `idToHexPath` fileName convention,
+migration is a pure byte-copy — no name translation, no id remapping.
+
+From code:
+
+```java
+Store src  = /* your File-backed Store */;
+Store dest = /* your KVStore-backed Store */;
+StoreMigrator.Report r = StoreMigrator.migrate(src, dest);
+System.out.println("copied=" + r.copied() + " errors=" + r.errors().size());
+```
+
+From the shell (bundled CLI):
+
+```bash
+java -cp hitorro-basedms.jar:… com.hitorro.base.objects.StoreMigratorCli \
+    --source-type File    --source-root /var/dms/legacy \
+    --dest-type   KVStore --dest-root  /var/dms/rocksdb
+# Output:
+#   copied:  47122
+#   skipped: 0
+#   errors:  0
+#   elapsed: 8341ms
+```
+
+Supported directions: File ↔ KVStore, File → File, KVStore → KVStore.
+Blob is not supported by the standalone CLI (needs a JDBC session);
+`StoreMigrator.migrate()` from within an app can add Blob paths.
+
+**Not transactional** — a mid-copy failure leaves both stores populated
+with the successfully-migrated subset. Re-run: puts overwrite, so
+already-copied contents are equal-byte no-ops. Consult `Report.errors()`
+for what to investigate.
+
+**Does NOT touch Content DB rows** — after the byte-copy finishes, run
+a SQL `UPDATE content SET store_id = ?` to point existing Content rows
+at the new Store. Then a sanity-scan (`SELECT COUNT(*) FROM content
+WHERE store_id = ?`) to confirm.
+
 ### Adding a new backend
 
 `StoreType` is an enum + inline switches — no strategy pattern today.
