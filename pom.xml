@@ -268,6 +268,15 @@
             <artifactId>jwi</artifactId>
             <version>2.2.3</version>
         </dependency>
+
+        <!-- RocksDB backend for the DMS KVStore StoreType. Adds ~15MB
+             (rocksdbjni) — if that's too heavy for your deployment,
+             skip the KVStore StoreType and it never loads. -->
+        <dependency>
+            <groupId>com.hitorro</groupId>
+            <artifactId>hitorro-kvstore</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>

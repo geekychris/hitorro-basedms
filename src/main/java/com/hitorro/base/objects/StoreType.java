@@ -26,10 +26,18 @@ import java.util.Map;
 
 
 public enum StoreType {
-    Blob(false, true, false, false),
-    File(true, false, false, false),
-    Unmanaged(false, false, false, true),
-    Link(false, false, true, false);
+    Blob(false, true, false, false, false),
+    File(true, false, false, false, false),
+    Unmanaged(false, false, false, true, false),
+    Link(false, false, true, false, false),
+    /**
+     * RocksDB-backed key-value store. Content bytes live under
+     * {@code content:<fileName>} keys inside a per-Store RocksDB
+     * instance at {@code <Store.rootPath>/rocksdb/}. Wrapped by
+     * {@code KvStoreBackend} which caches open handles by root path
+     * and closes them at JVM shutdown.
+     */
+    KVStore(false, false, false, false, true);
 
     private static Map<String, StoreType> s_map = null;
 
@@ -37,12 +45,14 @@ public enum StoreType {
     private boolean isUnmanagedFileStore;
     private boolean isBlobStore;
     private boolean isLinkStore;
+    private boolean isKvStore;
 
-    StoreType(boolean file, boolean blob, boolean link, boolean unmanaged) {
+    StoreType(boolean file, boolean blob, boolean link, boolean unmanaged, boolean kv) {
         isFileStore = file;
         isBlobStore = blob;
         isLinkStore = link;
         isUnmanagedFileStore = unmanaged;
+        isKvStore = kv;
     }
 
     public static StoreType get(String type) {
@@ -73,5 +83,10 @@ public enum StoreType {
 
     public boolean isLinkStore() {
         return isLinkStore;
+    }
+
+    /** True for the RocksDB-backed KVStore backend. */
+    public boolean isKvStore() {
+        return isKvStore;
     }
 }

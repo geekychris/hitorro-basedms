@@ -676,6 +676,13 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
                 } catch (SQLException e) {
                     throw new StoreException(e.getMessage());
                 }
+
+            case KVStore:
+                // Bytes live under content:<fileName> in the per-Store
+                // RocksDB. Same fileName convention as the File backend,
+                // so migrating a Store between File ↔ KVStore is a
+                // future possibility via a small copy job.
+                return KvStoreBackend.get(store, this.getFileName());
         }
         return null;
     }
@@ -760,6 +767,29 @@ public class Content extends GuidBaseType implements com.hitorro.basedms.Categor
                 } catch (SQLException e) {
                     throw new StoreException(Fmt.S("Unable to get blob size %s %e", e, e));
                 }
+                return true;
+
+            case KVStore:
+                // Mirror the File branch: allocate a fresh id, set fileName
+                // (so the Content object round-trips like any other), stream
+                // bytes into the KV, capture size. Uses the SAME idToHexPath
+                // scheme as File so a later "copy between backends" tool
+                // wouldn't have to translate names.
+                long kvTempID = 0;
+                try {
+                    kvTempID = ContentIdNamedLong.getNextValue();
+                } catch (Exception e) {
+                    com.hitorro.basedms.Log.basedms.error("%s %e", e, e);
+                }
+                String kvFn = FileUtil.idToHexPath(kvTempID);
+                if (store.getIsPubliclyVisible()) {
+                    String ext = FileUtil.getFileExtension(originalFileName);
+                    if (!StringUtil.nullOrEmptyOrBlankString(ext)) {
+                        kvFn = Fmt.S("%s.%s", kvFn, ext);
+                    }
+                }
+                this.setFileName(kvFn);
+                contentSize = KvStoreBackend.put(store, kvFn, is);
                 return true;
         }
         return false;
