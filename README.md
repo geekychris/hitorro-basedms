@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="Hitorro Basedms logo" width="180">
+</p>
+
 # Hitorro Base DMS
 
 This is the **hitorro-basedms** project, a standalone Document Management System with database persistence, content management, and workflow capabilities.
