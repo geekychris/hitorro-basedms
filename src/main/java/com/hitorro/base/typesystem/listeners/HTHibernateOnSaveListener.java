@@ -25,38 +25,54 @@ import com.hitorro.base.typesystem.GuidBaseType;
 import com.hitorro.util.typesystem.OnTrigger;
 import com.hitorro.util.typesystem.TypeManager;
 import org.hibernate.HibernateException;
-import org.hibernate.event.spi.SaveOrUpdateEvent;
-import org.hibernate.event.spi.SaveOrUpdateEventListener;
+import org.hibernate.event.spi.MergeContext;
+import org.hibernate.event.spi.MergeEvent;
+import org.hibernate.event.spi.MergeEventListener;
 
 import java.lang.reflect.Method;
 
 /**
+ * Runs HiTorro's BeforeSave callbacks when an entity is saved through
+ * {@code DMSSession.saveOrUpdate/update}.
+ *
+ * <p>Hibernate 7 removed the SAVE_UPDATE event (and {@code Session.saveOrUpdate/update}).
+ * DMSSession now merges managed and detached instances, so this listens to MERGE (including
+ * merges cascaded to associations, as SAVE_UPDATE cascaded before). It acts on the caller's
+ * instance ({@link MergeEvent#getOriginal()}) before Hibernate copies its state, so changes
+ * the callbacks make reach the database. New objects go through persist and
+ * {@link HTHibernatePersistListener}; DMSSession calls {@link #beforeSave(Object)} for them.
  */
-public class HTHibernateOnSaveListener implements SaveOrUpdateEventListener {
-    public void onSaveOrUpdate(SaveOrUpdateEvent saveOrUpdateEvent) throws HibernateException {
-        Object o = saveOrUpdateEvent.getObject();
-        
-        // Manually trigger @PrePersist methods since DMSSession bypasses JPA
+public class HTHibernateOnSaveListener implements MergeEventListener {
+
+    @Override
+    public void onMerge(MergeEvent event) throws HibernateException {
+        beforeSave(event.getOriginal());
+    }
+
+    @Override
+    public void onMerge(MergeEvent event, MergeContext copiedAlready) throws HibernateException {
+        // copiedAlready holds the entities this merge (and its cascade) already handled
+        Object o = event.getOriginal();
+        if (copiedAlready == null || !copiedAlready.containsKey(o)) {
+            beforeSave(o);
+        }
+    }
+
+    /** The BeforeSave callbacks the SAVE_UPDATE listener used to run. */
+    public static void beforeSave(Object o) {
+        if (o == null) return;
         invokePrePersistCallbacks(o);
-        
         TypeManager.executeTrigger(OnTrigger.TriggerType.BeforeSave, o, true);
     }
-    
-    /**
-     * Manually invoke @PrePersist callbacks since Hibernate Session API doesn't trigger them.
-     * This ensures GUID initialization and other pre-persist logic runs correctly.
-     */
-    private void invokePrePersistCallbacks(Object entity) {
-        if (entity == null) return;
-        
-        // For GuidBaseType, call ensureGuidBeforePersist() directly
+
+    private static void invokePrePersistCallbacks(Object entity) {
         if (entity instanceof GuidBaseType) {
             try {
                 Method method = GuidBaseType.class.getDeclaredMethod("ensureGuidBeforePersist");
                 method.setAccessible(true);
                 method.invoke(entity);
             } catch (Exception e) {
-                // Ignore - guid will be generated via getter if needed
+                // Method might not be accessible or entity might not need it
             }
         }
     }

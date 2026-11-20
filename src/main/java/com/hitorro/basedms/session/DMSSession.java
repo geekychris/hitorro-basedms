@@ -25,6 +25,7 @@ import com.hitorro.base.objects.Content;
 import com.hitorro.base.objects.Document;
 import com.hitorro.base.objects.VersionableObject;
 import com.hitorro.base.typesystem.accessors.GuidAccessor;
+import com.hitorro.base.typesystem.listeners.HTHibernateOnSaveListener;
 import com.hitorro.basedms.db.HibernateService;
 import com.hitorro.basedms.db.HibernateUtil;
 import com.hitorro.util.core.Console;
@@ -39,6 +40,9 @@ import com.hitorro.util.typesystem.HTSerializable;
 import com.hitorro.util.typesystem.SessionException;
 import jakarta.persistence.FlushModeType;
 import org.hibernate.*;
+import org.hibernate.engine.internal.ForeignKeys;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
@@ -84,6 +88,14 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     private String realm = null;
     private DMSSecurityModel securityModel = DMSOpenSecurityModel.m;
     private DMSSessionInterceptor m_interceptor = new DMSSessionInterceptor(this);
+    /**
+     * Hibernate 7 removed Session.update/saveOrUpdate, which re-attached a detached instance.
+     * merge() attaches a managed copy instead, so the caller's instance stays detached. This
+     * maps each managed copy to the caller's instance so its version stamp (and flushed mark)
+     * can follow the copy; otherwise the next save of the caller's instance would fail the
+     * optimistic-lock check.
+     */
+    private final IdentityHashMap<Object, Object> m_mergedOriginals = new IdentityHashMap<>();
 
     /**
      * Default constructor that uses a default database configuration
@@ -322,13 +334,19 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     public void update(Object o) {
         Log.dmssession.debug("Updating (session: %s) %s", currentSessionId, o);
         ensureSession();
-        m_session.update(o);
+        if (!m_session.contains(o) && isTransient(o)) {
+            // Session.update() refused transient instances too
+            throw new TransientObjectException("update() called on a transient instance: " + o);
+        }
+        mergeIntoSession(o);
     }
 
     public void flush() {
         ensureSession();
         m_session.flush();
+        syncMergedOriginals();
         m_session.clear();
+        m_mergedOriginals.clear();
     }
 
     public void saveOrUpdate(Object o) {
@@ -340,6 +358,12 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     public Query createQuery(String query) {
         ensureSession();
         return m_session.createQuery(query);
+    }
+
+    /** A query with an explicit result type (Hibernate 7 requires one for a select-less query with joins). */
+    public <T> Query<T> createQuery(String query, Class<T> resultType) {
+        ensureSession();
+        return m_session.createQuery(query, resultType);
     }
 
     public AbstractIterator getIteratorFromQuery(HibernateQueryResultObjectAdapter adapter, String query, Object... vals) {
@@ -509,7 +533,12 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
 
     public void delete(Object o) {
         ensureSession();
-        m_session.delete(o);
+        Object target = o;
+        if (!m_session.contains(o) && !isTransient(o)) {
+            // Session.delete() accepted detached instances; remove() needs a managed one
+            target = managedInstanceFor(o);
+        }
+        m_session.remove(target);
         markForRemoval(o);
     }
 
@@ -685,6 +714,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
         if (m_session != null) {
             m_session.clear();
         }
+        m_mergedOriginals.clear();
     }
 
     public void commitList(List list) {
@@ -701,6 +731,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
                 //Console.println("Commit: %s", m_name);
             }
             m_transaction.commit();
+            syncMergedOriginals();
             // we should probably only do the objects that got really commited
             snapshotVersionStampsPostCommit();
             m_transaction = null;
@@ -727,6 +758,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             m_session = null;
             m_transaction = null;
             m_closed = true;
+            m_mergedOriginals.clear();
         }
         moveAttatchedToUnattatched();
     }
@@ -896,8 +928,64 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
                 return;
             }
         } */
-        m_session.saveOrUpdate(o);
-        //m_session.save(o);
+        if (!m_session.contains(o) && isTransient(o)) {
+            // was save(): a new object is persisted as this very instance. The removed
+            // SAVE_UPDATE listener ran the BeforeSave callbacks; persist also runs BeforePersist.
+            HTHibernateOnSaveListener.beforeSave(o);
+            m_session.persist(o);
+        } else {
+            // was update()/no-op: Hibernate 7 cannot re-attach, merge into a managed copy
+            mergeIntoSession(o);
+        }
+    }
+
+    /**
+     * Whether Hibernate considers the instance new (no row yet), using the same check the
+     * removed saveOrUpdate() used.
+     */
+    protected boolean isTransient(Object o) {
+        SessionImplementor si = m_session.unwrap(SessionImplementor.class);
+        return ForeignKeys.isTransient(null, o, null, si);
+    }
+
+    /**
+     * Merge a managed or detached instance. The MERGE listener (HTHibernateOnSaveListener)
+     * runs the BeforeSave callbacks on the caller's instance before its state is copied.
+     */
+    protected Object mergeIntoSession(Object o) {
+        syncMergedOriginals();
+        Object managed = m_session.merge(o);
+        if (managed != o) {
+            m_mergedOriginals.put(managed, o);
+        }
+        return managed;
+    }
+
+    /** The managed instance with the same identity as a detached instance. */
+    protected Object managedInstanceFor(Object detached) {
+        SessionImplementor si = m_session.unwrap(SessionImplementor.class);
+        EntityPersister persister = si.getEntityPersister(null, detached);
+        Object id = persister.getIdentifier(detached, si);
+        return m_session.getReference(persister.getEntityName(), id);
+    }
+
+    /**
+     * Copy the version stamp and flushed mark from each managed copy back to the caller's
+     * detached instance, as if that instance had been re-attached (pre-Hibernate-7 behaviour).
+     */
+    protected void syncMergedOriginals() {
+        if (m_mergedOriginals.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<Object, Object> e : m_mergedOriginals.entrySet()) {
+            if (e.getKey() instanceof com.hitorro.util.typesystem.VersionBaseType managed
+                    && e.getValue() instanceof com.hitorro.util.typesystem.VersionBaseType original) {
+                original.setVersionStamp(managed.getVersionStamp());
+                if (managed.isMarkedFlushed()) {
+                    original.markFlushed();
+                }
+            }
+        }
     }
 
     /**
@@ -976,14 +1064,15 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
         return m_throwable;
     }
 
-    class DMSSessionInterceptor extends EmptyInterceptor {
+    class DMSSessionInterceptor implements Interceptor {
         private DMSSession m_sess;
 
         DMSSessionInterceptor(DMSSession sess) {
             m_sess = sess;
         }
 
-        public void postFlush(java.util.Iterator iterator) {
+        @Override
+        public void postFlush(java.util.Iterator<Object> iterator) {
             if (iterator != null) {
                 while (iterator.hasNext()) {
                     Object bt = iterator.next();
@@ -995,7 +1084,8 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             }
         }
 
-        public void onDelete(java.lang.Object object, java.io.Serializable serializable, java.lang.Object[] objects, java.lang.String[] strings, org.hibernate.type.Type[] types) {
+        @Override
+        public void onRemove(java.lang.Object object, java.lang.Object id, java.lang.Object[] objects, java.lang.String[] strings, org.hibernate.type.Type[] types) {
             if (object instanceof com.hitorro.util.typesystem.BaseType) {
                 ((com.hitorro.util.typesystem.BaseType) object).setSession(m_sess);
                 String guid = ((com.hitorro.util.typesystem.BaseType) object).getGuid();
@@ -1003,7 +1093,8 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             }
         }
 
-        public boolean onLoad(java.lang.Object object, java.io.Serializable serializable, java.lang.Object[] objects, java.lang.String[] strings, org.hibernate.type.Type[] types) {
+        @Override
+        public boolean onLoad(java.lang.Object object, java.lang.Object id, java.lang.Object[] objects, java.lang.String[] strings, org.hibernate.type.Type[] types) {
             if (object instanceof com.hitorro.util.typesystem.BaseType) {
                 com.hitorro.util.typesystem.BaseType bt = (com.hitorro.util.typesystem.BaseType) object;
                 bt.setSession(m_sess);

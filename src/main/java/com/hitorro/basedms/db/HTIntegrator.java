@@ -26,6 +26,7 @@ import com.hitorro.base.typesystem.listeners.HTHibernateLoadListener;
 import com.hitorro.base.typesystem.listeners.HTHibernateOnSaveListener;
 import com.hitorro.base.typesystem.listeners.HTHibernatePersistListener;
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.DuplicationStrategy;
 import org.hibernate.event.service.spi.EventListenerRegistry;
@@ -54,17 +55,15 @@ public class HTIntegrator implements Integrator, Service {
 
     @Override
     public void integrate(final Metadata metadata,
-                          final SessionFactoryImplementor sessionFactory,
-                          final SessionFactoryServiceRegistry serviceRegistry) {
+                          final BootstrapContext bootstrapContext,
+                          final SessionFactoryImplementor sessionFactory) {
         // XXX TODO ???? debugging added this line back in on 28th aug 2007
-        final EventListenerRegistry eventListenerRegistry = serviceRegistry.getService(EventListenerRegistry.class);
+        final EventListenerRegistry eventListenerRegistry = sessionFactory.getEventListenerRegistry();
         eventListenerRegistry.addDuplicationStrategy(HT_DUPLICATION_STRATEGY);
 
-        SaveOrUpdateEventListener[] stack = {new HTHibernateOnSaveListener()};
-        eventListenerRegistry.prependListeners(EventType.SAVE_UPDATE, stack);
-
-        SaveOrUpdateEventListener[] s2 = {new HTHibernateOnSaveListener()};
-        eventListenerRegistry.prependListeners(EventType.SAVE, s2);
+        // Hibernate 7 removed SAVE_UPDATE/SAVE; DMSSession merges instead (see HTHibernateOnSaveListener)
+        MergeEventListener[] mergeStack = {new HTHibernateOnSaveListener()};
+        eventListenerRegistry.prependListeners(EventType.MERGE, mergeStack);
 
         PersistEventListener[] persiststack = {new HTHibernatePersistListener()};
         eventListenerRegistry.prependListeners(EventType.PERSIST, persiststack);

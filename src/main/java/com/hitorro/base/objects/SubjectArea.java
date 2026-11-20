@@ -42,7 +42,9 @@ import java.util.*;
  * Object representing a subject area (tech, poetry, golf, cooking).
  */
 @Entity
-@Table(name = "SubjectArea")
+@Table(name = "SubjectArea", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.SubjectArea,
         isView = false,
@@ -60,7 +62,6 @@ public class SubjectArea extends VersionableObject {
     
     // name is the unique key
     @Column(name = "name", length = 20, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     // displayname is the user friendly displayable name.  May not be unique!

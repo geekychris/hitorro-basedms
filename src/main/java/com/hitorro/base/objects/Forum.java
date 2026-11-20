@@ -42,7 +42,9 @@ import java.util.List;
  * Represent a forum topic.
  */
 @Entity
-@Table(name = "Forum")
+@Table(name = "Forum", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Forum,
         isView = false,
@@ -60,7 +62,6 @@ public class Forum extends Container {
             "where usr.rssFeedIn = feed and feed.forum.id= :a";
     
     @Column(name = "name", length = 80, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     @ManyToOne(fetch = FetchType.EAGER)

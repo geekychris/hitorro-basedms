@@ -42,7 +42,9 @@ import java.util.Set;
  * names starts with a capital letter.
  */
 @Entity
-@Table(name = "Role")
+@Table(name = "Role", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Role,
         isView = false,
@@ -57,7 +59,6 @@ public class Role extends VersionableObject {
     public static final int SerializationVersion = 1;
     
     @Column(name = "name", length = 20, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     @Column(name = "description", length = 255)

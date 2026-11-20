@@ -56,7 +56,11 @@ import java.io.InputStream;
 import java.util.*;
 
 @Entity
-@Table(name = "versionable_object")
+@Table(name = "versionable_object", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "guid_idx", columnList = "guid"),
+        @jakarta.persistence.Index(name = "canonguid_idx", columnList = "canonicalGuid"),
+        @jakarta.persistence.Index(name = "identityHash_idx", columnList = "identityHash")})
 @Inheritance(strategy = InheritanceType.JOINED)
 @FilterDef(name = "statusFilter", parameters = @ParamDef(name = "statusParam", type = String.class))
 @Filter(name = "statusFilter", condition = ":statusParam=realm")
@@ -115,7 +119,6 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     protected String versionLabel = new String("1.0");
     
     @Column(name = "canonicalGuid", nullable = false)
-    @org.hibernate.annotations.Index(name = "canonguid_idx")
     protected String canonicalGuid = null;
     
     // root version is the canonical version
@@ -150,7 +153,6 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
     protected String indexName = null;
 
     @Column(name = "identityHash")
-    @org.hibernate.annotations.Index(name = "identityHash_idx")
     protected long identityHash;
     
     @ElementCollection(fetch = FetchType.LAZY)

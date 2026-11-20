@@ -40,7 +40,9 @@ import java.io.IOException;
  * User permission. A permission is a representation of the ability to do a specific bit of functionality.
  */
 @Entity
-@Table(name = "Permission")
+@Table(name = "Permission", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Permission,
         isView = false,
@@ -59,7 +61,6 @@ public class Permission extends VersionableObject implements PermissionInterface
     private static Permission s_AdminPermission;
     
     @Column(name = "name", length = 20, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     @Column(name = "description", length = 255)

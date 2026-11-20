@@ -42,7 +42,9 @@ import java.util.*;
  * Represent an incoming rss feed.
  */
 @Entity
-@Table(name = "RssFeedIn")
+@Table(name = "RssFeedIn", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.RssFeedIn,
         isView = false,
@@ -61,7 +63,6 @@ public class RssFeedIn extends VersionableObject {
     public static final int SerializationVersion = 2;
 
     @Column(name = "name", length = 80, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     @Column(name = "description", length = 255)
