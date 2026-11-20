@@ -3,13 +3,9 @@ package com.hitorro.basedms.session;
 import com.hitorro.base.typesystem.listeners.HTHibernateDeleteListener;
 import com.hitorro.base.typesystem.listeners.HTHibernateOnSaveListener;
 import com.hitorro.base.typesystem.listeners.HTHibernatePersistListener;
-import com.hitorro.basedms.db.HTIntegrator;
-import com.hitorro.basedms.db.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.TransientObjectException;
-import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.EventListenerGroup;
 import org.hibernate.event.spi.EventType;
@@ -33,17 +29,7 @@ class DMSSessionHibernate7Test {
 
     @BeforeAll
     static void buildSessionFactory() {
-        Configuration cfg = new Configuration(
-                new BootstrapServiceRegistryBuilder().applyIntegrator(new HTIntegrator()).build());
-        cfg.setProperty("hibernate.connection.url", "jdbc:h2:mem:basedms-hibernate7;DB_CLOSE_DELAY=-1");
-        cfg.setProperty("hibernate.connection.username", "sa");
-        cfg.setProperty("hibernate.connection.password", "");
-        cfg.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        cfg.addAnnotatedClass(ProbeEntity.class);
-        HibernateUtil.setSessionFactory("hibernate7-test", cfg, true);
-        sessionFactory = HibernateUtil.getSessionFactory("hibernate7-test");
-        assertSame(sessionFactory, HibernateUtil.getSessionFactory(),
-                "the test factory must be the default one DMSSession uses");
+        sessionFactory = TestSessionFactory.get();
     }
 
     private static String guid() {

@@ -538,6 +538,10 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
             // Session.delete() accepted detached instances; remove() needs a managed one
             target = managedInstanceFor(o);
         }
+        if (target instanceof VersionableObject vo) {
+            // other versions may still point at this one (canonical/next/parent/branch)
+            vo.unlinkFromVersionTree(this);
+        }
         m_session.remove(target);
         markForRemoval(o);
     }
