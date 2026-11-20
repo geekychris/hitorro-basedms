@@ -564,6 +564,97 @@ public class VersionableObject extends GuidBaseType implements com.hitorro.util.
         return parentVersion;
     }
 
+    private static final String VersionReferencesQuery =
+            "select v from VersionableObject v where v <> :o and "
+            + "(v.canonical = :o or v.nextVersion = :o or v.parentVersion = :o or v.branchVersion = :o)";
+
+    /**
+     * Take this object out of its version tree so it can be deleted on its own.
+     *
+     * <p>Other versions reference a version through {@code canonical} (the root of the tree),
+     * {@code nextVersion}, {@code parentVersion} and {@code branchVersion}. Deleting a version that
+     * is still referenced fails (a foreign-key violation on Hibernate 6, a
+     * TransientPropertyValueException on Hibernate 7). This splices the version out:
+     * <ul>
+     *   <li>a predecessor's {@code nextVersion} moves on to this version's next version;</li>
+     *   <li>a {@code branchVersion} pointing here moves to this version's next version (or none);</li>
+     *   <li>versions whose parent is this one get this version's parent;</li>
+     *   <li>if this is the root, its successor (next version, else branch, else the oldest remaining
+     *       version) becomes the root: {@code canonical} and {@code canonicalGuid} of the remaining
+     *       versions point to it.</li>
+     * </ul>
+     * The changed versions are managed by the session and are written when it commits.
+     *
+     * @return the versions that were changed
+     */
+    public List<VersionableObject> unlinkFromVersionTree(com.hitorro.basedms.session.DMSSession session) {
+        List<VersionableObject> refs = new ArrayList<>(
+                session.createQuery(VersionReferencesQuery, VersionableObject.class)
+                        .setParameter("o", this)
+                        .list());
+        if (refs.isEmpty()) {
+            return refs;
+        }
+        refs.sort(Comparator.comparing(VersionableObject::getId, Comparator.nullsLast(Comparator.naturalOrder())));
+
+        VersionableObject parent = sameObject(parentVersion, this) ? null : parentVersion;
+        VersionableObject next = sameObject(nextVersion, this) ? null : nextVersion;
+
+        VersionableObject newRoot = null;
+        for (VersionableObject v : refs) {
+            if (sameObject(v.canonical, this)) {
+                newRoot = pickNewRoot(refs, next);
+                break;
+            }
+        }
+
+        for (VersionableObject v : refs) {
+            if (sameObject(v.nextVersion, this)) {
+                v.nextVersion = next;
+            }
+            if (sameObject(v.branchVersion, this)) {
+                v.branchVersion = next;
+            }
+            if (sameObject(v.parentVersion, this)) {
+                v.parentVersion = parent;
+            }
+            if (newRoot != null && sameObject(v.canonical, this)) {
+                v.canonical = newRoot;
+                v.canonicalGuid = newRoot.getGuid();
+            }
+        }
+        return refs;
+    }
+
+    private VersionableObject pickNewRoot(List<VersionableObject> refs, VersionableObject next) {
+        for (VersionableObject candidate : new VersionableObject[]{next, sameObject(branchVersion, this) ? null : branchVersion}) {
+            if (candidate != null) {
+                for (VersionableObject v : refs) {
+                    if (sameObject(v, candidate)) {
+                        return v;
+                    }
+                }
+            }
+        }
+        for (VersionableObject v : refs) {
+            if (sameObject(v.canonical, this)) {
+                return v;   // refs is sorted by id: the oldest remaining version
+            }
+        }
+        return null;
+    }
+
+    /** Identity by id: a reference may be an uninitialized Hibernate proxy. */
+    private static boolean sameObject(VersionableObject a, VersionableObject b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        if (a == b) {
+            return true;
+        }
+        return a.getId() != null && a.getId().equals(b.getId());
+    }
+
     void setParentVersion(VersionableObject so) {
         parentVersion = so;
     }
