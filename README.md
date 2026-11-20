@@ -180,7 +180,7 @@ mvn clean install
 
 ## Key Dependencies
 
-- **Hibernate 6.4.4**: ORM framework
+- **Hibernate 7.4** (Jakarta Persistence 3.2): ORM framework. Since 3.1.0, `DMSSession.saveOrUpdate/update` persist new objects and merge managed or detached ones (Hibernate 7 removed re-attachment), and the BeforeSave callbacks run from a MERGE listener.
 - **Apache Derby 10.17**: Embedded database
 - **Apache Tapestry 5.4.3**: Web framework
 - **Apache POI 5.2.5**: Office document processing

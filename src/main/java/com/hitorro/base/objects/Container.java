@@ -84,8 +84,17 @@ public class Container extends VersionableObject {
     }
 
     public Query getQuery(BaseSession sess, String queryString) {
-        return ((DMSSession) sess).createQuery(queryString).
-                setParameter("id", this.getId());
+        DMSSession dms = (DMSSession) sess;
+        // The default query ("from X s join s.containers c ...") has no select clause. Hibernate 6
+        // returned the root entity for it; Hibernate 7 needs the result type to do the same.
+        Query q = hasSelectClause(queryString)
+                ? dms.createQuery(queryString)
+                : dms.createQuery(queryString, VersionableObject.class);
+        return q.setParameter("id", this.getId());
+    }
+
+    static boolean hasSelectClause(String hql) {
+        return hql != null && hql.stripLeading().regionMatches(true, 0, "select", 0, 6);
     }
 
     public int removeCategoryFromAllSubordinates(BaseSession session) {

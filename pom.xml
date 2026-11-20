@@ -6,7 +6,7 @@
 
     <groupId>com.hitorro</groupId>
     <artifactId>hitorro-basedms</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
     <packaging>jar</packaging>
 
     <name>Hitorro Base DMS</name>
@@ -92,6 +92,12 @@
                 <version>2.18.12</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Hibernate 7 needs Jakarta Persistence 3.2 (hitorro-util brings 3.1) -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.2.0</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
@@ -452,6 +458,13 @@
             <version>3.0.2</version>
         </dependency>
 
+        <!-- In-memory database for the Hibernate session tests -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.4.240</version>
+            <scope>test</scope>
+        </dependency>
         <!-- RSS/Atom Feed Processing -->
         <dependency>
             <groupId>com.rometools</groupId>
@@ -521,7 +534,8 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.4.4.Final</version>
+            <!-- Hibernate 7: the version Spring Boot 4.1.3 manages -->
+            <version>7.4.15.Final</version>
         </dependency>
 
         <!-- XML APIs -->

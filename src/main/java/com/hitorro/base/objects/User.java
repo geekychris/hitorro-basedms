@@ -47,7 +47,9 @@ import java.util.*;
  * Basic user in the system
  */
 @Entity
-@Table(name = "user_t")
+@Table(name = "user_t", indexes = {
+        // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
+        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.User,
         isView = false,
@@ -68,7 +70,6 @@ public class User extends VersionableObject {
             "and usr.id = :a";
     // username is the unique key, and used for login
     @Column(name = "name", length = 80, nullable = false)
-    @org.hibernate.annotations.Index(name = "name_idx")
     private String name;
     
     // displayname is the user friendly displayable name.  May not be unique!

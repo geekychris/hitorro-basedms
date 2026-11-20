@@ -41,8 +41,9 @@ import jakarta.persistence.*;
 public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     public static NamedLong BaseTypeIdNamedLong = NamedLong.registerNamedLong("baseid", 1, 100, "unique id for base id and its subtypes");
 
+    // guid_idx is declared in @Table(indexes) of each entity that maps guid
+    // (VersionableObject, Content, ContentType, PersistedSerializedObject).
     @Column(name = "guid", nullable = false)
-    @org.hibernate.annotations.Index(name = "guid_idx")
     protected String guid = null;
 
     public static final String computeGuid(TypeIntf type) {
