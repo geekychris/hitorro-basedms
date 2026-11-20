@@ -26,10 +26,9 @@ import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.core.iterator.sinks.Sink;
 import com.hitorro.util.json.keys.BasefileProperty;
 import com.hitorro.util.typesystem.Bag;
-import org.apache.ws.commons.serialize.XMLWriter;
-import org.apache.ws.commons.serialize.XMLWriterImpl;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,14 +38,12 @@ public class XML2BagWriter implements Sink<Bag> {
     public static BasefileProperty BaseFileKey = new BasefileProperty("outfile", "output file using basefile syntax");
 
     public static final String Bags = "bags";
-    AttributesImpl attribs = new AttributesImpl();
-    private XMLWriter xwriter;
+    private XMLStreamWriter xwriter;
     private Writer writer;
 
     public XML2BagWriter(Writer writer) {
-        xwriter = new XMLWriterImpl();
-        xwriter.setWriter(writer);
         this.writer = writer;
+        xwriter = newXmlWriter(writer);
 
     }
 
@@ -59,17 +56,16 @@ public class XML2BagWriter implements Sink<Bag> {
         } catch (IOException e) {
             return false;
         }
-        xwriter = new XMLWriterImpl();
-        xwriter.setWriter(writer);
+        xwriter = newXmlWriter(writer);
         return false;
     }
 
     @Override
     public boolean start() {
         try {
-            xwriter.startDocument();
-            xwriter.startElement(Bags, Bags, Bags, attribs);
-        } catch (SAXException e) {
+            xwriter.writeStartDocument();
+            xwriter.writeStartElement(Bags);
+        } catch (XMLStreamException e) {
             //XXX LOG
             return false;
         }
@@ -80,20 +76,19 @@ public class XML2BagWriter implements Sink<Bag> {
     public boolean add(final Bag b) {
         String type = b.getType().getName();
         try {
-            xwriter.startElement(type, type, type, attribs);
+            xwriter.writeStartElement(type);
             String fields[] = b.getFieldNames();
             for (String field : fields) {
                 Object o = b.getValue(b, field);
                 if (o != null) {
-                    xwriter.startElement(field, field, field, attribs);
-                    char buff[] = o.toString().toCharArray();
-                    xwriter.characters(buff, 0, buff.length - 1);
-                    xwriter.endElement(field, field, field);
+                    xwriter.writeStartElement(field);
+                    xwriter.writeCharacters(o.toString());
+                    xwriter.writeEndElement();
                 }
             }
 
-            xwriter.endElement(type, type, type);
-        } catch (SAXException e) {
+            xwriter.writeEndElement();
+        } catch (XMLStreamException e) {
             //XXX LOG
             return false;
         }
@@ -103,11 +98,12 @@ public class XML2BagWriter implements Sink<Bag> {
     @Override
     public boolean stop() {
         try {
-            xwriter.endDocument();
-            xwriter.endElement(Bags, Bags, Bags);
+            xwriter.writeEndElement();
+            xwriter.writeEndDocument();
+            xwriter.flush();
             writer.flush();
             writer.close();
-        } catch (SAXException e) {
+        } catch (XMLStreamException e) {
             //XXX logging
             return false;
         } catch (IOException e) {
@@ -120,5 +116,14 @@ public class XML2BagWriter implements Sink<Bag> {
     @Override
     public void close() throws IOException {
         stop();
+    }
+
+    private static XMLStreamWriter newXmlWriter(Writer writer) {
+        try {
+            return XMLOutputFactory.newInstance().createXMLStreamWriter(writer);
+        } catch (XMLStreamException e) {
+            //XXX LOG
+            return null;
+        }
     }
 }
