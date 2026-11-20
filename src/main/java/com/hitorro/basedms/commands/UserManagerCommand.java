@@ -26,7 +26,7 @@ import com.hitorro.base.objects.User;
 import com.hitorro.base.objects.UserMark;
 import com.hitorro.base.objects.UserPreferences;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;

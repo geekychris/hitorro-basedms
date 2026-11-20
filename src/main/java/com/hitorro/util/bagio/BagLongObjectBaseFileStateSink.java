@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.bagio;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.fs.sinks.LongObjectBaseFileStateSink;

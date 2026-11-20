@@ -21,9 +21,10 @@
  */
 package com.hitorro.basedms.transformer.methods;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.basedms.transformer.TransformMethod;
 import com.hitorro.util.json.String2JsonMapper;
+import com.hitorro.util.json.JsonValues;
 
 /**
  * Common base class for transformer methods providing shared functionality
@@ -44,7 +45,7 @@ public abstract class BaseTransformMethod implements TransformMethod {
             JsonNode node = jsonMapper.apply(parameters);
             if (node != null && node.has(key)) {
                 JsonNode value = node.get(key);
-                return value.isNull() ? defaultValue : value.asText();
+                return value.isNull() ? defaultValue : JsonValues.asText(value);
             }
             return defaultValue;
         }

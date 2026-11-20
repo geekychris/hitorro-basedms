@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.transformer.constraints;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.basedms.transformer.ConvertionEdge;
 import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.opers.HTPredicate;

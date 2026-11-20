@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.base.typesystem.commands.DumpForUpgrade;
 import com.hitorro.basedms.cache.ContentTypeCache;
 import com.hitorro.basedms.commands.ChangePasswordCommand;

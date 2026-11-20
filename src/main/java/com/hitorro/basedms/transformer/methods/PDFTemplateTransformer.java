@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.transformer.methods;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.basedms.transformer.Log;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.fs.file.FileFile;
@@ -31,6 +31,7 @@ import com.hitorro.util.json.keys.StringProperty;
 import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
+import com.hitorro.util.json.JsonValues;
 
 /**
  * PDF Template Transformer using pdftk to fill form fields.
@@ -175,7 +176,7 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
             if (node != null && node.isObject()) {
                 JsonNode vars = node.has("variables") ? node.get("variables") : node;
                 if (vars.isObject()) {
-                    Iterator<Map.Entry<String, JsonNode>> fields = vars.fields();
+                    Iterator<Map.Entry<String, JsonNode>> fields = vars.properties().iterator();
                     while (fields.hasNext()) {
                         Map.Entry<String, JsonNode> field = fields.next();
                         String fieldName = field.getKey();
@@ -183,7 +184,7 @@ public class PDFTemplateTransformer extends BaseTransformMethod {
                                 || fieldName.equalsIgnoreCase("_template_path"))
                             continue;
                         writer.println(Fmt.S("<< /V (%s) /T (%s) >>",
-                                escapeFdf(field.getValue().asText()),
+                                escapeFdf(JsonValues.asText(field.getValue())),
                                 escapeFdf(fieldName)));
                     }
                 }

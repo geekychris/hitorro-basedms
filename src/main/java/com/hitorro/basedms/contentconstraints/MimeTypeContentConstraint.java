@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.contentconstraints;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.base.objects.Content;
 import com.hitorro.base.objects.ContentType;
 import com.hitorro.util.core.HTAssert;

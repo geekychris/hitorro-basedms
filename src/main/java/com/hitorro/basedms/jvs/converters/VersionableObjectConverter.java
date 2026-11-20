@@ -21,9 +21,9 @@
  */
 package com.hitorro.basedms.jvs.converters;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.base.objects.Content;
 import com.hitorro.base.objects.Container;
 import com.hitorro.base.objects.VersionableObject;
@@ -65,7 +65,7 @@ public class VersionableObjectConverter implements DMSToJVSConverter<Versionable
             jvs = new JVS(type);
         } else {
             // Create JVS from raw JSON when type is not available
-            com.fasterxml.jackson.databind.node.ObjectNode root = com.fasterxml.jackson.databind.node.JsonNodeFactory.instance.objectNode();
+            tools.jackson.databind.node.ObjectNode root = tools.jackson.databind.node.JsonNodeFactory.instance.objectNode();
             root.put("type", TYPE_NAME);
             jvs = new JVS(root);
             com.hitorro.basedms.Log.basedms.warn("Type '{}' not found in type system, creating JVS without type validation", TYPE_NAME);
