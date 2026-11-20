@@ -47,14 +47,21 @@ public final class TestSessionFactory {
         return sf;
     }
 
-    /** A Configuration as HibernateService builds one: HTIntegrator, the given entities, create-drop. */
+    /**
+     * A Configuration as HibernateService builds one: HTIntegrator, the given entities, unquoted
+     * identifiers (Hibernate's default). Every test database starts empty, so the schema is created
+     * without a drop first (create-only: MySQL cannot drop foreign keys of tables that do not exist
+     * yet), and creation halts on the first DDL error, which Hibernate otherwise only logs (an
+     * index that fails to create would go unnoticed).
+     */
     public static Configuration configuration(String url, String user, String password, Class<?>... entities) {
         Configuration cfg = new Configuration(
                 new BootstrapServiceRegistryBuilder().applyIntegrator(new HTIntegrator()).build());
         cfg.setProperty("hibernate.connection.url", url);
         cfg.setProperty("hibernate.connection.username", user);
         cfg.setProperty("hibernate.connection.password", password);
-        cfg.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        cfg.setProperty("hibernate.hbm2ddl.auto", "create-only");
+        cfg.setProperty("hibernate.hbm2ddl.halt_on_error", "true");
         for (Class<?> c : entities) {
             cfg.addAnnotatedClass(c);
         }

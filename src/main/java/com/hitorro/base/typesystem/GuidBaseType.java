@@ -41,7 +41,8 @@ import jakarta.persistence.*;
 public abstract class GuidBaseType extends VersionBaseType<BaseSession> {
     public static NamedLong BaseTypeIdNamedLong = NamedLong.registerNamedLong("baseid", 1, 100, "unique id for base id and its subtypes");
 
-    // guid_idx is declared in @Table(indexes) of each entity that maps guid
+    // the guid index is declared in @Table(indexes) of each entity that maps guid, named
+    // <table>_guid_idx: index names are schema-wide on PostgreSQL and H2
     // (VersionableObject, Content, ContentType, PersistedSerializedObject).
     @Column(name = "guid", nullable = false)
     protected String guid = null;

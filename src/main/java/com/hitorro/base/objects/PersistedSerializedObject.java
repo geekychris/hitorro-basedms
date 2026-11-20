@@ -50,7 +50,7 @@ import java.util.List;
 @Entity
 @Table(name = "persistedserializedobject", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "guid_idx", columnList = "guid")})
+        @jakarta.persistence.Index(name = "persistedserializedobject_guid_idx", columnList = "guid")})
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.PersistedSerializedObject,
         onTriggers = {@ImplClassMeta(className = BaseTypeOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.OnNew),
                 @ImplClassMeta(className = BaseTypeOnTriggerGeneric.class, trigger = com.hitorro.util.typesystem.OnTrigger.TriggerType.BeforeSave),

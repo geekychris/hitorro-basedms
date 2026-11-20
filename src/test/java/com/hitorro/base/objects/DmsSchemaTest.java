@@ -91,6 +91,69 @@ class DmsSchemaTest {
         }
     }
 
+    /**
+     * Every index the mapping declares exists on its table, under its own name. Index names are
+     * schema-wide on PostgreSQL (and H2): a name reused on a second table is never created there.
+     */
+    @Test
+    void everyDeclaredIndexExistsOnItsTable() {
+        java.util.Map<String, String> declared = new java.util.TreeMap<>();   // index -> table
+        java.util.List<String> problems = new java.util.ArrayList<>();
+        for (Class<?> c : ALL_ENTITIES) {
+            jakarta.persistence.Table t = c.getAnnotation(jakarta.persistence.Table.class);
+            if (t == null) continue;
+            for (jakarta.persistence.Index ix : t.indexes()) {
+                String other = declared.put(ix.name().toLowerCase(), t.name());
+                if (other != null) {
+                    problems.add(ix.name() + " is declared on both " + other + " and " + t.name());
+                }
+            }
+        }
+        DMSSession s = TestSessionFactory.newSession(false);
+        try {
+            s.doJdbcWork(connection -> {
+              try {
+                java.sql.DatabaseMetaData md = connection.getMetaData();
+                for (var e : declared.entrySet()) {
+                    String table = actualTableName(md, e.getValue());
+                    java.util.Set<String> found = new java.util.TreeSet<>();
+                    if (table != null) {
+                        try (java.sql.ResultSet rs = md.getIndexInfo(connection.getCatalog(), null, table, false, false)) {
+                            while (rs.next()) {
+                                if (rs.getString("INDEX_NAME") != null) found.add(rs.getString("INDEX_NAME").toLowerCase());
+                            }
+                        }
+                    }
+                    if (!found.contains(e.getKey())) {
+                        problems.add("index " + e.getKey() + " missing on " + e.getValue() + " (has " + found + ")");
+                    }
+                }
+                return null;
+              } catch (java.sql.SQLException ex) {
+                throw new RuntimeException(ex);
+              }
+            });
+        } finally {
+            s.rollback();
+        }
+        assertTrue(problems.isEmpty(), String.join("\n", problems));
+    }
+
+    /** The table's name as the database stores it (case differs by database). */
+    private static String actualTableName(java.sql.DatabaseMetaData md, String mapped) throws java.sql.SQLException {
+        try (java.sql.ResultSet rs = md.getTables(md.getConnection().getCatalog(), null, "%", new String[]{"TABLE"})) {
+            while (rs.next()) {
+                String name = rs.getString("TABLE_NAME");
+                String schema = rs.getString("TABLE_SCHEM");
+                if (name.equalsIgnoreCase(mapped)
+                        && (schema == null || !schema.equalsIgnoreCase("information_schema"))) {
+                    return name;
+                }
+            }
+        }
+        return null;
+    }
+
     private static PersistedSerializedObject<?> pso(DMSSession s, String name, int collection, byte[] content) {
         PersistedSerializedObject<?> p = new PersistedSerializedObject<>();
         p.setGuid("pso:" + UUID.randomUUID());

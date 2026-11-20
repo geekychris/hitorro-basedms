@@ -42,7 +42,7 @@ import java.io.IOException;
 @Entity
 @Table(name = "Permission", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
+        @jakarta.persistence.Index(name = "permission_name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Permission,
         isView = false,

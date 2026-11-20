@@ -209,4 +209,23 @@ class DMSSessionHibernate7Test {
         s.rollback();
         assertEquals("rb", readBack(e.getId()).getName());
     }
+
+    @Test
+    void doJdbcWorkOnAFreshSessionRuns() {
+        // JDBCUtils.performSimpleJDBCUpdate calls doJdbcWork on a new session
+        ProbeEntity e = createCommitted("jdbc", false);
+        DMSSession s = new DMSSession(false);
+        s.doJdbcWork(connection -> {
+            try (var st = connection.prepareStatement("update probe_entity set name = ? where system_id = ?")) {
+                st.setString(1, "jdbc-changed");
+                st.setLong(2, e.getId());
+                assertEquals(1, st.executeUpdate());
+            } catch (java.sql.SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            return null;
+        });
+        s.commit();
+        assertEquals("jdbc-changed", readBack(e.getId()).getName());
+    }
 }
