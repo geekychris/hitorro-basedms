@@ -9,8 +9,10 @@ import org.hibernate.TransientObjectException;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.EventListenerGroup;
 import org.hibernate.event.spi.EventType;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.UUID;
 import java.util.stream.StreamSupport;
@@ -22,28 +24,48 @@ import static org.junit.jupiter.api.Assertions.*;
  * that replaced the SAVE_UPDATE listener. Hibernate 7 removed Session.save/update/saveOrUpdate/
  * delete; DMSSession now persists new objects, merges managed/detached ones, and removes via a
  * managed instance.
+ * <p>
+ * The database matrix subclasses (DMSSessionHibernate7PostgresTest, DMSSessionHibernate7MySqlTest)
+ * run these tests on PostgreSQL and MySQL by overriding {@link #openDatabase()}.
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DMSSessionHibernate7Test {
 
-    private static SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
+    private SessionFactory previousDefault;
+
+    /** The database under test: in-memory H2 here; a container in the matrix subclasses. */
+    protected SessionFactory openDatabase() {
+        return TestSessionFactory.get();
+    }
+
+    protected void closeDatabase(SessionFactory sf) {
+    }
 
     @BeforeAll
-    static void buildSessionFactory() {
-        sessionFactory = TestSessionFactory.get();
+    void buildSessionFactory() {
+        sessionFactory = openDatabase();
+        previousDefault = TestSessionFactory.useAsDefault(sessionFactory);
+    }
+
+    @AfterAll
+    void restoreDefaultSessionFactory() {
+        TestSessionFactory.useAsDefault(previousDefault);
+        closeDatabase(sessionFactory);
     }
 
     private static String guid() {
         return "probe:" + UUID.randomUUID();
     }
 
-    private static ProbeEntity readBack(Long id) {
+    private ProbeEntity readBack(Long id) {
         try (Session s = sessionFactory.openSession()) {
             return s.get(ProbeEntity.class, id);
         }
     }
 
     /** Persist through one DMSSession and commit; the returned instance is detached from any other session. */
-    private static ProbeEntity createCommitted(String name, boolean cache) {
+    private ProbeEntity createCommitted(String name, boolean cache) {
         DMSSession s1 = new DMSSession(cache);
         ProbeEntity e = new ProbeEntity(guid(), name);
         s1.saveOrUpdate(e);

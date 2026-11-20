@@ -167,6 +167,22 @@ mvn clean install
 2. Refactored out of the codebase
 3. Replaced with external library equivalents
 
+## Testing on PostgreSQL and MySQL
+
+`mvn test` runs the Hibernate tests on in-memory H2. The same tests also run on PostgreSQL 17
+and MySQL 8.4 in containers (Testcontainers): `DMSSessionHibernate7*Test`,
+`VersionTreeDelete*Test` and `DmsSchema*Test` (every basedms entity: schema creation and
+validation, a blob round trip, the native SQL). Without Docker those classes are skipped and the
+build still passes. With Rancher Desktop:
+
+```bash
+DOCKER_HOST=unix://$HOME/.rd/docker.sock TESTCONTAINERS_RYUK_DISABLED=true mvn test
+```
+
+A matrix class extends the H2 test and overrides `openDatabase()` (see `TestSessionFactory` and
+`TestDatabases`). Native SQL must name tables exactly as their `@Table` does: MySQL on Linux
+compares table names case-sensitively.
+
 ## Known Issues
 
 - References to `com.hitorro.util.*` packages (from deleted hitorro-util module)
