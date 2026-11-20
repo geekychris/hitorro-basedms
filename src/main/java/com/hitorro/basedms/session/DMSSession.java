@@ -387,6 +387,7 @@ public class DMSSession extends com.hitorro.util.typesystem.BaseSession {
     }
 
     public void doJdbcWork(Function<Connection, Object> work) {
+        ensureSession();   // a fresh DMSSession has no Hibernate session yet (JDBCUtils uses one)
         m_session.doWork(connection -> {
             work.apply(connection);
         });

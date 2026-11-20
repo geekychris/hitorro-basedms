@@ -4,8 +4,10 @@ import com.hitorro.basedms.session.DMSSession;
 import com.hitorro.basedms.session.TestSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.UUID;
 
@@ -15,14 +17,34 @@ import static org.junit.jupiter.api.Assertions.*;
  * Deleting a version that other versions still reference (canonical / nextVersion /
  * parentVersion / branchVersion) through DMSSession.delete. Before 3.1.1 this failed: an FK
  * violation on Hibernate 6, TransientPropertyValueException on Hibernate 7.
+ * <p>
+ * The database matrix subclasses (VersionTreeDeletePostgresTest, VersionTreeDeleteMySqlTest) run
+ * these tests on PostgreSQL and MySQL by overriding {@link #openDatabase()}.
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VersionTreeDeleteTest {
 
-    private static SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
+    private SessionFactory previousDefault;
+
+    /** The database under test: in-memory H2 here; a container in the matrix subclasses. */
+    protected SessionFactory openDatabase() {
+        return TestSessionFactory.get();
+    }
+
+    protected void closeDatabase(SessionFactory sf) {
+    }
 
     @BeforeAll
-    static void factory() {
-        sessionFactory = TestSessionFactory.get();
+    void factory() {
+        sessionFactory = openDatabase();
+        previousDefault = TestSessionFactory.useAsDefault(sessionFactory);
+    }
+
+    @AfterAll
+    void restoreDefaultSessionFactory() {
+        TestSessionFactory.useAsDefault(previousDefault);
+        closeDatabase(sessionFactory);
     }
 
     private static VersionableObject vo(String label) {
@@ -33,7 +55,7 @@ class VersionTreeDeleteTest {
     }
 
     /** root, optionally with versions already linked; persisted and committed. */
-    private static void commit(VersionableObject... objects) {
+    private void commit(VersionableObject... objects) {
         DMSSession s = TestSessionFactory.newSession(false);
         for (VersionableObject o : objects) {
             s.persist(o);
@@ -68,7 +90,7 @@ class VersionTreeDeleteTest {
         return d;
     }
 
-    private static VersionableObject read(Long id) {
+    private VersionableObject read(Long id) {
         try (Session s = sessionFactory.openSession()) {
             VersionableObject v = s.get(VersionableObject.class, id);
             if (v != null) {
@@ -89,7 +111,7 @@ class VersionTreeDeleteTest {
         return v == null ? null : v.getId();
     }
 
-    private static void delete(Long id, boolean loadFirst) {
+    private void delete(Long id, boolean loadFirst) {
         DMSSession s = TestSessionFactory.newSession(false);
         Object target = loadFirst ? s.getSingleObjectById(VersionableObject.class, id) : read(id);
         s.delete(target);

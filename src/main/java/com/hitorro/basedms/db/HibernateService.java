@@ -55,6 +55,19 @@ import java.util.Properties;
         debugCommands = {DumpCommand.class, Load.class, Hql.class, DumpHibernateStatistics.class, DumpSessionInfo.class},
         typeManagedClasses = {},
         uiDirectories = {})
+/**
+ * Builds basedms's own SessionFactory from the properties DatabaseConfigProvider returns.
+ * <p>
+ * In a Spring Boot app that also lists this service under {@code services}, there are two
+ * SessionFactories on one database: Spring's (configured by {@code spring.jpa.*}) and this one,
+ * which sees only what the provider passes (hitorro-spring-boot's SpringDatabaseConfigProvider
+ * passes dialect, driver and hbm2ddl). Naming and quoting settings in {@code spring.jpa} do not reach
+ * it, so keep both factories on the same identifiers: Hibernate's standard physical naming
+ * ({@code PhysicalNamingStrategyStandardImpl}) and no {@code globally_quoted_identifiers}. With
+ * quoting on, Spring creates quoted mixed-case names ("commitCount", "Extensions") that this
+ * factory's unquoted SQL does not find on PostgreSQL. See README, "Two SessionFactories in a Spring
+ * Boot app".
+ */
 public class   HibernateService {
     public static StringProperty DerbyDB = new StringProperty("db.embedded.name", "", null);
     public static StringProperty DefaultDBKey = DatabaseUtil.DefaultDBKey;

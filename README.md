@@ -167,6 +167,46 @@ mvn clean install
 2. Refactored out of the codebase
 3. Replaced with external library equivalents
 
+## Testing on PostgreSQL and MySQL
+
+`mvn test` runs the Hibernate tests on in-memory H2. The same tests also run on PostgreSQL 17
+and MySQL 8.4 in containers (Testcontainers): `DMSSessionHibernate7*Test`,
+`VersionTreeDelete*Test` and `DmsSchema*Test` (every basedms entity: schema creation and
+validation, a blob round trip, the native SQL). Without Docker those classes are skipped and the
+build still passes. With Rancher Desktop:
+
+```bash
+DOCKER_HOST=unix://$HOME/.rd/docker.sock TESTCONTAINERS_RYUK_DISABLED=true mvn test
+```
+
+A matrix class extends the H2 test and overrides `openDatabase()` (see `TestSessionFactory` and
+`TestDatabases`). Native SQL must name tables exactly as their `@Table` does: MySQL on Linux
+compares table names case-sensitively.
+
+### Index names
+
+Index names are unique per table (`<table>_<column>_idx`, e.g. `user_t_name_idx`,
+`content_guid_idx`): PostgreSQL and H2 scope index names to the schema, so before 3.1.2 the shared
+`name_idx` / `guid_idx` were created on the first table only. With `hbm2ddl=update`, an existing
+database gets the new indexes added; an existing MySQL database (where index names are per table)
+also keeps its old `name_idx` / `guid_idx` indexes, which are now redundant and can be dropped.
+
+## Two SessionFactories in a Spring Boot app
+
+An app that lists `com.hitorro.basedms.db.HibernateService` under `services` runs basedms's own
+SessionFactory beside Spring's on the same database. HibernateService only sees the properties
+`DatabaseConfigProvider` gives it (hitorro-spring-boot passes dialect, driver and `hbm2ddl`), not
+`spring.jpa.*`. Keep the two on the same identifiers:
+
+- `spring.jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl`
+  (Spring Boot's default, camelCase to snake_case, gives different column names);
+- no `hibernate.globally_quoted_identifiers` (with it, Spring creates quoted mixed-case names such
+  as `"commitCount"` and `"Extensions"`, which basedms's unquoted SQL does not find on PostgreSQL).
+
+`NamingConsistencyTest` checks that these settings give basedms's entities the same tables and
+columns as Hibernate's defaults. Without `HibernateService` in `services`, hitorro-spring-boot's
+`DMSAutoConfiguration` hands Spring's own SessionFactory to basedms and there is only one.
+
 ## Known Issues
 
 - References to `com.hitorro.util.*` packages (from deleted hitorro-util module)

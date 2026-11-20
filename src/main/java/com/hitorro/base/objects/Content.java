@@ -63,7 +63,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Content", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "guid_idx", columnList = "guid")})
+        @jakarta.persistence.Index(name = "content_guid_idx", columnList = "guid")})
 @com.hitorro.util.typesystem.annotation.TypeClassMetaInfo(shortTypeName = com.hitorro.util.typesystem.annotation.TypeClassMetaInfo.Content,
         onTriggers = {@com.hitorro.util.typesystem.annotation.ImplClassMeta(className = com.hitorro.basedms.BaseTypeOnTriggerGeneric.class, trigger = OnTrigger.TriggerType.OnNew),
                 @com.hitorro.util.typesystem.annotation.ImplClassMeta(className = com.hitorro.basedms.BaseTypeOnTriggerGeneric.class, trigger = OnTrigger.TriggerType.BeforeSave),

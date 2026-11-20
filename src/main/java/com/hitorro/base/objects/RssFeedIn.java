@@ -44,7 +44,7 @@ import java.util.*;
 @Entity
 @Table(name = "RssFeedIn", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "name_idx", columnList = "name")})
+        @jakarta.persistence.Index(name = "rssfeedin_name_idx", columnList = "name")})
 @PrimaryKeyJoinColumn(name = "system_id")
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.RssFeedIn,
         isView = false,

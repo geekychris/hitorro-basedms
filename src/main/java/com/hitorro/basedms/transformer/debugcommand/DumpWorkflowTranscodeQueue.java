@@ -92,17 +92,23 @@ public class DumpWorkflowTranscodeQueue extends com.hitorro.util.commandandcontr
 
 
     private List getWorkflowQueue(BaseSession session) {
-        List<String> results = new ArrayList<String>();
-
-
-        if (session != null) {
-            String sql = "SELECT guid FROM PersistedSerializedObject WHERE collectionId = :collectionId ORDER BY effectiveFrom DESC";
-            NativeQuery query = ((DMSSession) session).createSQLQuery(sql);
-            query.setParameter("collectionId", PersistedSerializedObject.CollectionID_UIJobQueue);
-            query.addScalar("guid", StandardBasicTypes.STRING);
-            results = query.list();
+        if (session == null) {
+            return new ArrayList<String>();
         }
-        return results;
+        return workflowQueueGuids((DMSSession) session);
+    }
+
+    /**
+     * Guids of the UI job queue's PersistedSerializedObjects, newest first (native SQL).
+     * The table name must match the mapping (@Table "persistedserializedobject") exactly: MySQL on
+     * Linux compares table names case-sensitively, so "PersistedSerializedObject" does not exist there.
+     */
+    public static List<String> workflowQueueGuids(DMSSession session) {
+        String sql = "SELECT guid FROM persistedserializedobject WHERE collectionId = :collectionId ORDER BY effectiveFrom DESC";
+        NativeQuery query = session.createSQLQuery(sql);
+        query.setParameter("collectionId", PersistedSerializedObject.CollectionID_UIJobQueue);
+        query.addScalar("guid", StandardBasicTypes.STRING);
+        return query.list();
     }
 
     private Object[] getResponseRow(BaseSession session, String psoGuid) {

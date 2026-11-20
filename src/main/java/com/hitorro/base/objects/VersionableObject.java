@@ -58,7 +58,7 @@ import java.util.*;
 @Entity
 @Table(name = "versionable_object", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "guid_idx", columnList = "guid"),
+        @jakarta.persistence.Index(name = "versionable_object_guid_idx", columnList = "guid"),
         @jakarta.persistence.Index(name = "canonguid_idx", columnList = "canonicalGuid"),
         @jakarta.persistence.Index(name = "identityHash_idx", columnList = "identityHash")})
 @Inheritance(strategy = InheritanceType.JOINED)

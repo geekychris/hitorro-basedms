@@ -44,7 +44,7 @@ import java.util.Set;
 @Entity
 @Table(name = "contenttype", indexes = {
         // was @org.hibernate.annotations.Index on the field (removed in Hibernate 7)
-        @jakarta.persistence.Index(name = "guid_idx", columnList = "guid")})
+        @jakarta.persistence.Index(name = "contenttype_guid_idx", columnList = "guid")})
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.ContentType,
         isView = false,
         isPersisted = true,
