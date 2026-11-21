@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.bagio;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.language.Iso639Table;
 import com.hitorro.language.LanguageId;
 import com.hitorro.util.json.keys.BooleanProperty;

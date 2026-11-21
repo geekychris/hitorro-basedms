@@ -23,7 +23,7 @@ package com.hitorro.basedms.commands;
 
 import com.hitorro.base.objects.VersionableObject;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.commandandcontrol.ano.RespColumn;

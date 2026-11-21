@@ -25,7 +25,7 @@ import com.hitorro.base.objects.Store;
 import com.hitorro.base.objects.StoreType;
 import com.hitorro.basedms.StoreUtil;
 import com.hitorro.basedms.session.DMSSessionFactory;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.tools.queue.reader.DirectoryVisitorIterator;
 import com.hitorro.util.basefile.tools.queue.reader.GoodFileKeyWriter;

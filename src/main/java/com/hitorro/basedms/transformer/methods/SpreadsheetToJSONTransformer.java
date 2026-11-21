@@ -21,7 +21,8 @@
  */
 package com.hitorro.basedms.transformer.methods;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import com.hitorro.util.json.JsonMappers;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.fs.file.FileFile;
 import com.hitorro.util.basefile.fs.file.FileFileSystem;
@@ -62,7 +63,7 @@ public class SpreadsheetToJSONTransformer extends BaseTransformMethod {
     
     public static final String METHOD_NAME = "spreadsheet_to_json";
     
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = JsonMappers.json();
     
     @Override
     public String getMethodName() {

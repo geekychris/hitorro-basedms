@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.db;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.basedms.db.executor.Executor;
 import com.hitorro.basedms.db.executor.Result;
 import com.hitorro.basedms.db.executor.Script;

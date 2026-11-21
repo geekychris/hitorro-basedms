@@ -22,7 +22,7 @@
 package com.hitorro.util.bagio;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import gnu.trove.set.hash.TLongHashSet;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.opers.HTPredicate;

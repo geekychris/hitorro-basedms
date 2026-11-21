@@ -21,7 +21,7 @@
  */
 package com.hitorro.basedms.commands;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.auth.AuthResponse;
 import com.hitorro.util.auth.AuthenticationService;
 import com.hitorro.util.commandandcontrol.Command;
